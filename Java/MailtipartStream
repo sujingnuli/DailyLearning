@@ -1,0 +1,99 @@
+public int discardBodyData() throws MalformedStreamException ,IOException{
+	//抛弃注释信息
+	boolean done=false;
+
+	int head;
+	int pos;
+	int total=0;
+	while(!done){
+		pos=findSeparator();
+		if(pos!=-1){
+			//如果有分割线
+			total+=pos-head;
+			head=pos;
+			done=true;
+		}else{
+			//如果没有分割线
+			if(tail-head>keepRegion){
+				//如果大于保留区
+				pad=keepRegion;
+			}else{
+				pad=tail-head;
+			}
+			total+=tail-head-pad;
+			System.arraycopy(buffer,tail-pad,buffer,0,pad);
+			head=0;
+			bytesRead=input.read(buffer,pad,bufSize-pad);
+			if(bytesRead!=-1){
+					tail+=pad+bytesRead;
+			}else{
+				total+=pad;
+				throw new MalformedStreamException ("Stream ended unexception");
+			}
+		}
+	}
+	return total;
+}
+
+public boolean readBoundary() throws MalformedStreamException,IOException{
+	//读取边界分割线
+	//如果是描述体之间的分割，分割线后面，多一个回车换行，如果是整体的结束，多一个"--"
+	byte[]  marker=new byte[2];
+	boolean nextChunk=false;
+	head+=boundaryLength;//跳过分割界线符
+	try{
+		marker[0]=readByte();
+		marker[1]=readByte();
+		//静态常量，STREAM_TEAMINATOR ={'-','-'}
+		if(arrayequals(marker,STREAM_TREAMTANTOR,2)){
+			nextChunk=false;
+		}
+		//静态常量，FIELD_SEPARATOR={'/n','/r'}
+		else if(arrayequals(marker,FIELD_SEPARATOR,2)){
+			nextChunk=true;
+		}else{
+			throw new MalformedStreamException("unexcpeted charaters follows a boundary";)
+		}
+	}catch(IOException e){
+		throw new MalformedStreamException("stream ended unexcepted");
+	}
+	return nextChunk;
+}
+
+public boolean skipPremble() throws IOException{
+	//第一个分割界线，没有\r\n
+	//思路，读取boundary,修改boundary,去掉\r\n.
+	//调用readBoundary,再把boundary修改回来 
+	System.arraycopy(boundary,2,boundary,0,boundary.length-2);
+	boundaryLength=boundary.length-2;
+	try{
+		//去掉第一个分割界线符前的注释数据
+		discardBodyRead();
+		return readBoundary();
+	}catch(MalformedStreamException e){
+		return false;
+	}finally{
+		System.arraycopy(boundary,0,boundary,2,boundary.length-2);
+		boundaryLength=boundary.length;
+		boundary[0]='0x0D';
+		boundary[1]='0x0A';
+	}
+}
+
+
+public void doPost(HttpServletRequest request,HttpServletResponse response){
+	//通过MaltipartStream类，来读取浏览器上传的文件
+	//从请求的消息中获取Content-Type头字段
+	String content_type=request.getHeader("content-type");
+	byte[] boundary=  
+	InputStream in=request.getInputStream();
+	MaltipartStream ms=new MaltipartStream(in, boundary);
+	boolean nextPart=ms.skipPreamble();
+	while(nextPart){
+		String header=ms.readHeaders();
+		String file=;//从head中提取出文件名
+		FileOutputStream fos=new FileOutputStream(file);
+		ms.readBodyData(fos);
+		nextPart=ms.readBoundary();
+	}
+}
