@@ -1,0 +1,81 @@
+public class ThresholdingOutputStream
+{
+	int threshold;
+	public ThresholdingOutputStream(int threshold){
+		this.threshold=threshold;
+	}
+}
+
+//封装MalpartStream类，解析出各个分区的主体数据，继承了抽象类
+//ThresholdingOuputStream,
+//DeferredFileOuputStream,在开始时，使用ByteArrayOutputStream对象存储主体数据
+//超过临界值时，使用临时文件存储主体数据
+public class DeferredFileOutputStream  extends ThresholdingOutputStream
+{
+	int writen;
+	File outputFile;
+	ByteArrayOutputStream memoryOutputStream;
+	FileOutputStream diskOutputStream;
+	OutputStream currentOutputStream;
+	boolean thresholdExceeded;
+
+	public DeferredFileOutputStream(int threshold,File outputFile){
+		//设置存储方式的临界值
+		super(threshold);
+		this.outputFile=outputFile;
+		memoryOutputStream=new ByteArrayOutputStream(threshold);
+		currentOutputStream=memoryOutputStream;
+	}
+	
+	//返回数据，如果主体数据，是字节数组，则返回，如果是存在FileOutputStrem类型，则返回
+	public byte[] getData(){
+		if(memoryOutputStream!=null){
+			return memoryOutputStream.toByteArray();
+		}
+		return null;
+	}
+
+	public File getFile(){
+		return outputFile;
+	}
+
+	public OutputStream getStream() throws IOException{
+		return currentOutputStream;
+	}
+
+	public boolean isThresholdExceeded(){
+		return (written>threshold);
+	}
+
+	public boolean isInMemory(){
+		return (!isThresholdExceeded());
+	}
+	protected void thresholdReached() throws IOException{
+		byte[] data=memoryOutputStream.toByteArray();
+		FileOutputStream fos=new FileOutputStream(outputFile);
+		fos.write(data);
+		diskOutputStream=fos;
+		currentOutputStream=fos;
+		memoryOutputStream=null;
+	}
+
+	protected void checkThreshold(int count) throws IOException{
+		if(!thresholdExceeded&&(written+count>threshold)){
+			thresholdReached();
+			thresholdExceeded=true;
+		}
+	}
+
+	public void write(int b) throws IOException{
+		checkThreshold(1);
+		getStream().write(b);
+		written++;
+	}
+	public void write(byte b[]) throws IOException{
+		checkThreshold(b.length);
+		getStream().write(b);
+		written+=b.length;
+	}
+
+
+}
