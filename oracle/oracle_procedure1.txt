@@ -1,0 +1,128 @@
+-- goto语句
+declare 
+i number:=1;
+begin 
+  <<start_loop>>
+      loop 
+        dbms_output.put_line('输出i='||i);
+        if i=12 then 
+           goto end_loop;
+        end if;
+        i:=i+1;
+        if i=10 then 
+           goto start_loop;
+        end if;
+       end loop;
+  <<end_loop>>
+  dbms_output.put_line('循环结束');
+end;
+
+--for 循环
+begin 
+      for i in 1..10 loop
+          insert into users values(i,'百度');
+       end loop;
+end;
+--null 语句不会执行任何操作，并且会直接将控制传递到吓一条语句
+declare
+v_sal emp.sal%type;
+v_ename emp.ename%type;
+begin 
+     select sal,ename into v_sal,v_ename from emp where empno=&no;
+     if v_sal<3000 then 
+        update emp set sal=sal*0.1 where ename=v_ename;
+     else 
+        null;
+     end if;
+end;
+
+--带有输出参数的存储过程
+create or replace procedure for_inoutPara(v_in_empno in number,v_out_ename out varchar2)
+is
+begin 
+       select ename into v_out_ename from emp where empno=v_in_empno;
+end; 
+
+--编写存储过程，输入部门号，返回该部门所有雇员信息
+create or replace package mypackage
+is
+type my_cursor is ref coursor
+end;
+--
+create or replace procedure for_allEmp(
+       v_in_deptno in number,v_out_result out mypackage.my_cursor
+)
+is
+begin 
+       open v_out_result
+       for 
+       select * from emp where deptno=v_in_deptno;
+end;
+
+--编写一个存储过程，入参，表名，每页记录数，当前页，排序字段，
+--   返回 总记录数 总页数和结果集。
+oracle的分页查询，
+select t2.* from 
+       (select t1.*,rownum rn from (select * from emp ) t1 where rownum<=9) t2 
+               where rn>=4
+create or replace procedure fencyPro(
+       v_in_table in varchar2 ,v_in_pagesize in number,v_in_pagenow in number,
+       v_out_result out mypackage.my_cursor
+)
+is
+v_sql varchar2(2000);
+v_start number;
+v_end number;
+begin 
+      v_start:=(v_in_pagenow-1)*v_in_pagesize+1;
+      v_end:=v_in_pagenow*v_in_pagesize;
+      v_sql='select t2.* from (select t1.*,rownum rn from (select * from '||v_in_table||') t1 where rownumber<='||v_end||') where rn>='||v_start||'';
+
+      open v_out_result
+           for sql;
+end;
+
+--建立存储过程，入参，表名，每页记录数，当前页，排序字段，
+--   返回  总记录数   总页数   返回查询的总结果
+create or replace procedure for_page(
+       v_in_table in varchar2,v_in_pagesize in number,v_in_pagenow in number,
+       v_out_result out mypackage.my_cursor 
+)
+is 
+v_start number;
+v_end number;
+v_sql varchar2;
+begin 
+     v_start:=(pagesize-1)*pagenow+1;
+     v_end:=pagesize*pagenow;
+     v_sql:='select t2.* from (select t1.* ,rownum rn from (select * from  '||v_in_table||') t1 where rownumber<='||v_end||') t2 where rn>='||v_start||'';
+
+     open v_out_result 
+          for v_sql;
+end;
+
+--简单的存储过程
+create or replace procedure procedure_test(
+       p_id in varchar2 ,p_status out varchar
+)
+as
+t_name varchar2(20);
+t_count number:=0;
+begin 
+    if t_count <=0 then 
+      p_status:=t_name ||':差';
+    elsif t_count >0 and t_count<3 then 
+      p_status:=t_name||':良好';
+    else
+      p_status:=t_name||':优秀';
+    end if;
+end;
+
+
+
+
+
+
+
+
+
