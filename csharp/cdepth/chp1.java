@@ -2,6 +2,10 @@
 1.2 排序和过滤
 1.3 处理未知数据
 1.4 linq简介
+1.5 COM和动态类型
+1.6 剖析.Net平台
+1.7 怎样写出超炫的代码
+1.8小结
 
 1.2排序和过滤
 使用产品列表，按名称排序，找出最贵的产品。
@@ -97,6 +101,75 @@
 			Console.WriteLine("Supplier={0};Product={1}",v.SupplierName,v.ProductName);
 	}
 	linq与sql语言很像，但是只是借用了sql的语法和思路，与数据库没有任何关联。
--查询xml
-	假如不是将产品和供货商硬编码过来，而是使用xml文件
--linq to sql
+		XmlDocument doc=XDocument.Load("data.xml");
+		var fil=from p in doc.Descendants("Product")
+				 join s in doc.Descendants("Supplier")
+					on (int)p.Attribute("SupplierId") equals (int)s.Attibute("SupplierID")
+				where (decimal)p.Attribute("Price")>10
+				orderby (string)s.Attribute("Name").
+				(string)p.Attribute("Name")
+				select new{SupplierName=(string)s.Attribute("Name"),ProductName=(string)p.Attribute("Name")};
+		foreach(var v in fil){
+			Console.WriteLine("Supplier={0},Product={1}",v.SupplierName,v.ProductName);
+		}
+--linq to sql
+  对SQL数据库应用查询表达式
+  using(LinqDemoDataContext db=new LinqDemoDataContext()){
+	var fil=from p in db.Products
+			 join s in db.Suppliers
+				on p.SupplierId equals s.SupplierId
+			 where p.Price>10
+			orderby s.Name,p.Name
+			select new{SupplierName=s.Name,ProductName=p.Name};
+	foreach(var v in fil){
+		Console.WriteLine("supplier={0},product={1}",v.SupplierName,v.ProductName);
+	}
+	}
+
+--1.5 COM和动态类型
+	linq是c#3的内容，互操作性是c#4的主题，包括处理旧的COM技术，和全新的执行在
+	DLR的动态语言上(Dynamic Language Runtime)
+	将产品列表，导出到一个Excel数据表中
+	var app=new Application{Visible=false};
+	Workbook workbook=app.Workbooks.Add();
+	Worksheet worksheet=app.ActiveSheet;
+	int row=1;
+	foreach(Product product in Product.GetSampleProducts().Where(p=>p.Price!=null)){
+		worksheet.Cells[row,1].Value=product.Name;
+		worksheet.Cells[row,2].Value=product.Price;
+		row++;
+	}
+	workbook.SaveAs(FileName:"demo.xls",FileFormat:xlFileFormat.xlWorkbookNormal);
+	app.Application.Quit();
+  -与动态语言互操作
+	假设 ，数据没有存在数据库，内存，xml中，可以通过Web来访问。
+	从IronPython中获取 列表，并打印出来。
+	ScriptEngine engine=Python.CreateEngine();
+	ScriptScope scope=engine.ExecuteFile("FindProducts.py");
+	dynamic products=scope.GetVaraibale("products");
+	foreach(dynamic product in products){
+		Console.WriteLine("{0}:{1}",product.ProductName,Product.Price);
+	}
+	product,products为动态类型，编译器，允许我们对产品进行迭代，并打印
+	如果出现错误，只有在执行时，才直到错误。
+	dynamic ,一个新的类型，如果一个表达式为dynamic类型，可以调用其方法
+	访问其属性，将其作为方法的参数，进行传递，并且大多数绑定都发生在运行时，而不是在编译时
+	如果出现错误，只有在执行时，才知道 。
+	dynamic products=Product.GetSampleProducts();
+	foreach(dynamic product in products){
+		Console.WriteLine("{0}:{1}",product.productName,product.Price);
+	}
+--1.6 剖析.NET平台
+	c#语言本身的特性，运行时特性，.net框架库的特性
+	c#语言特性
+	运行时特性
+		数组和委托对IDisposable接口，没有任何特殊含义，对于运行时很重要。
+		枚举enumerator，不是在运行时级别定义，却出现子啊运行时级别。
+		运行时确保IL写的程序，符合CLI规范。CLI的运行时部分称为CLR,
+		CLI: Common Language Infrastructure.公共语言基础设施。
+	.NET框架库特性
+		.Net库主要以IL形式构建，
+--1.7 优化代码
+	char[] chars=input.ToCharArray();
+	Array.Reverse(chars);
+	return new string(chars);
