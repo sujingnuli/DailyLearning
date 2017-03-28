@@ -1,0 +1,139 @@
+用泛型实现参数化类
+
+3.1 为什么需要泛型
+3.2 日常使用的简单泛型
+3.3 深化与提高
+
+泛型-c#2最重要的新特性，将大量安全检查从执行时转移到了编译时进行。
+    -在API中进行反射调用时泛型是如何工作的。
+    -CLR处理泛型的一些细节，泛型常见的一些限制，及可以解决的方法。
+3.1 为什么需要泛型
+	无论是速度还是内存消耗，有泛型和没泛型差别很大。
+	泛型的优点：更好的在编译时进行检查。
+3.2 日常使用的简单泛型
+	.net2.0 Dictionary<TKey,TValue>;
+	--泛型字典
+		使用Dictionary<TKey,TValue>来统计单词在一段文本中出现的频率
+	static Dictionary<string,int> CountWords(string text){
+		Dictionary<string,int> frequencies;
+		frequencies=new Dictionary<string,int>();
+		string[] words=Regex.Split(text,@"\W+");
+		foreach(string word in words){
+			if(frequencies.ContainsKey(word)){
+				frequencies[word]++;
+			}else{
+				frequencies[word]=1;
+			}
+		}
+		return frequencies;
+	}
+	string text=@"Do you like green eggs and ham?
+			I do not like them ,Sam-I-am.
+			I do not like green eggs and ham."；
+	Dictionary<string,int> frequencies=CountWords(text);
+	foreach(KeyValuePair<string,int> entry in frequencies){
+		string word=entry.Key;
+		int frequency=entry.Value;
+		Console.WriteLine("{0}:{1}",word,frequency);
+	}
+	用正则表达式将文本分解成单词。
+	string[] words=Regex.Split(text,@"\W+");
+	这是一种粗糙的处理方式，会得到两个空字符串，没有管Do和do分开计数。
+	--泛型类型和泛型参数
+	泛型有两种：泛型类型(类，接口，委托，结构)和泛型方法
+	类型实参：type argument
+	未绑定泛型类型：unbound generic type.
+	已构造类型：constructed type.
+	开放类型： open type	封闭类型：closed type
+	已构造类型，可以是开放的或者封闭的。	
+	List<TOutput> ConvertAll<TOutput>(Converter<T,TOutput> conv);
+	
+	--将一个整数列表 转换成 浮点数列表 ，第二个列表的每个元素都是第一个
+	列表中对应元素的平方根。
+	
+	--委托 /泛型
+	static double TaskSquareRoot(int x){
+		return Math.sqrt(x);
+	}
+	List<int> integers=new List<int>();
+	integers.Add(1);
+	integers.Add(2);
+	integers.Add(3);
+	integers.Add(4);
+	Converter<int,double> converter=TaskSquareRoot;
+	List<double> doubles;
+	doubles=integers.ConvertAll<double>(converter);
+	foreach(double d in doubles){
+		Console.WriteLine(d);
+	}
+	
+	converter的赋值 使用了委托的一个特性。
+	static double TaskSquareRoot(int x){
+		return Math.Sqrt(x);
+	}
+	Converter<int,double> converter=TaskSquareRoot;
+	List<double> doubles;
+	doubles=integer.ConvertAll<double>(converter);
+	匿名方法也可以提供帮助，可以采用内联的方式来指定转换。
+	linq和lambda大量的使用了这种转换。
+	非泛型类型也可以拥有泛型方法。
+	--开放/封闭/未绑定/已构造    泛型
+	泛型集合，既可以作为初学泛型的起点，也可以在几乎所有大型.net程序中广泛应用。
+--3.3 深化与提高
+	类型约束 type constraint 进一步控制指定哪一个类型实参。
+	类型推断 type inference 
+	约束 constraint 
+      --类型约束
+	我们要制定规则，从而判断，哪些是泛型类型或泛型方法能接收的有效类型实参。
+	有4种约束类型：
+		引用类型约束
+		值类型约束
+		构造函数类型约束
+		转换类型约束
+	--引用类型约束
+	 struct RefSample<T> where T:class
+	 
+	 确保使用的类型实参是引用类型，
+	 有效的封闭类型： RefSample<IDisposable>,RefSample<string>,RefSample<int[]>
+	 无效的封闭类型： RefSample<Guid>,RefSample<int>
+	--值类型约束
+	  class ValSample<T> where T:struct;
+
+	  T:struct,确保使用的类型实参是值类型，包括枚举(enums).
+	  有效封闭类型： ValSample<int>,ValSample<FileMode>.
+	  无效的封闭类型： ValSample<object>,ValSample<StringBuilder>
+	  System.Enum,System.ValueType.本身是引用类型。
+	  类型参数被约束为值类型后，不能进行 == 和 !=比较
+	--构造函数类型约束
+	  public T CreateInstance<T>() where T:new(){
+		return new T();
+	  }
+
+	  构造函数类型约束：T :new() 必须是所有约束的最后一个约束。
+	  它检查是否有一个无参的构造函数。
+	  有效： CreateInstance<int>();CreateInstance<object>();
+	  无效： CreateInstance<string>();string没有无参的构造函数。
+	  在使用 工厂设计模式  时，构造函数的约束很有用。
+	--转换类型约束
+	  class Sample<T> where T:Stream;
+	  struct Sample<T> where T:IDisposable;
+	  class Sample<T> where T:IComparable<T>;
+	  class Sample<T> where T:U 
+
+
+	  可以指定多个接口，只能有一个类
+	  class Sample<T> where T:Stream,ArrayList,IComparable<int>;
+	--组合约束
+	   class Sample<T> where T:class,IDisposable,new();
+	   class Sample<T> where T:struct,IDisposable;
+	   class Sample<T,U> where T:class where U:struct,T
+	   class Sample<T,U> where T:Stream where U:IDisposable'
+
+	   每一个值类型，都有一个无参构造函数。
+	   c#中IDisposable接口 的主要用途是释放非托管资源。当不在使用托管对象时，
+	   垃圾回收器会自动释放分配给该对象的内存。但是无法预测垃圾回收的时间。
+
+		
+   --泛型方法类型实参的类型推断
+	 static List<T> MakeList<T>(T first,T second);
+	 List<string> list=MakeList<string>("Line 1","Line 2");

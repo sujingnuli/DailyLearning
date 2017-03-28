@@ -1,0 +1,7 @@
+###深化与提高
+>static int CompareDefault<T>(T t) where T:IComparable<T>{
+	return t.CompareTo(default(T));
+}
+public void ComT(){
+	Console.WriteLine(CompareDefault<DateTime>(DateTime.MinValue));
+}

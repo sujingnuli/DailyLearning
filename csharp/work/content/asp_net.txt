@@ -48,3 +48,9 @@ C:只允许管理员访问
 </configuration>
 5.图形类型
  柱形曲线图，柱形图，曲线图，饼图，雷达图。
+6.通过正则表达式获取url参数
+ var search=window.location.search;
+ var reg=new RegExp("(^|&)"+lb+"=([^&]*)(&|$)");
+ var r=search.substr(1).match(reg);
+if(r!=null) return unescape(r[2]);
+	return null;
