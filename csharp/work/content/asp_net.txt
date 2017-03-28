@@ -1,0 +1,50 @@
+1.ScriptManager:
+	ajax，无刷新操作。
+	全局脚本控制器，用来控制ajax核心控件的，只有声明过scriptMangaer后，才能声明类似time,updatePanel等控件。如果母版页声明过了，子页面就不用再声明了。
+2.httpRuntime可以让FileUpload上传更大的文件，但是会因文件设置太大因用户将大量文件上传到服务器而导致拒绝服务攻击。
+3.httpHandler:
+<httpHandlers>
+	<add path="ChartImg.axd" verb="GET,HEAD,POST"  type=" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" validate="false">
+</httpHandlers>
+verb:表示对Get或Post请求进行处理。"*"表示对所有请求进行处理。
+path:指明 相对应的文件进行处理。"*.aspx"表示对发给所有aspx页面的请求进行处理。
+  也可以指明路径，"/test/*.aspx"对test目录下的aspx文件进行处理。
+type: 要进行处理的类名。该类名 ，一定要继承IHttpHandler这个接口。
+HttpHandler:HttpHandler是http请求的处理中心，真正的对客户端请求的服务器页面进行编译和执行，
+并将处理过后的信息，附加在Http请求信息流中，再次返回到HttpModule中 。
+HttpHandler与HttpModule不同，一旦定义了HttpHandler类，对系统的HttpHandler类
+将是覆盖关系。
+public interface IHttpHandler{
+	bool IsReusable{get;}
+	public void ProcessRequest(HttpContext context);//请求处理函数
+}
+4.web.confg中authorization下的location的path设置
+项目下有三个文件夹
+A：匿名可访问
+B:普通用户授权可访问
+C:只允许管理员访问
+<configuration>
+	<location path="A">
+		<system.web>
+			<authorization>
+				<allow users="*">
+			<aithorization>
+		<system.web>
+	</location>
+	<location>
+		<system.web>
+			<authorization>
+				<allow users="?"/>
+			</authorization>
+		</system.web>
+	</location>
+	<location path="C">
+		<system.web>
+			<authorization>
+				<allow roles="Admin"/>
+			</authorization>
+		</system.web>
+	</location>
+</configuration>
+5.图形类型
+ 柱形曲线图，柱形图，曲线图，饼图，雷达图。
