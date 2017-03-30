@@ -1,0 +1,16 @@
+1.1 ASP.NET MVC简介
+	ASP.NET MVC是一种构建Web应用程序的框架。将MVC应用于ASP.NET框架。
+	2002.ASP.NET 1.0发布。
+	System.Web.UI,
+	System.Web,管道程序。提供基本的Web堆栈。包括组件模块、处理程序、Http堆栈
+	
+	MVC ，将应用程序的用户界面，分为三个部分
+	Model,View,Controller,
+	--ASP.NET MVC3
+
+	支持Razor视图引擎
+	支持.net4 数据注解
+	改进了模型验证
+	支持依赖项解析 Dependency Resolution 和全局操作过滤器Global Action Filters.
+	JavaScript支持，包括非入侵式JavaScript，jQuery验证，和json绑定
+	支持NuGet，用来发布软件，管理整个平台的依赖。
