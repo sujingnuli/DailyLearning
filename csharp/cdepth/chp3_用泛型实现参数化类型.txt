@@ -308,3 +308,37 @@
 	利用反射来访问泛型类和方法。
 3.5 泛型在c#和其他语言中的限制
 	表现力 expressiveness;
+	数组可变性————————协变性和逆变性
+	泛型，不存在可变性。为安全性着想。
+	--泛型为什么不支持协变性
+	静态类型的意义，再代码运行前，就找出错误。
+	--协变在什么时候有用
+	泛型协变  最明显例子
+		IEnumerator<T>,IEnumerable<T>;
+		它们共同描述一个值的序列。每一个值都于T兼容
+		T currentValue=iterator.Current;
+	interface 
+	IShape			Rectangle ,Circle
+	IDrawing		shapes   IEnumerable<IShape>;
+				MondrianDrawing   reactangles List<rectangles>
+				SeuratDrawing	circles  List<Circles>
+	Mond,Seurat,都要实现IDrawing,都有shapes字段。
+	然而，shapes类型为 IEnumerable<IShape>，变成只读属性
+	IEnumerable<IShape> Shapes{get;}
+	在Mond,Seurat,中，维护强类型。
+
+	将IDrawing变成泛型。IDrawing<T>,实现的时候，IDrawing<Circle>,IDrawing<Rectagnle>
+	--逆变性 在什么地方有用
+
+	协变  ，SomeType<Circle> ————>  SomeType<IShape>
+	逆变  ，SomeType<IShape> ————>  SomeType<Circle>
+    --缺乏操作符约束 或者 “数值” 约束
+	c# 除了简单的算术运算，其他的运算，都要显式的使用Math类。
+
+
+
+
+
+
+
+

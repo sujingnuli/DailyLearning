@@ -1,0 +1,83 @@
+可空性： nullity
+4.1 没有值时怎么办
+4.2 System.Nullable<T> 和System.Nullable
+4.3 c#2 为可空类型提供的语法糖
+
+4.1 没有值时怎么办
+	Nullable<int>,
+	Nullable<T>  是值类型。
+	对于Nullable<int> 变量来说。值包含两个，bool,int .而不是其他对	象的引用。
+	Nullable<int>,hasValue,value;
+
+	Nullable<T>,有两个构造函数。
+		GetValueOrDefault();
+		覆盖了：GetHashCode,ToString(),Equals方法。
+
+     --Nullable<T> 装箱和拆箱
+	是以一个结构，是一个值类型。
+4.2 System.Nullable<T> 和System.Nullable
+	--来自非泛型 Nullable类的支持
+	System.Nullable<T> 结构。
+	System.Nullable是一个静态类。只包含了静态方法。不能创建实例。
+
+	int? nullable=5;
+	object boxed=nullable;
+	Console.WriteLine(boxed.GetType());
+
+	int normal=(int)normal;
+	Console.WriteLine(normal);
+
+	nullable=(int?)boxed;
+	Console.WriteLine(nullable);
+
+	nullable=new int?();
+	boxed=nullable;
+	Console.WriteLine(boxed==null);
+	
+	normal=(int?)boxed;
+	Console.WriteLine(normal);
+	
+      --使用null进行赋值 和 比较。 
+	以后将常用，泛型，空类型，?,和反射，和委托
+	c#编译器允许 使用 null在 比较和赋值时 表示一个可空类型的空值
+	Nullable<T>,默认构造函数。使用熟悉的null字面量。
+	Person类，姓名，出生日期，死亡日期。死亡日期用Null值表示。
+	class Person{
+		DateTime birth;
+		DateTime? death;
+		string name;
+		public Person(string name,DateTime birth,DateTime? death){
+			this.name=name;this.birth=birth;this.death=death;
+		}
+		public TimeSpan Age(){
+			if(death==null){
+				return DateTime.Now-birth;
+			}else{
+				return death.Value-birth;
+			}
+		}
+	}
+	Person p1=new Person("Tom",new Date(1983,2,14),new DateTime(1938,3,21));
+	Person p2=new Person("Lily",new Date(1990,4,24),null);
+     --可空转换和操作符
+	可空类型，值，引用。
+	可与null进行比较。
+	非可空的值类型，支持 操作符 或者一种转换。int.long.  int？  long?
+	转换： null   到  T？
+		T     到  T？
+		T？   到  T
+	提升转换： lifted conversion.
+	int?	long?	隐式
+	int	long?	隐式
+	int?	long    显式
+
+	提升操作符。
+	对于一元和二元操作符，返回类型为可空类型。如果任何一个操作数为空，返回一个空值。
+	对于关系运算符，如果任何一个操作数为空，返回始终为false.
+	five+nullInt	int?x,int?y	null
+	nullInt==nullInt  int?x int?y	true
+	nullInt==five		int? x,int?y false
+	five<nullint	int?x int?y	false
+
+
+

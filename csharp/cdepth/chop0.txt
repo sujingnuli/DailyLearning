@@ -1,0 +1,18 @@
+委托类型
+	Func<int,int,string>
+	IComparer<T>
+
+值类型：
+	Nullable<T>  结构	值类型
+引用类型： 数组
+	
+
+泛型： 
+List<T>;
+IComparer<T>;
+Nullable<T>;
+
+
+提升操作符。
+	对于一元和二元操作符，返回类型为可空类型。如果任何一个操作数为空，返回一个空值。
+	对于关系运算符，如果任何一个操作数为空，返回始终为false.
