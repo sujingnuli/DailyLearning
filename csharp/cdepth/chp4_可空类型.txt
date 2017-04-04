@@ -2,6 +2,7 @@
 4.1 没有值时怎么办
 4.2 System.Nullable<T> 和System.Nullable
 4.3 c#2 为可空类型提供的语法糖
+4.4 可空类型的新奇用法
 
 4.1 没有值时怎么办
 	Nullable<int>,
@@ -78,6 +79,85 @@
 	nullInt==nullInt  int?x int?y	true
 	nullInt==five		int? x,int?y false
 	five<nullint	int?x int?y	false
+     --可空逻辑
+	V=I*R ,电压=电流*电阻  电路各个部分的电压
+	真值表，NAND门 ,NOR门 的差异
+	2个输入门的逻辑门  ，总共有4行。
+	x	y	x&y	x|y	x^y
+	0	0	0	0	
+	0	1	0	1
+	0	null	0	null
+	1	0	0	1
+	1	1	1	1
+	1	null	null	1
+	null	0	0	null
+	null	1	null	1
+	null	null	null	null
+	三态的逻辑类型  bool?  true/false/null
+	一个为空的bool? 代表一种可能。
+	可以将输入的每个空项想象成一个变量，加入结果依赖于该变量，结果就为null.
+	x	y	x&y	x|y
+	1	null	null	1
+	0	null	0	null
+	null	1	null	1
+	null	0	0	null
+	null	null	null	null
+     --对可空类型 使用as 操作符
+	c#2 之前	as 只能用于引用类型
+	c#2 之后	as  可用于引用类型和可空类型
+	public void PrintValueAsInt32(object o){
+		int? nullable=o as int?;
+		Console.WriteLine(nullable.HasValue?nullable.Value.ToString():"null");
+	}
 
+	PrintValueAsInt32(5);
+	PrintValueAsInt32("something");
+	避免判断，使CLR执行两次相同类型检查。
+    -- 空合并操作符
+	first??second
+	DataTime birth;
+	DateTime death;
+	public TimeSpan Age(){
+		return death??DataTime.Now-birth;
+	}
+	# c#1
+	Address contact=user.contactAddress;
+	if(contact==null){
+		contacct=user.ShipppingAddress;
+		if(contact==null){
+			contact=user.BillingAddress;
+		}
+	}
+	#  c#2
+	Address contact=user.contactAdress??user.ShippingAddress??user.BillingAddress;
+	
+	引用类型： 失败，返回Null，但是如果成功时，null是有效值。
+	Hashtable null在 Hashtable中是一个有效值。
+
+	c#1 
+	ArrayList list=hash[key];
+	if(list!=null){
+		list=new ArrayList();
+		list[key]=list;
+	}
+	list.Add(newItem);
+
+	解析一个整数  ，TryParse
+	#
+	static int? TryParse(string text){
+		int ret;
+		if(int.TryParse(text,out ret)){
+			return ret;
+		}else{
+			return null;
+		}
+	}
+	int? parsed=TryParse("Notvalid");
+	Console.WriteLine(String.Format("{0}",parsed==null?"Not valid":"parsed to "+parsed.Value));
+
+4.4 可空类型的新奇用法
+	谁都不愿意写相同的重复代码。重构能摆脱重复。
+	但是重构会遇到阻力。
+	例如 ，Equals,和 Compare
 
 
