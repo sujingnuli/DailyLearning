@@ -1,0 +1,208 @@
+c#2  委托实例，匿名方法
+c#3  lambda委托
+c#4  泛型委托
+c#5  异步委托
+
+
+
+
+5.1 向笨拙的委托语法说拜拜
+5.2 方法组转换
+5.3 协变性和逆变性
+5.4 使用匿名方法的内联委托操作
+
+### 委托
+举例一：
+delegate Stream StreamFactory();
+static MemoryStream GenerateSimpleData(){
+	...
+}
+StreamFactory factory=GenerateSimpleData();
+Stream stream=facotry();
+举例二：
+delegate void SimpleDelegate(string x);
+public void CandidateAction(string x){
+	...
+}
+Snippet x=new Snippet();
+SimpleDelegate factory=new SimpleDelegate(x.CandidateAction);
+factory("test");
+###
+5.1 向笨拙的委托语法说拜拜
+	Delegate.Combine,Delegate.Remove,以及语法糖。
+	将协变性和逆变性 用于委托。
+
+	#
+	有一个事件处理方法，用于保存当前文档。或者简单记录，方法被调用了。
+	或者其他不需要知道细节的操作。
+	c#1 中，必须为不同的事件处理程序的签名，提供不同的方法。
+	# C#1
+	生成一个简单窗体，上面有一个按钮，订阅了三个事件
+	static void LogPlainEvent(object sender,EventArgs e){
+		Console.WriteLine("LoginPlain");
+
+	}
+	static void LogKeyEvent(object sender,EventArgs e){
+		Console.WriteLine("LogKey");
+	}
+	static void LogMouseEvent(object sender,EventArgs e){
+		Console.WriteLine("LogMouse");
+	}
+	
+	Button button =new Button();
+	button.Text="Click me";
+	button.Click+=new EventHandler(LogPlainEvent);
+	button.KeyPress+=new EventHandler(LogKeyEvent);
+	button.MouseClick+=new EventHandler(LogMouseEvent);
+
+	Form from=new Form();
+	form.AutoSize=true;
+	form.Controls.Add(button);
+	Application.Run(form);
+5.2 方法组转换
+	c#1 创建一个委托实例，同时指定委托类型和要执行的操作。
+	new KeyPressEventHandler(LogKeyEvent);
+	如果是较长表达式的一部分
+	Thread t=new Thread(new ThreadStart(MyMethod));
+	以尽量简单的方式，启动一个新线程。
+	Thread t=new Thread(new ThreadStart(test));
+	c#2 支持 从方法组 到一个兼容委托的 隐式转换。
+	方法组  method group
+	button.KeyPress+=LogKeyEvent;
+	Thread t=new Thread(test);
+	方法组  LogKeyEvent,MyMethod.
+	之所以被划分为方法组 是因为由于重载，可能不止一个方法适用
+	void MyMethod();
+	void MyMethod(object sender,EventArgs e);
+	ThreadStart x=MyMethod;
+	EventHandler y=MyMethod;
+	static void SimpleInvoke(Control control,MethodInvoke invoker){
+		Control.Invoke(invoker);
+	}
+	SimpleInvoke(form,UpdateUI);
+	form.Invoke((MethodInvoker)UpdateUI);
+	MethodInvoker invoker=UpdateUI;
+	form.Invoke(invoker);
+5.3 协变性和逆变性
+	在静态类型的情况下，如果能调用一个方法，而且在能调用一个特定委托类型的
+	实例并使用
+
+	# 委托参数的逆变性
+	KeyPressEventHandler,MouseEventHandler是从EvnetHandler派生而来。
+	事件处理签名有两个 EventHandler
+	object sender,事件来源。
+	EventArgs e,与事件有关的信息。
+
+	# 委托返回类型的协变性
+	 delegate Stream StreamFactory();
+	 static MemoryStream GenerateSimpleData(){
+		byte[] buffer=new byte[16];
+		for(int i=0;i<buffer.Length;i++){
+			buffer[i]=(byte)i;
+		}
+		return new MemoryStream(buffer);
+	 }
+
+	 StreamFactory factory=GenerateSimpleData;
+	 using(Stream stream=factory()){
+		int data;
+		while((data=stream.ReadByte())!=-1){
+			Console.WriteLine(data);
+		}
+	 }
+
+	 #不兼容的风险
+	 c#2 的 灵活性，参数的逆变性，返回的协变性。会使c#1,和c#2编译有不同
+	 的结果。
+	 Delegate void SimpleDelegate(string x);
+	 public void CandidateAction(string x){
+		Console.WriteLine("Snippet.CandidateAction");
+	 }
+	 public class Derived:Snippet{
+		public void CandidateAction(object o){
+			Console.WriteLine("Derived.Snippet");
+		}
+	 }
+	 Derived x=new Derived();
+	 SimpleDelegate factory=new SimpleDelegate(x.CandidateAction);
+	 factory("test");
+5.4  使用匿名方法的内联委托操作
+	c#2 匿名委托方法
+	闭包 closure
+
+	# 从简单开始 处理一个参数
+	.net 2.0 Action<T>
+	public delegate Action<T>(T t);
+	Action<string> 反转字符串并打印
+	Action<int> 打印平方根
+	Action<IList<double>>  求平均值并打印
+
+	Action<string> printReserve=delegate(string text){
+		char[] chars=text.ToCharArray();
+		Array.Reserve(chars);
+		Console.WriteLine(new string(chars));
+	}
+	Action<int> printRoot=delegate(int num){
+		Console.WriteLine(Math.Sqrt(num));
+	}
+	Action<IList<double>> printMean=delegate(IList<double> numbers){
+		double sum=0;
+		foreach(double value in numbers){
+			sum+=value;
+		}
+		Console.WriteLine(sum/numbers.Count);
+	}
+	pintReserve("Hello World");
+	printRoot(2);
+	printMean(new double[]{1.5,2.5,3.5,4.5});
+
+	#
+	再真实的代码中，委托常作为另一个方法的参数使用，并且只有几行。
+	使用匿名方法原因就是对代码进行精简。
+	IList<int> x=new List<int>(){1,2,3,4,5};
+	x.Foreach(delegate(int n){Console.WriteLine(Math.Sqrt(n));});
+	
+	#匿名方法的返回值
+	Comparison<T>; .NET 2.0
+	用于对集合进行排序，是IComparer<T> 的委托版
+	Predicate<T>;  .NET 2.0
+	public delegate bool Predicate<T>(T t);
+	该方法常用于过滤和匹配。
+	Arrays.BinarySearch(arrs,obj);二分法查找，速度比Contains要快。
+	.net 2.0 很有有委托有返回值。
+	.net 3.5 广泛使用了返回值委托，特别是Linq时，
+
+	# 
+	采用内联的方式 排序，而不需要在类的内部，添加一个独立的方法，进行排序。
+	Comparison<T>,IComparer<T>;
+	输出 c:\根目录下的所有文件名，按照名称排序，再按照大小排序
+	public void print(string title,Comparison<FileInfo> sortOrder){
+		FileInfo[] files=new DirectoryInfo(@"c:\").GetFiles();
+		Array.Sort(files,sortOrder);
+		Console.WriteLine(title);
+		foreach(FileInfo file in files){
+			Console.WriteLine("{0} ({1} bytes)",file.Name,file.Length);
+		}
+	}
+
+	print("order by Name:",delegate(FileInfo f1,FileInfo f2)){
+		return f1.Name.CompareTo(f2.Name);
+	};
+	print("order by Name:",delegate(FileInfo f1,FileInfo f2)){
+		return f1.Length.Compare(f2.Length);
+	};
+
+	DateRow dr=dt.Rows.Add();
+	dr["xh"]=i;
+
+	#忽略委托参数
+	Button button=new Button();
+	button.Text="Click me";
+	button.Click+=delegate{Console.WriteLine("LogPlain");};
+	button.KeyPress+=delegate{Console.WriteLine("LogKey");};
+	button.MouseClick+=delegate{Console.WriteLine("LogMouse");};
+	
+	Form form=new Form();
+	form.AutoSize=true;
+	form.Controls.Add(button);
+	Application.Run(form);

@@ -1,6 +1,9 @@
 委托类型
 	Func<int,int,string>
 	IComparer<T>
+	Action<T>  .net2.0		public delegate void Action<T>(T obj);
+	Predicate<T>  .net 2.0 		public delegate bool Predicate<T>(T obj);
+	Comparison<T> .net 2.0		IComparer<T> 委托版，对集合排序。
 
 值类型：
 	Nullable<T>  结构	值类型

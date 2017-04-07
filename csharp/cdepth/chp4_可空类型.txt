@@ -159,5 +159,20 @@
 	谁都不愿意写相同的重复代码。重构能摆脱重复。
 	但是重构会遇到阻力。
 	例如 ，Equals,和 Compare
+	#
+	public static class PartialComparer{
+		public static int? Compare<T>(T first,T second){
+			return Compare(Compare<T>.Default,first,second);
+		}
+		public static int? Compare<T>(ICompare<T> compare,T first,T second){
+			int ret=compare.Compare(first,second);
+			return ret==0?new int()?:ret;
+		}
+		pulic static int? ReferenceCompare<T>(T first ,T second) where T:class{
+			return first==second?0:first==null?-1:second==null?1:new int?();
+		}
+	}
+	该比较方法，如果没有指定比较器，就用默认的。
+	比较后，对返回值的唯一处理，如果是0，换成null.
 
 
