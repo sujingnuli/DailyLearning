@@ -10,6 +10,7 @@ c#5  异步委托
 5.2 方法组转换
 5.3 协变性和逆变性
 5.4 使用匿名方法的内联委托操作
+5.5 匿名方法中的捕获变量
 
 ### 委托
 举例一：
@@ -206,3 +207,87 @@ factory("test");
 	form.AutoSize=true;
 	form.Controls.Add(button);
 	Application.Run(form);
+
+	#启动新线程
+	.net 2.0 有 4 个线程构造函数
+	public Thread(ParameterizedThreadStart start);
+	public Thread(ThreadStart start);
+	public Thread(ParameterizedThreadStart start,int maxStackSize);
+	public Thread(ThreadStart start,int maxStackSize);
+	涉及到的两个委托
+	public delegate void ThreadStart();
+	public delegate void ParameterizedThreadStart(object obj);
+
+	创建一个线程 
+	new Thread(delegate(){Console.WriteLine("t1");});
+	new Thread(delegate(object o){Console.WriteLine("t2");});
+	new Thread(delegate{Console.WriteLine("t3");});
+	1,2包含参数列表。3报错误。
+5.5 匿名方法中的捕获变量
+	# 定义闭包 和不同类型的变量
+	闭包  一个函数除了能通过提供给它的参数互交外，还能连同环境进行更大程度的互动
+	外部变量 outer vairable. 
+	捕获的外部变量 captured outer variale .匿名方法内部使用的外部变量。
+	
+	#匿名方法可以使用 定义匿名方法的方法内部的变量
+	public void EnclosingMethod(){
+		int outerVariable=5;
+		string captured="captured";
+		if(DateTime.Now.Hour==12){
+			int normalLocalVariable=DateTime.Now.Minute;
+			Console.WriteLine(normalLocalVariable);
+		}
+		MethodInvoker invoker=delegate(){
+			string anonVariable="this is t";
+			Console.WriteLine(captured+anonVariable);
+		}
+	}
+
+	# 捕获变量的行为
+	创建委托实例，并不会导致执行。
+	public void test(){
+		string cap="this is a string";
+		MethodInvoker invoker=delegate(){
+			Console.WriteLine(cap);
+			cap="cap is changed by x";
+		}
+		cap="before x is invoke";
+		x();
+		Console.WriteLine(cap);
+		cap="before x is second invoke";
+		Console.WriteLine(cap);
+	}
+	#捕获变量到底有什么用处
+	捕获变量 能避免 创建一些类 来存储一个委托需要处理的信息。
+	捕获变量 的 lifetime.
+	
+	#找到低于年龄Limit的值
+	List<Person> FindYoungerPeople(List<Person> p ,int limit){
+		return p.FindAll(delegate(Person p){
+			return p.Age<limit;
+		});
+	}
+	
+	#捕获变量的延长生存期
+	变量存在堆上，在实例内部。其他委托可以引用
+	public MethodInvoker CreteDelegateInstance(){
+		counter=5;
+		MethodInvoker t=delegate{
+			Console.WriteLine(counter);
+			counter++;
+		}
+		t();
+		return t;
+	}
+	MethodInvoker tt=CreateDelegateInstance();
+	tt();
+	tt();
+
+	#局部变量实例化
+	#共享和非共享变量的混合使用
+
+	使用捕获变量时，要很小心，容易产生异常复杂的代码。
+	#在使用foreach,for声明变量时，考虑变量生命周期。
+
+
+

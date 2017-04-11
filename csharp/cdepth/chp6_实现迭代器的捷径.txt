@@ -1,0 +1,211 @@
+6.1 手写迭代器的痛苦
+6.2 c#2 利用yield 语句 简化迭代器
+6.3 真实的迭代器示例
+6.4 使用CCR实现伪同步代码
+
+6.1 手写迭代器的痛苦
+	行为模式—— 简化对象之间通信的设计模式。
+	迭代器模式—— 行为模式的一种范例 。LINQ 核心模式之一。
+
+	在.net 中，迭代器模式 是通过 IEnumerator和IEnumerable接口以及泛型等价物来封装的。
+
+	迭代器只能在序列中向前移动，并且一个序列可能存在多个迭代器操作。
+
+	c#1 利用foreach，实现了访问迭代器的内置支持。
+
+	集合可以设置逻辑起点。
+	迭代器模式： 不是一次返回所有数据。调用代码一次只获取一个元素。
+	c#嵌套类型可以访问外层类的私有成员。
+
+	object[] values={"a","b","c","d","e"};
+	IterationSample collection=new IterationSample(values,3);
+	foreach(object value in values){
+		Console.WriteLine(value);
+	}
+
+	public class IterationSample:IEnumeration{
+		object[] values;
+		int startingPoint ;
+		public IterationSample(object values,int startingPoint){
+			this.values=values;
+			this.startingPoint=startingPoint;
+		}
+		public IEnumerator GetEnumerator(){
+			return new IterationSampleEnumerator(this);
+		}
+	}
+	public class IterationSampleEnumerator:IEnumerator{
+		IterationSample parent;
+		int position;
+		public IterationSampleEnumerator(IterationSample parent){
+			this.parent=parent;
+		}
+		public bool MoveNext(){//position=-1，不能++,不可能的
+			if(position!=parent.values.length){
+				position++;
+			}
+			return position<parent.values.length;
+		}
+		public object Current{
+			get{
+				if(position==-1||position=parent.values.length){
+					throw new InvalidOperationException();
+				}
+				int index=position+parent.startingPoint;
+				index=index%parent.values.length;
+				return parent.values[index];
+			}
+		}
+		public void Reset(){
+			position=-1;
+		}
+	}
+6.2 c#2: 利用yield 语句 简化迭代器
+	
+	# 迭代器块 和 yield return 简介
+
+	public IEnumerator GetEnumerator(){
+		for(int i=0;i<values.Length;i++){
+		yield return values[(index+startingPoint)%values.Length]
+		}
+	}
+
+	#观察迭代器的工作流程
+	序列图的方式，有助于充分了解迭代器是如何工作的。
+	IEnumerable<int> iterable=CreateEnumerable();
+	IEnumerator<int> iterator=iterable.GetEnumerator();
+	Console.WriteLine("{0}starting to iterator... ",Padding);
+	while(true){
+		Console.WriteLine("starting calling MoveNext...");
+		bool result=iterator.MoveNext();
+		Console.WriteLine("...MoveNext result={0}",result);
+		if(!result){
+			break;
+		}
+		Console.WriteLine("...Feching Current");
+		Console.WriteLine("...Current result={0}",iterator.Current);
+	}
+	static readonly string Padding=new string(" ",30);
+	public IEnumerable<int> CreateIEnumerable(){
+		Console.WriteLine("...creating Enumerable");
+		for(int i=0;i<3;i++){
+			Console.WriteLine("{0}About yield",Padding);
+			yield return i;
+			Console.WriteLine("{0}After yield",Padding);
+		}
+		Console.WriteLine("{0} yield final value",Padding);
+		yield return -1;
+		Console.WriteLine("{0}End of CreateEnumerable()",Padding);
+	}
+	#moveNext 之前，createEnumerable了里面的代码不会执行
+	yield return ,返回后，代码不在执行，下次MoveNext()的时候，继续执行。
+	代码的结束，是MoveNext=false;结束。
+	yield return 返回迭代器。
+	终止迭代器 的其他方式。finally代码块 如何在迭代器中执行。
+
+	#进一步了解迭代器执行流程
+	常规方法：return : 给调用者返回值，终止方法执行。退出时执行finally代码块
+	yield	  return : 临时退出方法，，下次调用MoveNext继续执行。
+
+	# yield break 语句 结束迭代器执行
+
+	计数到100次的过程中，如果超过时限就退出运行。
+	public IEnumerable<int> CountWithLimit(int limit){
+		for(int i=0;i<100;i++){
+			if(DateTime.Now>=limit){
+				yield break;
+			}
+			yield return i;
+		}
+	}
+	DateTime stop=DateTime.Now.AddSecond(2);
+	IEnumerable<int> ienumerable= iteraCountWithLimit(stop);
+	foreach(int i in ienumerbale){
+		Console.WriteLine("Received {0}",i);
+		Thread.Sleep(300);
+	}
+
+	#finally 代码块的执行
+	finally 在迭代器中， 常用于释放资源。通常于using 配合使用。
+	在 yield break时 ，代码可以执行。
+6.3 真实的迭代器示例
+	#迭代时刻表中的日期
+
+	#没有迭代器
+	for(DateTime day=dataTable.StartDate;day<=dataTable.EndDate;day=day.AddDays(1));
+
+	#增加了迭代器
+	public class dataTable{
+		DateTime StartDate;
+		DateTime EndDate;
+		public IEnumerable<DateTime> DateRange{
+			get{
+				for(DateTime day=StartDate;day<=EndDate;day=day.AddDays(1)){
+					yield return day;
+				}
+			}
+		}
+	}
+
+	foreach(DateTime day in dataTable:RangeDate);
+
+	#迭代在文件中的行
+	.net 4 reader.ReadLines();
+	c#的生命周期管理比较简单： using 语句
+	using(TextReader reader=File.OpenText(filename)){
+		string line;
+		while((line=reader.ReadLine())!=null){
+			Console.WriteLine(line);
+		}
+	}
+
+	#使用迭代器读文本文件
+	public IEnumerable<string> ReadLines(string filename){
+		using(TextReader reader=File.OpenText(filename)){
+			string line;
+			while((line=reader.ReadLine())!=null){
+				yield return line;
+			}
+		}
+	}
+	foreach(string line in ReadLines(filename)){
+		Console.WriteLine(line);
+	}
+	using(TextReader reader=File.OpenText(filename)){};
+	using 语句扮演了try/finally的角色。在语句执行完或者foreach.Dispose的时候，会调用。
+	c#2 四大喜
+	
+	# 使用迭代器块和谓词对项进行延迟过滤
+	Linq 的核心特性之一： where .过滤，延迟执行的查询。并与任意IEnumerable<T>一起使用。
+	由委托和迭代器的延迟语义所决定的。所有的检查要放在迭代器的外面。
+	在普通方法中，检查参数，然后调用使用迭代器块实现的方法。在得到请求时，延迟处理数据。
+	
+	#
+	public static IEnumerable<T> Where<T>(IEnumerable<T> source,Predicate<T> predicate){
+		if(source==null||predicate==null){
+			throw new ArgumentNullException();
+		}
+		return WhereImpl(source,predicate);
+	}
+	public static IEnumerable<T> WhereImpl<T>(IEnumerable<T> source,Predicate<T> predicate){
+		foreach(T item in source){
+			if(predicate(item)){
+				yield return item;
+			}
+		}
+	}
+	IEnumerable<string> source=ReadLines(filename);
+	Predicate<string> predicate=delegate(string line){
+		return line.StartWith("using");
+	};
+	foreach(string line in Where(source,predicate)){
+		Console.WriteLine(line);
+	}
+6.4 使用CCR 实现伪同步代码
+	CCR Concurrency and Coordination Runtime 并发和协调运行时。微软开发的一个函数库
+	# 假设 一个处理很多请求的服务器
+		调用Web服务来获取身份令牌
+		使用这个令牌，从两个独立的数据源中获取数据
+		然后处理数据
+		返回结果
+	  通常会考虑简单的同步路由，或者管用的异步方法。

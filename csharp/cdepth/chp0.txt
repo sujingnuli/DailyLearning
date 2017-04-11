@@ -1,9 +1,11 @@
 委托类型
-	Func<int,int,string>
+	Func<int,int,string>		public delegate TResult Func<TResult>();
 	IComparer<T>
-	Action<T>  .net2.0		public delegate void Action<T>(T obj);
-	Predicate<T>  .net 2.0 		public delegate bool Predicate<T>(T obj);
+	Action<T>  .net2.0		public delegate void Action<T>(T obj);	--字符串反转，求平均值。List<T>.ForEach(Action<T> t);就用到该委托
+	Predicate<T>  .net 2.0 		public delegate bool Predicate<T>(T obj); --判断奇偶等，返回集合，求低于年龄值，List<T>.FindAll(Predicate<T> p);
 	Comparison<T> .net 2.0		IComparer<T> 委托版，对集合排序。
+	ThreadStart			public delegate void ThreadStart();
+	ParameterizedThreadStart 	public delegate void ParameterizedThreadStart(object o);
 
 值类型：
 	Nullable<T>  结构	值类型
@@ -27,3 +29,13 @@ Nullable<T>;
 	null	1	null	1
 	null	0	0	null
 	null	null	null	null	
+
+#  线程
+构造函数
+public Thread(ThreadStart start);
+pubiic Thread(ParameterizedThreadStart start);
+public Thread(ThreadStart start,int maxStackSize);
+public Thread(ParameterizedThreadStart start,int maxStackSize);
+委托
+public delegate void ThreadStart();
+public delegate void ParameterizedThreadStart(object o);
