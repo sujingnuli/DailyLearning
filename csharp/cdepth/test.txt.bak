@@ -1,13 +1,6 @@
 using System;
-partial class Example<TFirst,TSecond>:IEquatable<string> where Trist:class{
-	public void Equals(string other){
-		return false;
-	}
-}
+using System.Runtime.InteropServices;
 
-using System;
-partial class Example<TFrist,TSecond> :EventArgs,IDisposable{
-	public void Dispose(){
-		
-	}
+struct COORD{
+	public short X,Y;
 }

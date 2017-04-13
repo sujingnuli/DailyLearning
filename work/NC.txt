@@ -48,6 +48,39 @@ nc的测试地址：
 
 供货商有重复的。
 
+解决供货商的问题。
+然后还有合价，要和挂往来账对比。
+
+看看，是否有辅助核算和其他对账，然后找。
+
+
+日报-苏淑珍
+a.邗建系统 项目进度管理-编制计划|在系统中提供微软Project下载。	100%
+b.邗建系统 财务系统-往来分析|根据项目类别填充搜索项目下拉框。	100%
+c.沈阳系统 财务辅助|增加供货商辅助等判断。			20%
+
+迭代器怎么用的，。
+
+columns:
+
+"ghsmc", "lb", "kmmcJ", "fzhsJ","lbSJ", "kmmcSJ","fzhsSJ", "lbc", "kmmcC", "fzhsC","lbf", "kmmcF","fzhsF", "hj", "hshj", "sj", "fzhs" };
+
+
+"ghsmc", "kmbhJ", "kmmcJ", "fzhsJ","kmbhSJ", "kmmcSJ","fzhsSJ", "kmbhC", "kmmcC", "fzhsC","kmbhF", "kmmcF","fzhsF", "hj", "hshj", "sj", "fzhs" };
+
+
+entrys;
+ghsmc","cllb","clmc","next_tax","hj","kmbhJ","kmmcJ","kmbhSJ","kmmcSJ","kmbhC",
+                    "kmmcC","kmbhF","kmmcF","hshj","fzhsJ","fzhsC","fzhsSJ","fzhsF","fzhs","sj"
+
+
+[项目辅助核算][部门档案]
+[部门档案]
+[地区分类][客商辅助核算]
+[现金流量项目]
+
+
+无论有什么，核算，只要你添加，我就会自动检测。
 
 
 

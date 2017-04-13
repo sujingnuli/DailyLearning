@@ -1,4 +1,9 @@
 7.1 分部类型
+7.2 静态类型
+7.3 独立的取值方法/赋值方法 属性访问器
+7.4 命名控件别名
+7.5 pragma 指令
+7.6 非安全代码中固定大小的缓冲区
 
 
 7.1 分部类型
@@ -19,3 +24,97 @@
 	#
 	工具类：直接从Object派生，静态的，没有状态，除非是涉及高速缓存或者单例。
 	不能存在任何的构造函数
+	# 静态类
+	public static 
+7.3 独立的取值方法，赋值方法，属性访问器
+7.4 命名控件别名
+	Button c# 2.0 Framework 
+	System.Windows.Form.Button;
+	System.Web.UI.WebControls.Button;
+
+	# 
+	c#1 的 using指令用于两种情况
+	第一：为命名空间和类型创建一个别名。
+		using Out=System.Control;
+	第二：引入命名空间 到，当编译器查找一个类的时候，可以搜索到的上下文列表中。
+
+	c#2 存在的三种别名种类
+		第一：c#1 的命名空间别名
+		第二：全局命名空间别名
+		第三：外部别名
+	
+	# 限定的命名空间别名
+	using System;
+	using WinForms=System.Windows.Forms;
+	using WebForms=System.Web.UI.WebControls;
+
+	class Test{
+		static void main(){
+			Console.WriteLine(typeof(WinForms.Button));
+			Console.WriteLine(typeof(WebForms.Button));
+		}
+	}
+	缺点： 如果要引入人为的命名空间 ，WebForms或者WinForms.怎么区分
+	哪个是别名，哪个是引入的命名空间？
+
+	c#2 引入了 "::" 命名空间 别名修饰符。
+	using System;
+	using WinForms=System.Windows.Forms;
+	using WebForms=System.Web.UI.Controls;
+
+	class WinForms{}
+	class Test{
+		static void main(){
+			Console.WriteLine(typeof(WinForms::Button));
+			Console.WriteLine(typeof(WebForms::Button));
+		}
+	}
+
+	# 全局命名空间别名
+	问题： 一个类 ，Configuration;
+		命名空间一： MyCompany;
+		命名空间二： 未指定命名空间。
+	引用哪个Configuration?
+
+	c#2 引入了 global::Configuration;
+	using System;
+	class Configuration{}
+	namespace chp7{
+		class Configuration{};
+		class Test{
+			static void main(){
+				Console.WriteLine(typeof(Configuration));
+				Console.WriteLine(typeof(global::Configuration));
+				Console.WriteLine(typeof(global::chp7.Test));
+			}
+		}
+	}
+	
+	#外部命名
+	c#2 ，使用外部别名 来指定额外信息。
+	一个外部别名可以涵盖多个程序集。多个外部别名都可以指向同一个程序集
+	extern  alias FirstAlias;
+	extern alias SecondAlias;
+
+	using System;
+	using FD=firstAlias::Demo;
+
+	class Test{
+		static void main(){
+			Console.WriteLine(FD.Example);
+			Console.WriteLine(SecondAlias::Demo.Example);
+		}
+	}
+
+7.5 pragma 指令
+	由 #pragma 开头的代码行，所表示的预处理指令。
+	c# 编译器 理解两种pragma 指令：
+		警告 warning;
+		校验和 checksum.
+7.6 非安全代码中固定大小的缓冲区
+	只能在非安全环境中使用固定大小的缓冲区成员。
+	外围的结构只能在非安全环境中声明。
+	fixed byte data[20];
+	同时，固定大小的缓冲区，之应用于基元 primitive 类型。但是无法作为类成员使用。
+	
+	# 显示可用颜色。使用函数GetConsoleScreenBufferEx,

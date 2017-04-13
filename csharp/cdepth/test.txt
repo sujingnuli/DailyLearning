@@ -1,1 +1,19 @@
-c#1 工具类的例子
+using System;
+using System.Runtime.InteropServices;
+
+struct COORD{
+	public short X,Y;
+}
+struct SAMLL_RECT{
+	public short Left,Top,Right,Bottom;
+}
+unsafe struct CONSOLE_SCREEN_BUFFER_INFOEX{
+	public int StructureSize;
+	public COORD ConsoleSize,CursorPosition;
+	public short Attributes;
+	public SAMLL_RECT DisplayWindow;
+	public COORD MaximumWindowSize;
+	public short PopupAttributes;
+	public int FullScreenSupported;
+	public fixed int ColorTable[16];
+}
