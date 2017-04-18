@@ -6,6 +6,24 @@
 	Comparison<T> .net 2.0		IComparer<T> 委托版，对集合排序。
 	ThreadStart			public delegate void ThreadStart();
 	ParameterizedThreadStart 	public delegate void ParameterizedThreadStart(object o);
+	Converter<TInput,TOutput>	public delegate TOutput Converter<TInput>(T Tinput);
+委托应用： 
+	List<T>.FindAll(Predicate<T> predicate);
+	List<T>.ForEach(Action<T> action);
+	List<T>.Sort(Comparison<T> comparison);
+	List<T>.ConvertAll(Func<T t,TResult t> func);
+
+
+	List<T>.ForEach(delegate(string x){...});
+	List<T>.ForEach(delegate(string x){...;return x});converter<>
+	List<T>.ConvertAll(delegate(Person p){ return new {p.Name,IsAdult=(p.Age>18)};});
+	List<T>.FindAll(delegate(Person p){ return p.Age>18});
+
+	有输入参数，有返回餐宿
+	TResult Func<T1,TResult>(T1 arg1);
+	有输入参数，无输出参数
+	void Action<T1,T2,T3>(T1 arg1,T2 arg2,T3 arg3);
+	
 
 值类型：
 	Nullable<T>  结构	值类型
@@ -39,3 +57,4 @@ public Thread(ParameterizedThreadStart start,int maxStackSize);
 委托
 public delegate void ThreadStart();
 public delegate void ParameterizedThreadStart(object o);
+

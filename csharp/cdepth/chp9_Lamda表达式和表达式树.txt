@@ -1,0 +1,222 @@
+9.1 做为委托的Lambda表达式
+9.2 使用List<T> 和事件的 简单例子
+9.3 表达式树
+9.4 类型推断和重载决策的改变
+9.5 类型推断和重载决策
+
+
+9.1 做为委托的Lambda表达式
+	c#2 简化了委托的使用   隐式转换，匿名方法，返回类型，参数逆变性
+	Linq  基本功能： 创建操作管道。以及这些操作需要的任何状态。过滤，排序，链接不同数据源
+	linq 在进程内执行时，通常用委托来表示。
+	Linq to Object 时，通常一个语句，几个委托。
+	执行委托，是Linq的一个功能之一。
+	Lambda表达式： 用符合习惯的方式来表示Linq数据管线中的操作。
+
+        # 作为委托的Lambda表达式
+	Lambda 表达式 本身并非 委托类型。但是可以通过多种方式隐式或显示转换未委托实例。
+	# Func<...> 委托类型简介
+	.net 3.5 的 System命名空间中。有5个 Func泛型委托
+	c# 1 委托一版用于事件，很少返回东西
+	Linq 被视为数据管道的一部分，接收输入并返回结果。或者判断某项是否符合条件
+
+	Func<string,int> returnlength=(string text)=>text.length;
+	Console.WriteLine(returnlength("Hello World"));
+9.2 使用List<T> 和事件的简单例子
+	List<T>.ForEach(Action<T> action);
+	List<T>.FindAll(Predicate<T> predicate);
+	List<T>.ConvertAll();
+	List<T>.Sort(Comparison<T> comparison);
+	首先 ，将使用自动实现的属性，隐式类型的局部变量，集合初始化。
+	然后调用委托，作为参数。
+	# 列表的过滤，排序，操作
+	List<T>.FindAll(Predicate<T> predicate);
+	public delegate bool Predicate<T>(T t);
+
+	# 多部电影的名称 和发行年份，作为示例数据。
+	程序先打印原始列表，然后创建并打印只包含老电影的过滤列表。
+	最后按照电影名称排序，并打印原始列表。
+	class Film{
+		public string Name{get;set;}
+		public int Year{get;set;}
+	}
+
+	List<Film> films=new List<Film>{
+		new Film{Name="Jaws",Year=1975},
+		new Film{Name="Singing in the Rain",Year=1952},
+		new Film{Name="Some like it Hot",Year=1959},
+		new Film{Name="The wizard of oz",Year=1939},
+		new Film{Name="It's wonderful Life",Year=1946},
+		new Film{Name="American Beauty",Year=1999}
+	};
+	Action<Film> print=film=>Console.WriteLine("Name={0},Year={1}",film.Name,film.Year);
+	films.ForEach(print);
+	films.findAll(film=>film.Year<1960).ForEach(print);
+	films.Sort((f1,f2)=>f1.Name.CompareTo(f2.Name));
+	films.ForEach(print);
+
+	# 再事件处理程序中进行记录
+
+	假如，记录事件的本质，又想记录 发送者和实参的相关信息。
+	Lambda表达式，允许我们以简洁的方式解决这个问题
+	public static void Log(string title,Object sender,EventArgs e){
+		Console.WriteLine("Event:{0}",title);
+		Console.WriteLine("sender:{0}",sender);
+		Console.WriteLine("EventArgs {0}",e.GetType());
+		foreach(PropertyDescriptor prop in TypeDecriptor.GetProperties(e)){
+			string name=prop.DisplayName;
+			object value=prop.GetValue(e);
+			Console.WriteLine("    {0}={1}",name,value);
+		}
+	}
+
+	Button button=new Button{Text="Click me"};
+	button.Click+=(src,e)=>Log("Click",src,e);
+	button.KeyPress+=(src,e)=>Log("KeyPress",src,e);
+	button.MouseClick+=(src,e)=>Log("MouseClick",src,e);
+
+	Form form=new Form{AutoSize=true,Controls={button}} ;
+	Application.Run(form);
+
+
+	# 表达式树
+
+	表达式树   对象构成的书。树中的每一个节点本身都是一个表达式
+	不同的表达式类型，在代码中执行不同的操作，二元操作，一元操作，方法调用，构造函数调用
+
+	System.Linq.Expression  包含了代表表达式的各个类，均继承自Expression。
+	一个抽象的主要包含一些静态工厂方法的类。
+	Expression 包含两个属性
+		Type	表达式求值后的.net 类型。返回类型。
+		NodeType 返回表达式的种类，是 ExpressionType枚举的成员。包括
+			LessThan,Mutiply,Invoke等。 例，MemberAccress;
+	Expression 有多个派生类
+		BinaryExpression   代表了两个操作数的任意操作。 算术，逻辑，比较，数组索引。
+					NodeType,
+	# 创建一个简单的表达式树，让两个整数常量相加。
+		叶表达式，是最先创建的 。
+		自下而上 构建表达
+				add
+			BinaryExpression
+			NodeType=Add;
+			Type=System.Int32;
+
+
+		 firstArg			SecondArg
+		 ConstantExpression	   ConstantExpression
+		 NodeType=Constant	   NodeType=Constant;
+		 Type=System.Int32         Type=System.Int32;
+		 Value=2;		    Value=3;
+	
+	Expression firstArg=Expression.Constant(2);
+	Expression secondArg=Expression.Constant(2);
+	Expression add=Expression.Add(firstArg,secondArg);
+	Console.WriteLine(add);  
+	//ConstantExpression,NodeType=Constant,Type=System.Int32,Value=2;
+	//ConstantExpression,NodeType=Constant,Type=System.Int32,Value=3;
+	
+	LambdaExpression 是 Expression 派生的类型之一。
+	泛型类 Expression<TDelegate>  是从LambdaExpression 派生的。
+
+	Expresion
+		其他类型
+		BinaryExpression
+		LambdaExpression
+			Expression<TDelegate>
+	
+	Expression<TDelegate>，标识了 是什么种类的行为。确定了返回类型和参数。
+
+	LambdaExpression 有一个 Complie方法，可以返回一个恰当的委托类型
+	Expression<TDelegate> 也有一个Complie方法，可以返回TDelegate类型的委托
+
+	Expression firstArg=Expression.Constant(2);
+	Expression secondArg=Exression.Constant(3);
+	Expression add=Expression.Add(firstArg,secondArg);
+
+	Func<int> complie=Expression.Lambda<Func<int>>(add.Complie());
+	Console.WriteLine(complie());
+
+	将c# lambda表达式转换成表达式树
+	Lambda表达式 能够显式 或者 隐式的 转换成委托实例
+	还可以要求 编译器 通过 Lambda 表达式 构建一个 表达式树
+	在执行的时候 创建一个 Expression<TDelegate> 的一个实例
+	Expression<Func<int>> return5=()=>5;
+	Func<int> complied=return5.Complie();
+	Console.WriteLine(complied());
+9.3 表达式树
+	# 位于Linq 核心的表达式树
+	在与扩展方法组合使用的时候，Lambda表达式的效率尤其高。
+	Lambda表达式 + 表达式树 + 扩展方法
+	Lambda表达式 提供了 编译时检查的能力。
+	表达式树 可以将执行模型 从你所选的逻辑中提取出来。
+
+	转换的两种情况：
+		第一：在目标平台执行所有逻辑
+		第二：利用表达式树 在本地执行表达式一部分，在别的地方执行另一部分。
+
+	表达式树 是为Linq 引入的.net中。但是有偶别的用处。
+		优化动态语言运行时
+		放心重构
+		更简单的反射
+9.4 类型推断和重载决策的改变
+
+	delegate T MyFunc<T>();
+
+	static void WriteResult<T>(MyFunc<T> function){
+		Console.WriteLine(function);
+	}
+
+	WriteResult<int>(delegate(){return 5;});
+	WriteResult((MyFunc<int>)delegate{return 5;});	 
+	我们希望编译器能像非委托类型所做的那样，执行相同的类型推断。
+	delegate T MyFunc<T>();
+	static void WriteResult<T>(MyFunc<T> function){
+		Console.WriteLine(function);
+	}
+	WriteResult(delegate{
+		if(DateTime.Now.Hour<12){
+			return 10;
+		}else{
+			return new object();
+		}
+	});
+
+	# 分两个阶段进行的类型推断
+	固定类型变量 fixed
+		编译器能够确定其值的变量
+	非固定类型变量 unfixed
+
+	限制 一条与类型变量有关的信息
+
+	类型推断：
+	c#2 每个方法实参 被单独用于确定一些类型参数
+	c#3 类型推断分两步
+		第一：处理普通的实参
+		第二：推断隐式类型的Lambda表达式和方法组的类型
+	 推断过程： 
+	 static void PrintConvertedValue<TInput,TOutput>
+	 (TInput input,Converter<TInput,TOutput> converter){
+		
+	 }
+	
+	 #选择正确的 被重载的方法
+	 如果 方法名字相同 ，参数不同，就发生重载
+	 void write(int x);
+	 void write(double y);
+	 write(1.5);double
+	 write(1);  int->int,int->double
+	 更好的转换： 从任何类型 转换成 本身，好于 转换成一个不同的类型。
+	 void write(int x,double y);
+	 void write(double x,int y);
+	 write(1,1);
+	 推断的返回类型，在更好的转换规则中使用
+	 在执行了对实参的转换之后，如果发现两个方法都何时。就对那些实参进行转换检查。看哪个转换的更好。
+	 static void Execute(Func<int> action){
+		Console.WriteLine("return a int:{0}",action());
+	 }
+	 static void Exeucte(Func<double> action){
+		Console.WriteLine("return a double:{0}",action());
+	 }
+	 Execute(()=>1);
+9.5 类型推断和重载决策
+	

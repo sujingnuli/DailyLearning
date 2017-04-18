@@ -5,6 +5,8 @@ c#语言的改变	库的改变	CLR的改变
 8.1 自动实现的属性
 8.2 隐式类型的局部变量
 8.3 简单的初始化
+8.4 隐式类型的数组
+8.5 匿名类型
 
 8.1 自动实现的属性
 	普通属性：可读/可写 将值存在一个非常只管的私有变量中，不做任何校验，也没有自定义代码。
@@ -58,8 +60,98 @@ c#语言的改变	库的改变	CLR的改变
 		Home={Country="UK",City="Reading"}
 	}
 
+	c# 3 集合初始化程序  collection initializer.
+	
+	c#2 集合初始化： 第一： 传一个现有的集合
+			 第二： 创建一个空的列表，重复调用Add
 
+	List<string> names=new List<string>{
+		"Jon","Tom","Rain"
+	}
+	ICollection;
+	实现IEnumerable<T>;
+	# 初始化特性的应用
+	 常量集合
+		c# ，集合，静态，只读的，static List<Person>;public List<Person> Friends{get{return this.friends;}}
 
+	 设置单元测试
+		为一个测试填充对象，object Initializer,嵌套结构的对象层次，可以通过代码
+		清晰的表现
+		class Person{
+		      public string Name{get;set;}
+		      public int Age{get;set;}
+		      Location home=new Location();
+		      public Location Home{get{return home;}}
+		      List<Person> friends=new List<Person>();
+		      public List<Person> Friends{get{return friends;}}
+		      public Person(){}
+		      public Person(string name){this.Name=name;}
+		}		
+		class Location{
+			public string Country{get;set;}
+			public string City{get;set;}
+		}
+		Person tom=new Person{
+			Age=15,
+			Name="Alice",
+			Home={Country="UK",City="Reading"},
+			Friends={
+				new Person("Tom"),
+				new Person{Name="Ali",Age=15},
+				new Person{Name="Tom",Age=14,Home={Country="MK",City="Li"}}
+			}
+		}
+		类内嵌套的对象，最好用已经有的方式，不要放个空的在那里/
+	 Builder模式
+		单个方法，构造函数，调用指定多个值。与其使用庞大的参数列表，不如使用
+		builder模式。使用适当的属性，创建一个易变类型。然后将builder实例，传给
+		构造函数和列表。
+8.4 隐式类型的数组
+	string[] names={"Holly","Jon","Tom","Robin","William"}
+	
+	# 
+	void MyMethod(string[] names);
+	MyMethod(new string[]{"Holly","Jon","Tom"});
+	编译器，要自己判断数组类型。
+	只有表达式的类型，才会成为候选的数组类型。
+	new MemoryStream(),new StringWriter();
+	两者都是隐式转换为 object,IDisposable.
+8.5 匿名类型
+	隐式类型 var, 对象和集合初始化，object initializer,Collction initializer.
+	匿名类型 服务于 Linq
 
+        # 第一次邂逅匿名类型
+	假设没有 Person 类，而我们唯一关心的就是名字和年龄。
+	var Tom=new {Name="Tom“,Age=15};
+	var holly=new {Name="Tom",Age=12};
+	Console.WriteLine("{0} is {1} years old",holly.Name,holly.Age);
+        # 匿名类型的成员
+	匿名类型是由编译器创建，包含到最终程序集.编译器以同样的方式，处理匿名方法
+	和迭代器块所设计的类型。CLR把他们看作普通的类型。
+	var family=new {
+		new {Name="Tom",Age=15},
+		new {Name="Lily",Age=13}
+	}
+	匿名方法包含如下：
+		获取所有初始值的构造函数。公有的只读属性，属性的私有 只读字段。
+		重写，Equals,ToString().GetHashCode();
+		散列码。不易变，能在现成中共享数据。
+	# 投影初始化程序
+		将Person类的集合，转为相似的集合。
+		新集合，每个元素只有一个name.还有一个标志，是否成年人。
+		new {Name=Person.Name,IsAdult={Person.Age>=18}};
+		c# 3支持投影初始化程序
+		List<Person> family=new List<Person>{
+			new Person{Name="Holly",Age=6},
+			new Person{Name="Jon",Age=25}
+		}
+		var converted=family.ConvertAll(delegate(Person p){
+			return new {p.Name,IsAdult=(p.Age>15)};
+		});
+		foreach(var person in converted){
+			Console.WriteLine("{0} is adult?{1}",person.Name,person.IsAdult);
+		}
+	#重点何在？
+	 
 
 	

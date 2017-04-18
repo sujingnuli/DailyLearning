@@ -1,6 +1,7 @@
-using System;
-using System.Runtime.InteropServices;
-
-struct COORD{
-	public short X,Y;
+static void Execute(Func<int> action){
+	Console.WriteLine("action returns an int:"+action());
 }
+static void Execute(Func<double> action){
+	Console.WriteLine("action returns a double:"+action());
+}
+Execute(()=>1);
