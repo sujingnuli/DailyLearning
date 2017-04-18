@@ -86,6 +86,3 @@
 	 Enumerable类中，大多扩展的 IEnumerable<T>;
 	 Queryable类中，大多扩展的 IQueryable<T>;
 
-	 # 从Enumerable开始起步
-
-

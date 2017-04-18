@@ -1,7 +1,5 @@
-static void Execute(Func<int> action){
-	Console.WriteLine("action returns an int:"+action());
+public static class NullUtil{
+	public static bool IsNull(this object x){
+		return x==null;
+	}
 }
-static void Execute(Func<double> action){
-	Console.WriteLine("action returns a double:"+action());
-}
-Execute(()=>1);
