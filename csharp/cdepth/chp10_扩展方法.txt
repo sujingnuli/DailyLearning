@@ -87,5 +87,120 @@
 	 Queryable类中，大多扩展的 IQueryable<T>;
 
 	 # 从Enumerable开始起步
+	 var collection=Enumerable.Range(0,9).Reverse();
+	 foreach(var item in collection){
+		Console.WriteLine(item);
+	 }
+	 # 用Where 过滤 将方法调用链接到一起
+	 扩展方法允许静态方法调用链接到一起，这是扩展方法存在的主要原因之一
+	 var collection=Enumerable.Range(0,9).Where(x=>x%2!=0).Reverse();
 
+	 #似曾相识的Where方法
+	   public static IEnumerable<T> Where<T>(this IEnumerable<T> source,Func<T,bool> predicate){
+		if(source==null||predicate==null){
+			throw new ArgumentNullException();
+		}
+		return WhereImpl(source,predicate);
+	   }
+	   public static IEnumerable<T> Where<T>(IEnumerable<T> source,Func<T,bool> predicate){
+		foreach(T item in source){
+			if(predicate(item)){
+				yield return item;
+			}
+		}
+	   }
 
+	   foreach(string line in ReadLine.ReadLines("../../pragrame.cs").Where(
+		line=>line.StartWith("using")
+	   )){
+		Console.WriteLine(line);
+	   }
+
+	  # 用select 方法和匿名类型进行投影
+	  Enumerable中最重要的投影方法 就是 select.
+	  public static IEnumerable<TResult> Select<TSource,TResult>(this IEnumerable<TResource> souce,Func<TSource,TResult> selector);
+	  IEnumerable<TSource>-> IEnumerable<TResult>;
+	  Func<TSouce,TResult> 
+	  Select 和 List<T> 中的 ConvertAll方法很像。但是可以操作任意枚举的集合
+	  采用了延迟执行技术。只有在每个元素被请求时才会真正的执行。
+	  var source=Enumerable.Range(0,10).Where(x=>x%2!=0).Reverse().Select(x=>new {num=x,root=Math.Sqrt(x)};);
+	  foreach(var item in source ){
+		Console.WriteLine("num={0},root={1}",item.num,item.root);
+	  }
+
+	  # 用orderby 方法进行排序
+	  OrderBy,OrderByDescending,  ThenBy ,ThenByDescending
+	  var collection=Enumerable.Range(-5,11).Select(x=>new{org=x,square=x*x}).OrderBy(x=>x.square).ThenBy(x=>x.org);
+	  
+	  Enumerable.OrderBy().ThenBy(),不改变原有的集合。
+	  List<T>.Sort(),Array.Sort();改变原有的集合
+	  Linq的操作符 无副作用，不影响输入，不会改变环境。
+
+	  # 涉及链接的实际例子
+	  public class Company{
+		List<Dept> depts=new List<Depts>();
+		public List<Dept> Depts{get{return this.depts;}}
+	  }
+	  public class Dept{
+		public string Name{get;set;}
+		List<Employee> employees=new List<Employee>();
+		public List<Employee> Employees{get{return this.employees;}}
+	  }
+	  public class Employee{
+		public double salary;
+	  }
+	  public void test(){
+		Company	 company=new Company{
+				Depts={
+					new Dept{Name="dept1",Employees={
+						new Employee{salary=3000},
+						new Employee{salary=3000},
+						new Employee{salary=2000}
+					}},
+					new Dept{Name="dept2",Employee={
+						new Employee{salary=5000},
+						new Employee{salary=4000}
+					}}
+				}
+			};
+			company.Depts.Select(dept=>new{dept.Name,Cost=dept.Employees.Sum(emp=>emp.salary)}).OrderBy(dept=>dept.Cost);
+
+	  }
+
+	   
+	  # 统计分配给开发者的Bug数量
+	  bugs.GroupBy(bug=>bug.AssignedTo).Select{list=>new{Developer=list.key,Count=list.Count()}).OrderByDescending(x=>x.Count);
+	  缺陷跟踪： Defect Tracking 
+	  public class Bugs{
+		List<Bug> bugs=new List<Bug>();
+		public List<Bug> Bugz{get{return this.bugs;}}
+	  }
+	  public class Bug{
+		public string Name{get;set;}
+		public string Developer{get;set;}
+	  }
+	  public void test(){
+		Bugs bugs=new Bugs{
+		     Bugz={
+			new Bug{Name="b0",Developer="lily"},
+			new Bug{Name="b0",Developer="Hans"},
+			new Bug{Name="b0",Developer="Jane"},
+			new Bug{Name="b0",Developer="Dans"},
+			new Bug{Name="b1",Developer="lily"},
+			new Bug{Name="b1",Developer="Hans"},
+			new Bug{Name="b1",Developer="Jane"},
+			new Bug{Name="b2",Developer="lily"},
+			new Bug{Name="b2",Developer="Hans"}
+		     }
+		};
+		var cts=bugs.Bugs.GroupBy(bug=>bug.Developer).Select(
+			list=>new{Developer=list.Key,Count=list.Count()}).OrderByDescending(x=>x.Count);
+		foreach(var item in cts){
+			Console.WriteLine("bug's Developer:{0} ,bug's Count:{1}",item.Developer,item.Count);
+		}
+	  }
+10.4 使用思路和原则
+	# 扩展方法，使接口更丰富
+	扩展方的一个用途：工具类
+		另一个用途：流畅接口
+	DSL Domain Specific Language  领域特有语言

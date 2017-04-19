@@ -1,5 +1,6 @@
-public static class NullUtil{
-	public static bool IsNull(this object x){
-		return x==null;
+static class Extendsions{
+	public static Dummy<T> Where<T>(this Dummy<T> dummy,Func<T,bool> predicate){
+		Console.WriteLine("where called");
+		return dummmy;
 	}
 }

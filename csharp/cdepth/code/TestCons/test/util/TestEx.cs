@@ -12,6 +12,7 @@ namespace TestCons.test.util
         public static void test() {
             string xt = null;
             Console.WriteLine(xt.PureStr());
+            Enumerable.Range(4,5);
         }
     }
 }

@@ -19,10 +19,36 @@
 	List<T>.ConvertAll(delegate(Person p){ return new {p.Name,IsAdult=(p.Age>18)};});
 	List<T>.FindAll(delegate(Person p){ return p.Age>18});
 
+	#扩展方法  排序 OrderBy,投影 Select,过滤 Where,分组 GroupBy
+	Enumerable.Reverse();
+	Enumerable.Select();
+	Enumerable.Where();
+	Enumerable.OrderBy();	Enumerable.OrderBy,不改变原来的集合。List<T>.Sort(),Array.Sort()改变原来的集合。
+	Enumerable.ThenBy();
+	Enumerable.Sum();
+	Enumerable.GroupBy();
+	#
+	
+	#List自带方法
+	List.ForEach();
+	List.FindAll();
+	List.ConvertAll();
+	List.Sort();
+	List.Reverse();
+	#
+
 	有输入参数，有返回餐宿
 	TResult Func<T1,TResult>(T1 arg1);
 	有输入参数，无输出参数
 	void Action<T1,T2,T3>(T1 arg1,T2 arg2,T3 arg3);
+
+扩展方法： 
+	Enumerable.Where();
+		public static IEnumerable<T> Where<T>(this IEnumerable<T> source,Func<T,bool> predicate);
+	Enumerable.Select();
+		public static IEnumerable<TResult> Select<TSouce,TResult>(this IEnumerable<TSource> souce,Func<TSource,TResult> selector);
+		Enumerable.Range(0,10).Where(x=>x%2!=0).Reverse().Select(x=>{return new{num=x,root=Math.Sqrt(x)};});
+
 	
 
 值类型：

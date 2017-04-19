@@ -10,8 +10,10 @@ namespace TestCons.test
     public class tMain
     {
         public static void Main(string[] args) {
-            NullEx.test2();
+            PeopleTest p = new PeopleTest();
+            p.test();
             Console.ReadKey();
+            
         }
     }
 }
