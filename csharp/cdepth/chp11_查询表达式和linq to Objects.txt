@@ -102,3 +102,113 @@
 	 查询表达式 
 	 编译器转译的工作原理；
 		为Select和 Where提供了伪实现。使Select成为普通实例方法，Where成为扩展方法。
+
+	 # Cast, OfType,和 显示 类型的范围变量
+	 对ArrayList,Object[] 数组查询。
+	 用Cast,或者 OfType.其中 Cast 是查询表达式语法直接支持的。
+	 这两个操作符很相似： 都可以处理非类型化的序列，并返回强类型的序列。
+	 Cast 把每个元素都转换为目标元素。
+	 而OfType首先进行一个测试，以调过任何具有错误类型的元素。
+
+	 ArrayList list=new ArrayList{"First","Second","third"};
+	 IEnumerable strs=list.Cast<string>();
+	 foreach(var str in strs){
+		Console.WriteLine(str);
+	 }
+	 list=new ArrayList{1,"I am not an int",2,3};
+	 IEnumerable ints=list.OfType<int>();
+	 foreach(int item in ints){
+		Console.WriteLine(item);
+	 }
+	 两个转换都是对数据进行流处理。只有在获取数据后，才对其进行转换
+
+	 #
+	 在引入显示类型的范围变量后，编译器就调用Cast 来保证查询表达式的剩余部分使用这个类型。
+	 ArrayList list=new ArrayList{"First","Second","Third"};
+	 var strs=from string str in list
+		  select str.Substring(0,3);
+	 foreach(string str in strs){
+		Console.WriteLine(str);
+	 }
+	 # 转译后的表达式
+	 list.Cast<string>().Select(entry=>entry.Substring(0,3));
+
+	 #Linq
+	 以数据序列为基础
+	 延迟执行
+	 c#3 的查询表达式 包括把一个表达式 转换为普通 c# 代码的 预处理阶段。然后使用类型推断
+		重载，Lambda表达式 等对转换后代码编译
+	 查询表达式中声明的变量，范围变量。
+
+11.3 对序列进行过滤和排序
+	 总是返回和输入类型相同的序列。
+	 使用where 子句进行过滤。
+	 编译器把 where 表达式语句，转换为 带有 Lambda表达式的 Where方法调用。
+	 使用多个 where 子句，会导致多个链接在一起的 where 调用。
+
+	 #测试 	分配给tim 的 开口的 缺陷。
+
+	 var query=from defect in SampleData.AllDefects
+		   where defect.Status=Status.Closed
+		   where defect.AssignedTo==time
+		   select defect.Summary;
+	  foreach(var summay in query){
+		Console.WriteLine(summary);
+	  }
+	  # 转译后的代码
+	  SampleData.AllUsers.Where(defect=>defect.Status!=Status.Closed).Where(defect.AssingedTo==tim).Select(defect=>defect.Summay);
+	  这里，两个where 因为逻辑关联，放在一起，更加合理。
+
+	  # 退化的查询表达式
+	  如果 查询表达式中，select 语句什么都不做，只是返回相同的序列。则编译器会删除
+	  所有对select的调用。
+
+	  # 退化的查询表达式 
+	  var query=from defect in SampleData.AllUsers
+			select defect;
+	   转译后：
+	  var query=SampleData.AllUsers.Select(defect=>defect);
+
+	  #而如果有其他的操作，则删掉Select查询
+	  var query=from defect in SampleData.AllUsers
+		   where defect.Status!=Status.Closed
+		   where defect.AssignedTo==time
+		   select defect;
+	   转译后：
+	   var query=SampleData.AllUsers.Where(defect=>defect.Status!=Status.Closed).Where(defect=>defect.AssingedTo==tim);
+
+	   # 使用 orderby 子句进行排序
+	   orderby。要求所有数据都载入。也不能对无限序列进行排序。
+	   主排序：Orderby,OrderByDescending
+	   子排序；ThenBy, ThenByDescending;
+
+	   # tim 的开口缺陷，按照优先级排序
+	   var query=from defact in SampleData.AllUsers
+		     where defect.Status!=Status.Closed
+		     where defect.AssignedTo=time
+		     orderby defect.Severity descending,defect.LastModified
+		     select defect;
+	    foreach(var defect in query){
+		Console.WriteLine("{0}:{1} ({2:d})",defect.Severtiy,defect.Summary,defect.LastModifed)
+	    }
+
+	    # 转译后
+	     var query=SampleData.AllUser.Where(defect=>defect.Status!=Status.Closed).Where(defect=>defect.AssingedTo==tim).OrderByDescending(defect=>defect.Severity).ThenBy(defect=>defect.LastModified);
+
+
+11.4 let子句和透明标识符
+	let子句 是最 简单的 使用 透明标识符的 转换
+	var query= from user in sampleData.AllUsers
+		   let length=user.Name.Length
+		   orderby length
+		   select new{Name=user.Name,Length=length};
+	foreach(var user in query){
+		Console.WriteLine("{0}:{1}",user.Length,user.Name);
+	}
+
+	我们需要两个范围变量，但是lambda表达式 只能给 select传递一个。
+
+
+	
+
+	

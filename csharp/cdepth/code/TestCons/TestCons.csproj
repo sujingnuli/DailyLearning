@@ -51,6 +51,10 @@
     <Compile Include="test\chp10\TestW.cs" />
     <Compile Include="test\chp10\tStream.cs" />
     <Compile Include="test\chp10\WhereT.cs" />
+    <Compile Include="test\chp11\CastOfType.cs" />
+    <Compile Include="test\chp11\CastT.cs" />
+    <Compile Include="test\chp11\SampleData.cs" />
+    <Compile Include="test\chp11\TestDefect.cs" />
     <Compile Include="test\tMain.cs" />
     <Compile Include="test\util\NullUtil.cs" />
     <Compile Include="test\util\StreamUtil.cs" />
