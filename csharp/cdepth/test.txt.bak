@@ -1,0 +1,4 @@
+var query=from row in Enumerable.Range(0,Height)
+	 from column in Enumerable.Range(0,Widt)
+	 select ComputeIndex(row,column);
+return query.ToArray();

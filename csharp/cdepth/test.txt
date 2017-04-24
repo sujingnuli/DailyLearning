@@ -1,5 +1,4 @@
-透明标识符：
-	select new{Name=user.Name,Length=length};
-	select 只对单个序列起作用 。
-
-	创建一个匿名类型，包含两个变量。
+var query=from row in Enumerable.Range(0,Height)
+	 from column in Enumerable.Range(0,width)
+	 select ComputeIndex(row,column);
+return query.ToArray();

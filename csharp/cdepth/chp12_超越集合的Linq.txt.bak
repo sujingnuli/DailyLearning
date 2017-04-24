@@ -1,0 +1,236 @@
+12.1 数据库和模型
+12.2 IQueryable 和 IQueryProvider进行转换
+12.3 Linq 友好的API和 Linq to XML
+12.4 用并行Linq 代替Linq to Objects
+
+12.1 数据库和模型
+	  使用： 
+	  1.建立数据上下文
+	  using(var context=DefectModelDataContext()){...};
+	  这个数据上下文包括很多功能：创建链接，事务管理，查询转译 ，跟踪实体变化和
+	  处理一致性。
+	  数据上下文可以看成是与数据库通信的交通工会据。
+	  using(var context=DefectModeDataContext()){
+		context.Log=Console.Out;
+	  }
+	  context.Log=Console.Out,让数据库 所有执行的 sql命令都输出到控制台上。
+	  本节代码所有使用与模型相关的属性 ，Defect,User 等，都是 Table<T>类型。是查询的数据源。
+	  using(var context=DefectModelDataContext()){
+		context.Log=Console.Out;
+		User tim=context.User.Where(user=>user.Name=="Tim").Single();
+		var query=from defect in context.Defect
+			 where defect.Status！=false
+			 where defect.AssignedTo==tim.ID
+			 select defect.Summary;
+		
+
+	  }
+	  在查询表达式中，Linq to Sql 和 内存中的查询 的唯一区别就是数据源。
+	  context.Defect,sampleData.Defects,
+	  所有的工作已经在数据库上完成。
+	  context.Log=Console.Out.;
+	  由于要填充这个实体，提取了用户的所有属性。
+	  第二次查询 ，只提取了摘要 。
+	  Linq to sql 还把我们第2个查询中分开的 where 子
+	  生成的sql语句，有些时候，比较啰嗦。
+	  # 连接查询
+	  using(var context=new DefectModelDataContext()){
+		context.Log=Console.Out;
+		var query=from defect in context.Defect
+			  join subscription in context.NotificationSubscription 
+			  on defect.ProjectID equals   subscription.ProjectID
+			  select new{defect.Summary,subscription.EmailAddress};
+		foreach(var entry in query){
+			Console.WriteLine("{0}:{1}",entry.Summary,entry.EmmailAddress);
+		}
+	  }
+	  生成sql:
+	  select t0.Summary ,t1.EmailAddress from defect t0 inner join NotificationSubscription t1 on t0.ProjectID =T1.ProjectID
+	  #隐式连接，显示缺陷概要和项目名称
+	 
+12.2 IQueryable和 IQueryProvider进行转换
+	Linq to Sql 如何管理 查询表达式 到 SQL 的转换过程
+	Linq 提供器、
+	Linq to Sql 的数据源 总是 Table<T>;   无 where ,select ,Join 方法。
+	Linq to Object 实现了IEnumerable<T>,然后使用Enumerable中的扩展方法
+	Linq to Sql    实现了 IQueryable<T>,并使用Queryable 的扩展方法
+		       我们就可以看到Linq 如何构建表达式树，以及提供器如何在恰当时候执行。
+
+	# IQueryable<T> 及相关接口
+	IEnumerable
+			IEnumerable<T>
+			IQueryable
+					IQueryable<T>
+	IQueryable<T> 继承自IQueryable和IEnumerable<T>,而IQueryable继承自IEnumerble.
+	IQueryable包含三个属性：QueryProvider,ElementType,Expression.
+	QueryProvider 是 IQueryProvider类型
+
+	IQueryable ：
+		1.将它看做一个查询，将生成结果序列
+		2.从Linq的角度看，通过 IQueryable的 Expression属性返回结果。
+		3.查询的详细信息保存于表达树中
+		4.一个查询进行执行，就是开始遍历IQueryable的过程，即调用GetEnumerator方法，然后调用MoveNext();
+			或者调用IQueryProvider上的Execute方法并传递表达式树
+		
+	IQueryProvider:
+	1.完成查询
+	2.构建更大的查询
+	3.构建查询时，用到IQueryProvider的CreateQuery方法
+
+	构建新的表达式：
+	1.请求现有表达式树，Expression->构建新表达式树
+	2.请求提供器Provider->调用提供器的CreateQuery方法，传递新表达式树。
+
+	查询提供器 最艰巨的工作：解析表达式树，并将他们转换为用于目标平台工作的是当时行
+
+	Linq 执行查询之前的准备工作
+	IQueryable,和 IQueryProvider的实现
+	class FakeQuery<T>:IQueryable<T>{
+		public Expression Expression{get;private set;}
+		public IQueryProvider Provider{get;private set;}
+		public Type ElementType{get;private set;}
+
+		internal FakeQuery(IQueryProvider provider,Expression expression){
+			this.Expression=expression;
+			this.Provider=provider;
+			ElementType=typeof(T);
+		}
+		internal FakeQuery():this(new FakeQueryProvider(),null){
+			Expression=Expresson.Constant(this);
+		}
+		public IEnumerator<T> GetEnumeartor(){
+			return Enumearable.Empty<T>().GetEnumerator();
+		}
+		public IEnumerator IEnumerable.GetEnumerator(){
+			return Enumerable.Empty<T>().GetEnumerator();
+		}
+	}
+
+	class FakeQueryProvider:IQueryProvider{
+		public IQueryable<T> CreateQuery<T>(Expression expression){
+			return new FakeQuery<T>(this,expression);		
+		}
+		public IQueryable CreateQuery(Expression expression){
+			Type queryType=typeof(FakeQuery<>).MakeGenericType(Expression.Type);
+			object[] cons=new object[]{this,expression};
+			return (IQueryable)Activator.CreateInstance(queryType,cons);
+		}
+		public 	T Execute<T>(Expression expression){
+			Logger.Log(this,Expression);
+			return T;
+		}
+		public object Execute(Expression expression){
+			return null;
+		}
+	}
+
+	# 把表达式粘合在一起： Queryable的扩展方法
+	Enumerable 包含IEnuerable<T>的扩展方法 来实现Linq标准查询操作
+	Queryable  包含 IQueryable<T>的扩展方法。
+
+	IEnumerable<T>与IQueryable<T>的 实现差别
+		
+	Linq to Object 和 Linq to Sql的 差别
+
+	var query=from user in users where user.Name.StartWith("D") select user.Name;
+
+		var query=users.Where(user=>user.Name.StartWith("D")).Select(user=>user.Name);
+
+			重载决策
+				|
+				|
+				|
+				|
+				——————————>简单的IEnumerable实现
+					   选择Enumerable的扩展方法，使用委托作为参数
+					   IL 调用Enumerable.Where 和 Enumerable.Select创建委托实例
+				|
+				|
+				|
+				|
+				——————————>IQueryable的实现
+					   选择Queryable的扩展方法，使用表达式树作为参数
+					   IL 调用Queryable.Where 和 Queryable.Select 创建表达式树
+		
+	Enumerable与Queryable的另一个区别：
+		1.Enumerable是完全执行与操作符对应的实际工作。利于Enumerable.Where
+		2.Queryable 第一步：基于参数创建新查询，第二步 调用Provider查询提供器
+			意味着 是代码和提供器之间的粘合剂
+		
+       #模拟实际运行的查询提供器
+
+12.3 Linq友好的 API 和 Linq to XML
+	Linq to XML 位于 System.Xml.Linq 程序集。
+	并且大多数类型都位于 System.Xml.Linq命令控件。
+	普通的DOM API 中的XmlElement 类型在 Linq to XML 中对应的是XElement.
+	XName: 元素或者特性的名称
+	XNamespace表示XML 命名空间。
+	构造内嵌元素，可以使代码很自然的形成树形层次结构。
+
+	new XElement("root",
+		new XElement("child",
+			new XElement("grandchild","text")
+		),
+		new XElement("other_child")
+	);
+
+	<root>
+		<child>
+			<grandchild>text</grandchild>
+		</child>	
+		<other-child/>
+	</root>
+
+	#
+	var users=new XElement("users",
+		sampleData.AllUsres.Select(user=>
+			new XElement("user",
+				new XAttribute("name",user.Name),
+				new XAttribute("type",user.UserType)
+			)
+		)
+	) ;
+	Console.WriteLine(users);
+
+	#
+	var users=new XElemnet("users",
+		from user in sampleData.AllUsers
+		where user.UserType==UserType.Developer
+		select new XElement("user",user.Name)
+	);
+	Console.WriteLine(users);
+
+	# 
+	XElement root=XmlSampleData.GetElement();
+	var query=root.Element("users").Elements().Select(user=>
+		new{
+			Name=(string)user.Attribute("name"),
+			UserType=(string)user.Attribute("userType")
+		}
+	);
+	foreach(var user in query){
+		Console.WriteLine("{0}:{1}",user.Name,user.UserType);
+	}
+	
+	# 合并查询操作符
+	#查询出所有订阅
+	from project in root.Element("projects").Elements()
+	from subscription in project.Elements("subscription")
+	select subscription 
+
+	#
+	root.Element("projects").Elements().SelectMany(project=>project.Elements("subscription"));
+
+
+	#
+	root.Element("projects").Elements().Elements("subscription");
+	Linq to XML中编写XPath风格的查询
+	
+	#
+	root.Element("projects").Elements().Where(project=>(string)project.Attribute("name").Contains("Media")).Elements("subscription");
+
+	# 与Linq 和谐共处
+12.4 用并行Linq 替代Linq to Objects
+
+
+		

@@ -208,7 +208,209 @@
 
 	我们需要两个范围变量，但是lambda表达式 只能给 select传递一个。
 
+	# 转译后的句子 
+	var query=SampleData.AllUsers.Select(user=>new{user,user.Name.Length}).OrderBy(z=>z.Length).Select(z=>new{z.user.Name,z.Length});
+	let 子句转译：从一个查询表达式 到 另一个 查询表达式 。引入 * 表示 引入的 透明 标识符 
+	透明标识符 在转译的最后一步 被清除 。
 
+11.5 连接
+	数据库连接： 使用两张数据表，视图，表函数。通过匹配两者之间的数据，来创建结果。
 	
+	有三种类型连接。
+		使用join子句的内连接
+		使用join into 子句进行分组连接
+		使用from 子句进行交叉连接和合并序列
+	内连接： join子句
+		涉及到两个序列。一个 键选择器 key selector. 应用于第一个序列
+				另一个键选择器key selector ,应用于第二个序列
+		      配对规则。第一个元素的键，与第二个元素的键相同。
+	
+         subscription: 订阅
+	 Linq to Object: 左右连接 可以交换顺序  。返回结果条目相同。只是顺序不同。
+	 返回条目顺序： 
+	 左边序列	第一个元素	所有成对数据
+	 左边序列	第二个元素	所有成对数据
 
+	 左边序列	流处理		右边序列	缓冲处理
+	 如果一个大序列，一个小序列	把小序列放右边，缓冲处理。
+
+	 这种操作依然是延迟的。
+	 访问第一个数据对
+				开始执行
+						读取右边的整个序列
+						建立键到值的映射
+				迭代左边的序列
+				生成适当的数据对。
+	 两种join 操作。
+	 var query=from defect in sampleData.AllUsers
+		   where defect.Status==Status.Closed
+		   join subscription in sampleData.AllSubscriptions
+		   on defect.Project equals subscription.Project
+		   select new{defect.Summary,subscription.EmailAddress};
+	 var query=from subscription in sampleData.AllSubscriptions
+		   join defect in (
+			from defect in sampleData.AllUsers
+			where defect.Status==Status.Closed
+			select defect
+		   )
+		   on subscription.Project equals defect.Project
+		   select new{defect.Summary,subscription.EmailAddress};
+	 编译器转译后：
+		LeftSequence.Join(rightSequence,LeftKeySelector,RightKeySelector,resultSelector);
+	 用于Linq to Object的重载签名
+	 static IEnumerable<TResult> Join<TOuter,TInner,Tkey,TResult>(
+		this IEnumerable<TOuter> outer,
+		IEnumerable<TInner> inner,
+		Func<TOuter ,TKey> outerSelector,
+		Func<TInner,TKey> innerSelector,
+		Func<TOuter,TInner,TResult> resultSelector
+	 )
+	 #使用 Join...into 进行分组 连接
+	 分组连接 ：group join .
+	 var query=from defect in sampleData.AllUsers
+		   join subscription in sampleData.AllSubscriptions
+		   on defect.Project equals subscription.Project
+		   into groupedSubscriptions
+		   select new{Defect=defect,Subscriptions=groupedSubscriptions};
+	  foreach(var entry in query){
+		Console.WriteLine(entry.Defect.Summary);
+		foreach(var subscription in entry.Subscriptions){
+			Console.WriteLine("    {0}",subscription.EmailAddress);
+		}
+	  }
+	  分组链接 对右边序列进行缓冲，左边序列进行流处理。
+		from defect in sampleData.AllUsers
+		Defect:{...}
+		Defect:{...}
+		Defect:{...}
+		join subscription in sampleData.AllSubscriptions
+		on defect.Project equals subcription.Project
+		into groupedSubscriptions
+			from subscription in sampleData.AllSubscriptions;
+			NotificationSubscription 序列
+			defect=Defect:{...},groupSubscriptions={..}
+			defect=Defect {...},groupSubscriptions={...}
+
+		select new {Defect=defect,Subscriptions=groupedSubscriptions}
+			  {Defect=Defect{...},Subscriptions={...}}
+			  {Defect=Defect{...},Subscriptions={...}}
+
+		查询结果。分组链接。
+
+		# 从新统一一遍：
+		Join查询
+		var query=from defect in sampleData.AllUsers
+			  join subscription in sampleDate.AllSubscription
+			  on defect.Project equals subscription.Project
+			  select new{defect.Summary,subscription.EmailAddress};
+		#Join 的 签名：
+			static IEnumerable<TResult> Join<TOuter,TInner,TKey,TResult>(
+				this IEnumerable<TOuter> outer,
+				IEnumerable<TInner> inner,
+				Func<TOuter,TKey> outerSelector,
+				Func<TInner,TKey> innerSelector,
+				Func<TOuter,TInner,TResult> resultSelector
+			)
+		# 转译后的表达式
+			sampleDate.AllUsers.Join(sampleDate.AllSubscriptions,defect=>defect.Project,subcription=>subcription.Project,(defect,subscription)=>new{defect.Summary,subscription.EmailAddress});
+
+		GroupJoin 查询
+		var query=from date in dates
+			  join defect in sampleData.AllUsers
+			  on date equals defect.Create.Date
+			  into joined
+			  select new{Date=date,Count=joined.Count}
+		#GoupJoin的签名
+			static IEnumerable<TResult> GroupJoin<TOuter,TInner,TKey,TResult>(
+				this IEnumerable<TOuter> outer,
+				IEnumerable<TInner> inner,
+				Func<TOuter> outerSelector,
+				Func<TInner> innerSelctor,
+				Func<TOuter,IEnumerable<TInner>,TResult> resultSelector
+			)
+		# 转译后的表达式
+		var query=dates.GroupJoin(sampleData.AllUsers,date=>date,defect=>defect.Created.Date,(date,joined)=>new{Date=date,Count=joined.Count});
+
+		# 使用多个 from 子句进行交叉连接 和合并连接
+
+		# 交叉链接
+		var query=from left in Enumerable.Range(1,4)
+			  from right in Enumerable.Range(11,left)
+			  select new{Left=left,Right=right};=
 	
+		#SelectMany的签名
+			static IEnumerable<TResult> SelectMany<TResouce,TCollection,TResult>(
+				this IEnumerable<TResouce> resource,
+				Func<TResouce,IEnumearble<TCollection>> collectionSelector,
+				Func<TResouce,TCollection,TResult> resultSelector
+			)
+		#转译后的表达式
+			Enumerable.Range(1,4).SelectMany(left=>Enumerable.Range(11,left),(left,right)=>new{Left=left,Right=right});
+
+		#交叉查询 很实用：实例
+		var query=from file in Directory.GetFiles(logDir,"*.log")
+			  from line in ReadLines(file)
+			  let entry=new LogEntry(line)
+			  where entry.Type=EntryType.Error
+			  select entry;
+		
+		分组查询 group by 
+		grouping projection by grouping .
+		
+		grouping 表达式 通过键来决定序列如何分组  ，结果是一个序列。
+		序列中，每个元素本身就是一个序列，还有一个Key属性。
+		封装在IGrouping<TKey,TElement>中，扩展了IEnumerable<TElement>类型。
+
+		分组无法对结果进行流处理。会对每个元素应用键选择和投影。并缓冲被投影的
+		分组序列，尽管不是流式的，但是执行延迟，直到获取结果。
+		var query= from defect in sampleData.AllUsers
+			   where defect.AssignedTo!=null
+			   group defect by defect.AssignedTo
+		foreach(var entry in query){
+			Console.WriteLine(entry.Key);
+			foreach(var defect in entry){
+				Console.WriteLine("   ({0})  {1}",defect.Serverity,defect.Summary);
+			}
+		}
+
+		转译后的lambda表达式
+		var query=sampleData.AllUser.Where(defect=>defect.AssignedTo!=null).GroupBy(defect=>defect.AssignedTo);
+
+		var query= from defect in sampleData.AllUsers
+			   where defect.AssignedTo!=null
+			   group defect.Summary by defect.AssignedTo
+		#转译后的lambda表达式
+		var query=sampleData.AllUsers.Where(defect=>defect.AssignedTo!=null).GroupBy(defect=>defect.AssingedTo,defect=>defect.Summary);
+
+
+11.6.2 查询延续
+		查询延续：把一个查询表达式的结果 作为另一个查询表达式的 初始序列。
+		var query=from defect in sampleData.AllUsers
+			   where defect.AssignedTo!=null
+			   group defect by defect.AssignedTo into grouped
+			   select new{Assigness=grouped.Key,Count=group.Count()} into result
+			   orderby result.Count descending
+			   select result;
+		foreach(var entry in query){
+			Console.WriteLine("{0}:{1}",entry.Assinged.Name,entry.Count);
+		}
+
+		sampleData.AllUsers.Where(defect=>defect.AssignedTo!=null).GroupBy(defect=>defect.AssignedTo).Select(grouped=>new{Assigned=group.Key,Count=grouped.Count()}).OrderByDescending(result=>result.Count);
+11.7 在查询表达式和点标记之间做出选择
+		Enumerable.Where 有一个重载  sequence.Where((item,index)=index%2==0)
+		Enumerable.Select 有一个重载 sequence.Select((Item,index)=>new{Item,Index}).OrderBy(x=>x.Item.Name);
+		将父序列的一个索引作为参数传入委托 
+		许多查询操作符 支持自定义比较器。比如排序和连接 。
+		 
+		# 使用点标记可以会更简单的查询表达式
+		var adults=people.Where(person=>person.Age>=18);
+		var adults=from person in people 
+			   where person.Age>=18
+			   select person;
+		# 选择查询表达式
+		let子句-》查询表达式
+		
+
+																											     
+
+		

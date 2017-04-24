@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="test\chp10\Bugs.cs" />
     <Compile Include="test\chp10\Company.cs" />
     <Compile Include="test\chp10\IEnumRes.cs" />
@@ -53,8 +59,21 @@
     <Compile Include="test\chp10\WhereT.cs" />
     <Compile Include="test\chp11\CastOfType.cs" />
     <Compile Include="test\chp11\CastT.cs" />
+    <Compile Include="test\chp11\Person.cs" />
+    <Compile Include="test\chp11\PrintLog.cs" />
     <Compile Include="test\chp11\SampleData.cs" />
     <Compile Include="test\chp11\TestDefect.cs" />
+    <Compile Include="test\chp11\TestLts.cs" />
+    <Compile Include="test\chp12\FakeQuery.cs" />
+    <Compile Include="test\chp12\FakeQueryProvider.cs" />
+    <Compile Include="test\chp12\FXml.cs" />
+    <Compile Include="test\chp12\FXml2.cs" />
+    <Compile Include="test\chp12\SampleData.cs" />
+    <Compile Include="test\LTSClaz\DefectModel.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefectModel.dbml</DependentUpon>
+    </Compile>
     <Compile Include="test\tMain.cs" />
     <Compile Include="test\util\NullUtil.cs" />
     <Compile Include="test\util\StreamUtil.cs" />
@@ -64,9 +83,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="test\LTSClaz\DefectModel.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>DefectModel.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="test\wars\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test\LTSClaz\DefectModel.dbml.layout">
+      <DependentUpon>DefectModel.dbml</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

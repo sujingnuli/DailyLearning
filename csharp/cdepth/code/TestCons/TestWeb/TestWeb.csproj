@@ -57,8 +57,10 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="contr\css\MainStyle.css" />
     <Content Include="contr\js\jquery-1.4.4.min.js" />
     <Content Include="Gen\GenAll.html" />
+    <Content Include="html\main.aspx" />
     <Content Include="html\xm\xmtable.html" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -67,8 +69,19 @@
       <DependentUpon>GenerableBean.ashx</DependentUpon>
     </Compile>
     <Compile Include="cs\Bean\ZLDW.cs" />
+    <Compile Include="cs\control\GetAllImpl.cs" />
+    <Compile Include="cs\control\inter\IGetAll.cs" />
     <Compile Include="cs\DBcs\DBWZHelper.cs" />
+    <Compile Include="cs\HtmlUtil.cs" />
+    <Compile Include="cs\Sqlcs\SqlStr.cs" />
     <Compile Include="cs\Sqlcs\tableName.cs" />
+    <Compile Include="html\main.aspx.cs">
+      <DependentUpon>main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="html\main.aspx.designer.cs">
+      <DependentUpon>main.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
