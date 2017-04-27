@@ -35,6 +35,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -68,7 +69,11 @@
     <Compile Include="test\chp12\FakeQueryProvider.cs" />
     <Compile Include="test\chp12\FXml.cs" />
     <Compile Include="test\chp12\FXml2.cs" />
+    <Compile Include="test\chp12\Paralle\ImageOptions.cs" />
+    <Compile Include="test\chp12\Paralle\MandelBrotGenerator.cs" />
+    <Compile Include="test\chp12\Paralle\OrderedParallelRangeGenerator.cs" />
     <Compile Include="test\chp12\SampleData.cs" />
+    <Compile Include="test\chp12\TestObservable.cs" />
     <Compile Include="test\LTSClaz\DefectModel.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -103,6 +108,9 @@
     <None Include="test\LTSClaz\DefectModel.dbml.layout">
       <DependentUpon>DefectModel.dbml</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

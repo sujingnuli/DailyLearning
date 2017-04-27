@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="contr\css\MainStyle.css" />
+    <Content Include="contr\img\bg.jpg" />
     <Content Include="contr\js\jquery-1.4.4.min.js" />
+    <Content Include="ForPlan\Plans.aspx" />
     <Content Include="Gen\GenAll.html" />
     <Content Include="html\main.aspx" />
     <Content Include="html\xm\xmtable.html" />
@@ -68,13 +70,22 @@
     <Compile Include="ashx\GenerableBean.ashx.cs">
       <DependentUpon>GenerableBean.ashx</DependentUpon>
     </Compile>
+    <Compile Include="cs\Bean\PlanBean.cs" />
     <Compile Include="cs\Bean\ZLDW.cs" />
     <Compile Include="cs\control\GetAllImpl.cs" />
     <Compile Include="cs\control\inter\IGetAll.cs" />
     <Compile Include="cs\DBcs\DBWZHelper.cs" />
     <Compile Include="cs\HtmlUtil.cs" />
     <Compile Include="cs\Sqlcs\SqlStr.cs" />
+    <Compile Include="cs\Sqlcs\SqlUtils.cs" />
     <Compile Include="cs\Sqlcs\tableName.cs" />
+    <Compile Include="ForPlan\Plans.aspx.cs">
+      <DependentUpon>Plans.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ForPlan\Plans.aspx.designer.cs">
+      <DependentUpon>Plans.aspx</DependentUpon>
+    </Compile>
     <Compile Include="html\main.aspx.cs">
       <DependentUpon>main.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

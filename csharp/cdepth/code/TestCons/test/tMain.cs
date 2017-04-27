@@ -12,10 +12,12 @@ namespace TestCons.test
     public class tMain
     {
         public static void Main(string[] args) {
-            FXml2 fx = new FXml2();
-            fx.test2();
+
+            TestObservable TO = new TestObservable();
+            TO.test();
             Console.ReadKey();
             
         }
+        
     }
 }

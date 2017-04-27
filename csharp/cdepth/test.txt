@@ -1,4 +1,4 @@
-var query=from row in Enumerable.Range(0,Height)
-	 from column in Enumerable.Range(0,width)
-	 select ComputeIndex(row,column);
-return query.ToArray();
+public Message(string from ,string to ,string body, string subject=null,byte[] attachment=null){
+	...
+}
+Message message=new Message(from:"skeet@com",To:"charp",body:"I hope you a ",Subject:"A qucik message");

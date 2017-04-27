@@ -1,5 +1,5 @@
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\bin\TestWeb.dll
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\bin\TestWeb.pdb
-D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\obj\Debug\TestWeb.csprojResolveAssemblyReference.cache
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\obj\Debug\TestWeb.dll
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\obj\Debug\TestWeb.pdb
+D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\TestWeb\obj\Debug\TestWeb.csprojResolveAssemblyReference.cache

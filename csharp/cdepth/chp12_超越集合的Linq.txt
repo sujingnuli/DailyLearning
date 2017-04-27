@@ -2,6 +2,7 @@
 12.2 IQueryable 和 IQueryProvider进行转换
 12.3 Linq 友好的API和 Linq to XML
 12.4 用并行Linq 代替Linq to Objects
+12.5 使用Linq to Rx 反转查询模型
 
 12.1 数据库和模型
 	  使用： 
@@ -231,6 +232,187 @@
 
 	# 与Linq 和谐共处
 12.4 用并行Linq 替代Linq to Objects
-	s
+	ParallelEnumerable是一个静态类，都是扩展方法。与Enumerable类似。
+	ParallelQuery是一个扩展类型。
+	包含泛型和非泛型。ParallelQuery<TSource>,ParallelQuery,
+	还有一个OrderedParallelQuery<TSource>类型，是IOrderedEnumerable<T>的并行版本
 
-		
+	ParallelQuery
+		ParallelQuery<TSource>	 实现了	IEnumerable<TSource> ,可以对查询进行迭代。
+		OrderedParallelQuery<TSourde>
+	
+	如果是并行查询，ParallelEnumerable优先于Enumerable 。
+	所有的查询操作符，都有并行版本。
+
+	# 调整并行查询
+	var query=from row in Enumerable.Range(0,Height).AsParallel().AsOrdered()
+		  from col in Enumerable.Range(0,Width)
+		  select ComputeIndex(row,col);
+	return query.ToArray();
+
+	#总的程序：
+	public class OrderedParallelRangeGnerator:MandelBrotGenerator{
+		private OrderedParallelRangeGenerator(ImageOptions options):base(options){
+			
+		}
+		static void Main(){
+		var generator=new OrderedParallelRangeGenerator(ImageOptions.Default);
+		generator.Display();
+		}
+
+		protected override byte[] GeneratePixels(){
+			var query=from row in Enumerable.Range(0,Height).AsParllel().AsOrdered()
+				 from col in Enumerable.Range(0,Width)
+				 select ComputeIndex(row,col);
+			return query.ToArray();
+		}
+	}
+	public abstruct class MandelBrotGenerator{
+		private readonly ImageOptions options;
+		public ImageOptions Options{get{return options;}}
+
+		protected abstract byte[] GeneratePixels();
+
+		public MandelBrotGenrator(ImageOptions options){
+			this.options=options;
+		}
+		protected byte ComputeIndex(int row,int col){
+			double x=(col*options.SampleWidth)/Width+options.OffsetX;
+			double y=(row*options.SampleHeight)/Height+options.OffsetY;
+			double x0=x;
+			double y0=y;
+			for(int i=0;i<options.MaxInterations;i++){
+				if(x*x+y*y>=4){
+					return (byte)((i%255)+1);
+				}
+				double xtemp=x*x-y*y+x0;
+				y=2*x*y+y0;
+				x=temp;
+			}
+			return 0;
+		}
+		protected void Display(){
+			Stopwatch timer=Stopwatch.StartNew();
+			byte[] imageData=GeneratePixels();
+
+			timer.Stop();
+			Console.WriteLine("Generation took {0}ms",timer.ElapsedMilliseconds);
+			using(Image image=CreateBitmap(imageData)){
+				Form from =new Form{
+					Controls={new PictureBox{Image=image,Dock=DockStyle.Fill}},
+					FormBorderStyle=FormBorderStyle.FixedSingle,
+					ClientSize=image.Size,
+					Text="MandelBrot"
+				};
+				Application.Run(form);
+			}
+		}
+		private Image CreateBitmap(byte[] imageData){
+			unsafe{
+				fixed(byte*Intptr=imageData){
+					IntPtr scan0=new IntPtr(ptr);
+					Bitmap bitmap=new Bitmap(Width,Height,Width,PixelFormat.Format8bppIndex,scan0);
+				        ColorPalette palette=bitmap.Palette;
+					palette.Entries[0]=Color.White;
+					for(int i=0;i<256;i++){
+						palette.Entries[i]=Color.FromArgb((i*7)%256,(i*5)%256,255);
+					}
+					bitmap.Palette=palette;
+					return (image)bitmap.Clone();
+				}
+			}
+		}
+	}
+
+	# 调整并行查询
+	AsUnordered-使有序查询变得无序。如果只对查询的第一部分排序，该方法使后续部分更加高效。
+	WithCancellation-在查询中指定取消标记，取消标记的使用贯穿了整个并行扩展。使任务以安全，可控的方式取得取消。
+	WithDegreeOfParallelism-指定执行查询的最大并发任务数。
+	WithExecutionMode-强制查询按并行方式执行。即使Linq认为单线程执行的更快
+	WithMergeOptions-可以改变结果的缓冲方式，
+
+12.5 使用Linq to Rx 反转查询模型
+	
+	事件的订阅，响应，和取消订阅。
+	适用范围：响应端。
+	程序集：System.Interactive.
+		包含各种额外的Linq to Objects方法。System.Reactive实现了各种推操作
+	数据流推模型的方式。
+
+	Linq to Rx的两个基础接口
+		IObservable<T>
+		IObserver<T>
+	Linq to Rx 的数据模型与普通的IEnumerable<T> 的模型在数学上是对偶的。
+	拉集合->迭代->
+		请给我一个迭代器(GetEnumerator)
+			Repeat?还有其他项吗？
+					Y,MoveNext,Current.
+	Linq　to Rx 是反向的  ，不向迭代器发送请求，而是提供一个观察者。也不请求下一项，而是通知你idea代码是否准备好了
+	一个项，是否有错误，是否到了数据末端。
+
+	IObservable<out T> ,协变的
+	IObserver<in T>,逆变的
+
+	IEnumerable<T>:
+			call:GetEnumerator()
+		返回IEnumerator()
+			MoveNext();
+		返回True
+			Current
+		返回第一个值
+			MoveNext
+		...
+			MoveNext
+		返回false
+	IObservable<out T>:
+			Subscribe(observer)
+		返回IDisposable
+			OnNext(first value);
+			...
+			OnCompleted();
+	#
+	public interface IObserver<in T>{
+		void OnNext(T value);
+		void OnComplete();
+		void OnError(Exception error);
+	}
+	public interface IObservable<Out T>{
+		IDisposable Subscribe(IObserver<T> observer);
+	}
+	  
+	#IObservable<T>
+	var observable=Observable.Range(0,10);
+	observable.Subscribe(x=>Console.WriteLine("Receivied {0}",x),
+				y=>Console.WriteLine("Error {0}",y),
+				()=>Console.WriteLine("Finished"));
+	
+	Observable.Range(),是一个冷观察对象。处于休眠状态，直到某个观察者订阅了它。
+	他会向观察者发送值。如果其他观察者也订阅了它，会得到该范围的一个范本。
+	多个观察者可订阅同一个实际的值序列。即便没有观察者，也会有效产生值。热可观察对象。
+	hot observable.
+	var numbres=Observable.Range(0.10);
+	var query=from number in numbers
+		  where number%2==0
+		  select number*number;
+	query.Subscribe(Console.WriteLine);
+	# 分组
+	Linq to objects 
+		在返回前，把所有序列都收集到一起
+			意味着对结果进行缓冲，直到序列结尾。
+	嵌套订阅
+		新产生分组的时候
+			向其订阅一个观察者
+				每个分组构造接收，并产生结果。
+					做出某种重定向选择
+	#嵌套订阅
+	var numbers=Observable.Range(0,10);
+	var query=from number in numbers
+		  group by number%3;
+	query.Subscribe(group=>group.Subscribe(x=>Console.WriteLine("value:{0},group:{1}",x,group.Key)));
+	在某些情况下，在Linq to Objects 中所需大量数据缓冲时，可以用Linq to Rx 更高效实现。
+
+	#合并
+	IEnumerable的Count()，总是可以调用的，时间复杂度O(n);
+	而实现了ICollection<T>,可直接使用Count属性，时间复杂度O(1);
+
+	
