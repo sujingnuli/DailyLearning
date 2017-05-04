@@ -16,12 +16,15 @@ namespace TestWeb.ForPlan
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            PlanBean bean = new PlanBean();
-            DataTable dt=selectPlan(bean,"tplan",null);
-            string table=GetTableStr(dt).Replace("\r\n","<br/>");
-            ScriptManager.RegisterStartupScript(this,this.GetType(),"","TbAp('"+table+"')",true);
-            //this.HidTab.Value = table;
-            BindNames();
+            if (!IsPostBack)
+            {
+                PlanBean bean = new PlanBean();
+                DataTable dt = selectPlan(bean, "tplan", null);
+                string table = GetTableStr(dt).Replace("\r\n", "<br/>");
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "", "TbAp('" + table + "')", true);
+                //this.HidTab.Value = table;
+                BindNames();
+            }
         }
         protected void BtnSave_Click(object sender, EventArgs e) {
             var hidOp = this.HidOp.Value;
@@ -30,13 +33,14 @@ namespace TestWeb.ForPlan
             //var name = this.addName.Text.Trim();
             //var date = this.addDate.Text.Trim();
             //var statu = this.AddStatu.Checked;
-            PlanBean bean=new PlanBean{
-                id=Convert.ToInt32(id),
-                Name=addName.Text.Trim(),
-                Date=addDate.Text.Trim(),
-                Content=addContent.Text.Trim(),
-                Status=this.AddStatu.Checked
-            };
+            PlanBean bean=new PlanBean();
+            bean.id=Convert.ToInt32(id);
+
+            bean.Name = addName.SelectedValue;
+            bean.Date=Convert.ToDateTime(addDate.Text);
+            bean.Content=addContent.Text.Trim();
+            bean.Status=this.AddStatu.Checked;
+             
             if (hidOp.Equals("1")) { AddPlan(bean); }
             else if (hidOp.Equals("2")) { UpdatePlan(bean); }
         }
@@ -90,15 +94,19 @@ namespace TestWeb.ForPlan
             foreach (PropertyInfo prop in properties) { 
                 var name=prop.Name;
                 var end = i == len ? "" : ",";
-                sb.Append(name).Append(end);
+                if (i != 1)
+                {
+                    sb.Append(name).Append(end);
+                }
                 i++;
             }
-            string sql = string.Format("select {0} from {1}", sb.ToString(), table);
+            string sql = string.Format("select row_number() over(order by Name) as id, {0} from {1} ", sb.ToString(), table);
            
             if (where != null)
             {
                 sql += " where " + where;
             }
+            sql += " order by Name";
             return DBWZHelper.GetReader(sql);
         }
         protected string GetTableStr(DataTable dt) {
@@ -108,7 +116,15 @@ namespace TestWeb.ForPlan
                 trs.Append("<tr>");
                 foreach (DataColumn dc in dt.Columns)
                 {
-                    trs.AppendFormat("<td>{0}</td>", dr[dc.ColumnName]);
+
+                    if (dc.ColumnName.Equals("Content"))
+                    {
+                        trs.AppendFormat("<td><textarea>{0}</textarea></td>", dr[dc.ColumnName]);
+                    }
+                    else {
+                        trs.AppendFormat("<td>{0}</td>", dr[dc.ColumnName]);
+                    }
+                    
                 }
                 trs.Append("</tr>");
             }
@@ -117,20 +133,37 @@ namespace TestWeb.ForPlan
             
         }
         protected void SelectType(string table,string type) {
-            string sql = string.Format("select {0} from {1}", type, table);
+            string sql = string.Format("select distinct {0} from {1}", type, table);
             DataTable dt= DBWZHelper.GetReader(sql);
-            this.DdlNames.DataSource = dt;
-            this.DdlNames.DataTextField = type;
-            this.DdlNames.DataValueField = type;
-            this.DdlNames.DataBind();
+            List<DropDownList> dls = new List<DropDownList> { DdlNames, addName };
+            dls.ForEach(dl =>
+            {
+                dl.DataSource = dt;
+                dl.DataTextField = type;
+                dl.DataValueField = type;
+                dl.DataBind();
+            });
+            this.DdlNames.Items.Insert(0, new ListItem("", ""));
         }
-        private void DdlNames_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var name = this.DdlNames.Text;
 
-            DataTable dt= selectPlan(new PlanBean(),"tplan", string.Format(" name like '%{0}%'", name));
-            string table = GetTableStr(dt);
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "", "TbAp('" + table + "')", true);
+        protected void DdlNames_SelectedIndexChanged(object sender, EventArgs e)
+        {
+               var name = this.DdlNames.Text;
+               string time = this.SearchDate.Text.Trim();
+               string timeWhere = time.Equals("") ? "" : string.Format(" and datediff(day,date,'{0}')=0",time);
+              DataTable dt= selectPlan(new PlanBean(),"tplan", string.Format(" name like '%{0}%' {1}", name,timeWhere));
+              string table = GetTableStr(dt).Replace("\r\n", "<br/>");
+              ScriptManager.RegisterStartupScript(this, this.GetType(), "", "TbAp('" + table + "')", true);
         }
+        protected void btnExcel_Click(object sender, EventArgs e)
+        {
+            string date = this.SearchDate.Text.Trim();
+            string name = this.DdlNames.SelectedValue;
+            string dateWhere = date.Equals("") ? "" : string.Format(" and datediff(day,date,'{0}')", date);
+            string sql = string.Format("select row_number() over(order by date) as id,name,date,content,status from tplan where name like '%{0}%' {1}", name, dateWhere);
+            DataTable dt = DBWZHelper.GetReader(sql);
+
+        }
+     
     }
 }

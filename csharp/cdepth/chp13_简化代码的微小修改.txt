@@ -1,4 +1,8 @@
 c#4 只有一个大特性，动态类型。
+
+13.1 可选参数和实名参数
+13.3 接口和委托的泛型可变性
+
 13.1 可选参数和实名参数
 	可选参数：optional parameter
 	实名参数:named argument
@@ -48,4 +52,68 @@ c#4 只有一个大特性，动态类型。
 
 	 #重载决策
 
+	 # 可选参数和命名实参的复仇
+	  不过 SaveAs的 16个参数，还剩下两个。根据本地变量的名称，很容易区分哪个参数的具体含义
+	  Application app=new Application{Visible=true};
+	  app.Documents.Add();
+	  Document doc=app.ActiveDocument();
+	  Paragraph para=doc.Paragraphs.Add();
+	  para.Range.Text="Thank goodness for c# 4";
+
+	  object fileName="demo.doc";
+	  object format=WdSaveFormat.wdFormatDocument97;
+	  doc.SaveAs(FileName:ref fileName,FileFormat:ref format);
+	  doc.close();
+	  app.Application.Quit();
+
+	  #按值传递ref参数
+	  c# 对ref 参数的要求。
+	  # 调用命名索引器
+	  命名索引器　named indexer
+	  office 的com组件 广泛的使用了 命名索引器 named indexer
+	  c#4 允许我们使用命名索引器，但是不允许在类型中，声明他们
+
+	  SynonymInfo SysmInfo[string word,ref object Languaged=Type.Missing];
+
+	  Application app=new Application{Visible=true};
+	  object missing=Type.Missing;
+	  ShowInfo(app.get_SynonymInfo("painful",ref missing));
+	  ShowInfo(app.SynonymInfo["nice",WdLanguagedID.wdEnglishUS]);
+	  ShowInfo(app.SynonymInfo["features"]);
+	  app.Application.Quit();
+
+	  #链接主互操作程序集
+		  namespace Microsoft.Office.Interop.Word{
+		[ComImport,TypeIdentifier,CompilerGenerated,Guid("..")]
+		public interface _Application
+		[ComImport,TypeIdentifier,CompilerGenerated,Guid("...")]
+		public interface _Documenmt;
+		[ComImport,TypeIdentifier,CompilerGenerated,Guid("...")]
+		public interface Document:_Document
+		[ComImport,TypeIdentifier,CompilerGenrated,Guid("...")]
+		public interface Documents:IEnumerable
+		[CompilerGenerated,TypeIdentitfier("...","WdSaveFormat")]
+		public enum WdSaveFormat
+		}
+		查看_Application接口 
+		[ComImport,TypeIdentifier,CompilerGenerated,Guid("...")]
+		public interface _Application{
+			void _VtbGap 1_4();
+			Document Documents{{...}get;}
+			void _VtbGap2_1);
+			Document ActiveDocuments{[...]get;}
+		}
+							
+	       类型库，内嵌到程序集
+	       优点：
+	       易于部署：不必依赖于已存在的版本，或者自行发布PIA.
+13.3 接口和委托的 泛型可变性
+
+	
+	
+
+	
+
+
+	
 	

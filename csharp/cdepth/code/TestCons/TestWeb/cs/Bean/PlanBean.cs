@@ -9,7 +9,7 @@ namespace TestWeb.cs.Bean
     {
         public int id { get; set; }
         public string Name { get; set; }
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
         public string Content { get; set; }
         public bool Status { get; set; }
     }

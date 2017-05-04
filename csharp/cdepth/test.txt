@@ -1,4 +1,16 @@
-public Message(string from ,string to ,string body, string subject=null,byte[] attachment=null){
-	...
+GUID 和属性特性。
+Reflector查看这些内嵌类型。
+接口和枚举
+namespace Mrcrosoft.Office.Interop.Word{
+	public interface _Application;
+	public interface Application:_Application;
+	public interface _Document;
+	public interface Document:_Document;
+	public interface Documents:IEnuemrable;
+	public enum WdSaveFormat;
 }
-Message message=new Message(from:"skeet@com",To:"charp",body:"I hope you a ",Subject:"A qucik message");
+[ComImport,TypeIdentifier,CompilerGenerated,Guid("...")]
+public interface _Application{
+	Document document{get{}}
+	Documents Documents{get;set;} 
+}

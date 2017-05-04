@@ -1,11 +1,5 @@
-创建一个Message类，来源from,目的，to,body.都是必备的。
-主题和附件是可选的。
-Message message=new Message(
-	From="skeet@pobox.com",
-	To="to",
-	Body="Hope you like the third edition",
-	Subject="A quick message"
-);
-#这里的问题：
-	没有强制要求必须提供哪些必备数据。
-	强制构造函数提供数据。
+c#4 提供了一种不同的方式。
+
+不用像引用其他程序集那样对PIA 进行引用
+而是进行链接。
+
