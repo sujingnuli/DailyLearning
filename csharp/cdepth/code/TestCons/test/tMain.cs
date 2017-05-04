@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TestCons.test.chp10;
 using TestCons.test.chp11;
 using TestCons.test.chp12;
+using TestCons.test.Clzz.Shape;
 
 namespace TestCons.test
 {
@@ -13,8 +14,8 @@ namespace TestCons.test
     {
         public static void Main(string[] args) {
 
-            TestObservable TO = new TestObservable();
-            TO.test();
+            ShapeTest test = new ShapeTest();
+            test.test2();
             Console.ReadKey();
             
         }

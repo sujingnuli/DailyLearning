@@ -74,6 +74,12 @@
     <Compile Include="test\chp12\Paralle\OrderedParallelRangeGenerator.cs" />
     <Compile Include="test\chp12\SampleData.cs" />
     <Compile Include="test\chp12\TestObservable.cs" />
+    <Compile Include="test\chp13\IFactory.cs" />
+    <Compile Include="test\Clzz\Shape\Circle.cs" />
+    <Compile Include="test\Clzz\Shape\IShape.cs" />
+    <Compile Include="test\Clzz\Shape\Point.cs" />
+    <Compile Include="test\Clzz\Shape\ShapeTest.cs" />
+    <Compile Include="test\Clzz\Shape\Square.cs" />
     <Compile Include="test\LTSClaz\DefectModel.designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,16 +1,7 @@
-GUID 和属性特性。
-Reflector查看这些内嵌类型。
-接口和枚举
-namespace Mrcrosoft.Office.Interop.Word{
-	public interface _Application;
-	public interface Application:_Application;
-	public interface _Document;
-	public interface Document:_Document;
-	public interface Documents:IEnuemrable;
-	public enum WdSaveFormat;
-}
-[ComImport,TypeIdentifier,CompilerGenerated,Guid("...")]
-public interface _Application{
-	Document document{get{}}
-	Documents Documents{get;set;} 
-}
+public event EventHandler Click;
+线程安全的实现方式，发生了该案。
+c#4 之前，字段风格的事件 生成的代码 锁定的是this,事件实例，或声明事件的类型，静态类型
+c#4 中，编译器实现了线程安全。对原子订阅和退订使用了Interlocked.CompareExchange<T>
+其次，声明事件的类时，事件名称的含义改变了。
+click+=DefaultClickHandler,
+add/remove.

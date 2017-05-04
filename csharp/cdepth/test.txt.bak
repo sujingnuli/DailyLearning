@@ -1,5 +1,1 @@
-c#4 提供了一种不同的方式。
-
-不用像引用其他程序集那样对PIA 进行引用
-而是进行链接。
-
+public event EventHandler Click;

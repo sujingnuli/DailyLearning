@@ -2,6 +2,7 @@ c#4 只有一个大特性，动态类型。
 
 13.1 可选参数和实名参数
 13.3 接口和委托的泛型可变性
+13.4 对锁和字段风格的事件的微小改变
 
 13.1 可选参数和实名参数
 	可选参数：optional parameter
@@ -108,6 +109,115 @@ c#4 只有一个大特性，动态类型。
 	       优点：
 	       易于部署：不必依赖于已存在的版本，或者自行发布PIA.
 13.3 接口和委托的 泛型可变性
+	可变性的种类：
+		逆变性
+		协变性
+	可变性：以一种类型安全的方式，将一个对象作为另一个对象来使用。
+	泛型可变性。
+		可变性应用于泛型接口和泛型委托类型参数时 。
+	协变性
+		从API返回的值。
+		调用者返回某项操作的值 。
+	interface IFactory<T>{
+		T CreateInstace();
+	}
+	
+	逆变性
+		调用者向API传入值。
+
+	 PrettyPrinter<object>(object obj);
+
+	 不变性：双向传递的值
+	 interface IStorage<T>{
+		byte[] Serialize(T value);
+		T Deserialize(byte[] value);
+	 }
+	 ref 参数： 按引用传递变量。其类型必须与参数本身类型一致 。因为值 被传入了方法内部。
+	 并且高效被传出
+
+	#在接口中使用可变性
+	c#4 能够使用out修饰符 来指定类型参数的协变性。
+	使用in 修饰符来指定逆变性。声明完成后，就可以对相关类型，进行隐式转换了。
+	在接口和委托中，它们的工作方式，是完全相同的。
+
+	# 用in 和 out 表示 可变性
+	IEnumerable<T> T 是协变的
+	IComparer<T> T 是逆变的
+
+	#接口的协变性
+	#在委托中使用可变性
+	Func<Square> squareFactory=()=>new Square(new Point(5,5),10);
+	Func<IShape> shapeFactory=squareFactory;
+
+	Action<IShape> shapePrinter=shape=>Console.WriteLine(shape.Area);
+	Action<Square> squarePrinter=shapePrinter;
+
+	shapePrinter(shapeFactory());
+	squarePrinter(squareFactory());
+
+	#复杂情况
+	委托和接口的可变性可能会很复杂
+	.net 2.0	Converter<TInput,TOutput>   与Func<T,TOutput> 是等效的。
+	.net 4.o	Converter<in TInput,out TOutput> 展示了那种类型参数，使用了哪种可变性
+	Converter<object,string> converter=x=>x.ToString();
+	Converter<string,string> converter1=converter;
+	Converter<object,object> converter2=converter;
+	Converter<string,object> converter3=converter;
+	既然能传入object，那么肯定可以传入string
+
+	#限制和说明
+	c# 4 对可变性的支持 主要受 CLR的限制。
+	不支持类的类型参数的可变性
+		 只有接口和委托 可以拥有可变的类型参数。
+			例如，不能把 Comparer<IShape> 转换为 Compere<Circle>;
+			输入，可以把大的给小的。输出反回来。
+		 可变性只支持引用转换。
+		 out 参数不是输出参数
+		 可变性必须显式指定
+13.4 健壮的锁 
+	lock(listLock){
+		list.Add("item");
+	}
+	c#4 之前，编译后
+	object temp=listLock;
+	Monitor.Enter(temp);
+	try{
+		list.Add("item");
+	}
+	finally{
+		Monitor.Exit(temp);
+	}
+	这样没有问题，我们要确保，释放的监视器和获取的是同一个。
+	因此，首先 将被锁定的内容的引用，复制到一个临时局部变量。object temp=lockList;
+	锁的表达式，只会进行一次求职。try之前获取锁 。Monitor.Enter(temp);
+	因此，如果获取锁的线程，异常，终止 。则不会执行finally块的释放。
+	如果线程获取锁后，Monitor.Enter(temp),进入try之前异常终止，也无法释放锁。
+	会导致死锁 。其他线程一直等待该线程释放锁。
+	我们需要的是，一种原子的获取锁，并且知道它已经被获取。.net4 增加了Monitor.Enter
+	的重载。
+	bool acquired=false;
+	object temp=listLock;
+	try{
+		Monitor.Enter(temp,acquired);
+		list.Add(“item”);
+	}
+	finally{
+		if(acquired){
+			Monitor.Exit(temp);
+		}
+	}
+	只有锁获取成功后，才会被释放
+
+	#字段风格的事件
+	public event EventHandler Click;
+	线程安全的实现方式，发生了改变。
+	c#4 之前，字段风格的事件 生成的代码 锁定的是this,事件实例，或声明事件的类型，静态类型
+	c#4 中，编译器实现了线程安全。对原子订阅和退订使用了Interlocked.CompareExchange<T>
+
+
+
+
+
 
 	
 	
