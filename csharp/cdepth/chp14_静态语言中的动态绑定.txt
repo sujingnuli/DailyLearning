@@ -3,8 +3,282 @@
 框架虽然优化了动态代码，但是大多数情况下，慢于静态代码。更重要的是
 失去了很多编译时的安全性。
 14.1 what,when ,why ,how
+14.2 关于动态的快速指南
+14.3 动态类型示例
+14.4 幕后原理
 
 
 14.1 what ,when ,why ,how 
     决定使用哪个成员的过程，称为绑定(binding)，对于静态语言类型来说，绑定发生在编译时。
     而在动态语言中，所有的绑定都发生在执行时。
+    c# 可以与运行在DLR Dynamic Language Runtime 动态语言
+    c#4 引入了一个新类型 dynamic 
+    编译器对待该类型与普通的CLR类型不同。
+    任何使用了dynamic 的表达式，都从根本上改变了编译器的行为。
+    编译器不会试图弄懂代码的确切含义，不会恰当的绑定各个成员的访问，不会执行重载决策。
+    只是解析源码，找出要执行的操作种类，名称，所涉及的参数，及其他相关信息
+    编译器也不会发出emit IL 来直接执行代码，而是使用所有必要的信息，生成调用DLR的代码。
+    剩下的工作在执行时进行。
+    这在很多方面与Lambda表达式类似。可以直接生成执行所需行为的代码，委托。也可以生成构建所需行为的描述代码，表达式树
+    表达式树在 DLR 中很重要，c#编译器通常通过表达式树来描述代码
+
+14.2 关于动态的快速指南
+	#
+	dynamic items=new List<string>{"First","Second","Third"};
+	dynamic valueToAdd="!";
+	foreach(var item in items){
+		string result=item+valueToAdd;
+		Console.WriteLine(result);
+	}
+	输出结果正确: First!,Second!,Third!
+	#
+	dynamic items=new List<int>{1,2,3};
+	dynamic valueToAdd=2;
+	foreach(var item in items){
+		string result=item+valueToAdd;
+		Console.WriteLine(result);
+	}
+	# 输出异常，无法将int 转换为string.
+14.3 动态类型的示例
+	动态类型有点类似 不安全代码 unsafe code
+	或使用P/Invoke与本地代码交互。
+	3个示例：
+		操作Excel
+		调用Python
+		通过更灵活的方式，使用普通托管.net
+	
+        #COM和Office
+	如果 你将正在使用的互操作类型内嵌到程序集中，那么在该API中，声明的任何object类型的东西
+	都将变成dynamic类型。这将大大简化弱类型API的使用
+
+	Application app=new Application{Visible=true};
+	app.Workbooks.Add();
+	Worksheet worksheet=(Worksheet)app.ActiveSheet;
+	Range start=(Range)worksheet.Cells[1,1];
+	Range end=(Range)worksheet.Cells[1,20];
+	worksheet.Range[start,end].Value=Enumerable.Range(1,20).ToArray();
+        
+	#动态语言 IronPython
+	DLR 的一个既定目标，使新语言的设计者能更简单的创建一个工作语言。与其他DLR 语言，传统语言如.net 能很好的交互。
+	并能访问庞大的.net库
+	# 为什么要在c# 中使用IronPython.
+		用户脚本
+		使用IronPython编写了一个层
+		用Python作为配置语言
+		Python 作为存储在文本中的各种规则的规则引擎
+		所使用的库在python中有 ，.net中没有这个库
+		为调试，而在应用程序中方的一个实时解释器
+	使用Python作为配置语言
+		ScriptEngine
+		ScriptScope
+	ScriptEngine 	engine=Python.CreateEngine();
+	engine.Execute("print 'Hello ,world'");
+	engine.ExecuteFile("HelloWorld.py");
+	
+	#
+	string python=@"
+	text='Hello'
+	output=input+1
+	";
+	ScriptEngine engine=Python.CreateEngine();
+	ScriptScope scope=engine.CrateScope();
+	scope.SetVariable("input",10);
+	engine.Execute(python,scope);
+	Console.WriteLine(scope.GetVariable("text"));
+	Console.WriteLine(scope.GetVariable("input"));
+	Console.WriteLine(scope.GetVariable("output"));
+	python 脚本对空格敏感
+
+
+	#
+	string python=@"
+	def sayHello(user):print 'Hello %(name)s' %{'name':user}
+	";
+	ScriptEngine engine=Python.CreateEngine();
+	ScritpScope scope=engine.CreateScope();
+	engine.Execute(python,scope);
+	dynamic sayHello=scope.GetVariable("sayHello");
+	sayHello("Jon");
+
+	# 纯托管代码中的动态类型
+
+	#弥补泛型操作符的不足。
+	方法仍然是静态类型。在内部使用动态类型。
+	我们声明一个Enumerable<dynamic>的非泛型求和方法。由于协变性的控制。并不能很好的控制。
+	将方法名改为DynamicSum.避免与Enumerable中方法冲突。
+	如果两个方法同名，签名包含的参数类型相同，则首先选择非泛型。
+	public static T DynamicSum<T>(this IEnumerable<T> source){
+		dynamic total=default(T);
+		foreach(T element in source){
+			total=(T)(total+element);
+		}
+		return total;
+	}
+	byte[] bytes=new byte[]{1,2,3};
+	Console.WriteLine(bytes.DynamicSum());
+	两个字节求和的结果。c# 编译器在执行加法前，将两个操作数转换为int。
+	如果不进行强制转换，total变量将保存int值 。这样返回语句，视图将其转换为byte 时 将抛出异常。
+
+	#
+	var list=new List<TimSpan>{
+		2.Hours(),25.Minutes(),35.Seconds()
+	};
+	Console.WriteLine(times.DynamicSum());
+	# 鸭子类型
+	介绍了 计算序列元素个数的优化算法。
+	ICollection和 ICollection<T> 都包含Count属性。 但是没有共同的包含该属性的父级接口 。需要分别处理。
+	鸭子类型，允许我们在访问Count时 ，不必执行父级类型检查。
+
+	#多重分发
+	对于静态类型：c# 使用单一分发，single dispatch .在执行时 ，调用的确切方法
+		取决于Override后的方法目标是实际类型。 重载在编译时确定的。
+	多重分发 multiple dispatch 会根据执行时实参的类型，找出最合适的方法实现。
+
+	private static int CountImpl<T>(ICollection<T> collection){
+		return collection.Count;
+	}
+	private static int CountImpl(Collection collection){
+		return collection.Count;
+	}
+	private staticc int CountImpl(string text){
+	
+		return text.Length;
+	}
+	private static int CountImpl(IEnumerable collection){
+		int count=0;
+		foreach(var item in collection){
+			count++;
+		}
+		return count;
+	}
+	public static void PrintCount(IEnumerable collection){
+		dynamic d=collection;
+		int count=CountImpl(d);
+		Console.WriteLine(count);
+	}
+	PrintCount(new BitArray(5)) ;
+	PrintCount(new HashSet<int>{1,2,3});
+	PrintCount("ABC");
+	PrintCount("ABCDEF".Where(c=>c>'B'));
+	
+	在这里，我们使用动态类型，来执行相同的工作。
+	问题：使用多重分发，如果实际类型，通过显示实现，即实现了ICollection<int>,又实现了ICollection<string>,结果可能不同
+14.4 幕后原理
+	c# 编译器做了什么？为了在执行时实现动态绑定所生成的代码。
+	同时，在明白DLR之前，看生成代码没有意义。
+	
+	#DLR
+
+	 CLR Common Language Runtime 公共语言运行时 
+
+	 DLR 所有动态语言和c# 编译器用来动态执行代码的库。
+	 DLR 是一个库，不涉及JIT 编译，本地API 封送，垃圾回收等。
+	 而是建立在 .NET 2.0 和 .NET 3.5 之上 ，特别是DynamicMethod 和 Expression类型。
+	 .NET 4 还扩展了表达式树的API .DLR 可以用它来表示更多的概念
+
+	 #.NET 4.0 的组件结构	允许静态和动态语言在相同的基础平台上运行
+
+
+	 ____					____其他.NET 库（WCF,WPF,ASP.NET）
+	      _>动态语言运行时DLR
+	      
+	      _>Binders Microsoft CSharp
+
+		
+
+
+	 ____系统库(mscorlib,System,System.Core)
+
+
+	 ____公共语言运行时(JIT,GC)
+
+
+	 CLR: 将IL 语言转换为本地代码
+	 DLR: 将用绑定器，调用点，元对象，以及其他各种概念表示的代码，转换为表达式树 ，
+		后者被编译为IL语言，再由CLR编译为本地代码。
+	 
+	 动态表达式的生命周期
+	 Code.cs
+		_>c#编译器
+	 调用点
+		_>绑定(IL)
+	 (创建对象并重用)
+		_>DLR+动态对象+c#绑定器
+	 调用点
+		_>缓存（IL+规则） _绑定器 _>缓存(规则) 包含缓存行为的对象
+		_>JIT(IL 位于缓存中)
+	 调用点
+		_>缓存(IL+本地代码+规则) _绑定器 _>缓存(规则) 我们最终有本地代码，并可以运行
+	
+	DLR 一个重要的部分，是多级缓存。这对性能来说很重要。
+
+	#DLR 的核心概念
+	DLR: 基于执行时才知道的信息 以高级形式表示并执行的代码。
+
+	#调用点
+	DLR 的原子，
+	#接收器和绑定器
+	# 规则和缓存
+	规则： 如何执行一个调用器 做出的决策
+	    ：包含两个逻辑元素
+			调用点表现为这种行为时 所处的环境
+			行为本身
+	行为本身：当规则匹配时 ，所使用的代码，表示为一个表达式树 。它可以存储为一个编译好的
+	供调用的委托，但是使用表达式树 ，意味着可以对缓存进行深度优化，
+
+	#DLR 中缓存包含3个级别，L0,L1,L2 。缓存以不同方式，将信息存储在不同作用域。
+	每个调用点包含自己的l0,l1 缓存。L2缓存，被多个类似调用点共享。
+	L2缓存的调用点，由它们的帮顶器决定。每个绑定器包含一个与之相关的L2缓存。
+	编译器决定要使用多少个绑定器，它可以只对多个表示类似代码的调用点，使用一个绑定器
+	如果执行的上下文相同，这些调用点可以以相同方式执行。
+	c#编译器为每个调用点创建一个新的绑定器，因此对于c#开发者来说，l1和l2没太大区别，但是IronRuby和IronPython都是了这个功能。
+	缓存本身是可以执行的，c#编译器生成代码来简单的执行调用点的L0缓存。l0缓存包含单一的规则，在调用时检查。
+	如果规则匹配，执行行为，如果不匹配，调用l1,继续调用L2.如果L2没有匹配规则，将要求接收器或绑定器来解决这个调用，其结果放入缓存中，供以后使用。
+        执行部分： 
+	 callSite.Target(callSite,d,10);
+	L1和L2 缓存以相当标准的形式审核规则--每级缓存都包含一组规则，每条规则都检查匹配。
+	L0缓存略有不同，行为的两个部分将被合并为单独的方法，然后进行JIT编译。对L0缓存更新时，根据新的规则重新构建方法。
+
+
+	#C# 编译器如何动态处理。
+	动态代码：c#编译器的主要工作，解决什么时候要动态行为，获取所需上下文，这样绑定器和接收器在执行时，就有足够信息处理调用
+
+	如果使用了动态，那么就是动态的。
+
+	如果所调用成员，目标是动态，那就是动态的。
+	如果调用的参数是动态的值，可能会静态处理。
+
+	string text="text to cut";
+	dynamic start=2;
+	string end=text.Substring(start);
+	包含两个动态操作，
+		1.动态调用Substring
+		2.将结果转换为string。
+	内嵌的静态类，用于存储该方法所有的调用点，因为他们只要创建一次。
+	如果是多线程的情况，可能多次创建，
+	[CompilerGenerated]
+	private static class <Main>o_SiteContainer0{
+		public static CallSite<Func<CallSite,object,string>> <>p_Site1;
+		public static CallSite<Func<CallSite,string,object,obect>> <>p_Site2;
+	}
+        # 更加智能的c# 编译器
+
+        # 动态代码的约束
+
+	#不能动态处理扩展方法
+	编译器在调用点，内部生成一些调用的上下文。
+	但是，当前c#版本，不知道所调用所在的源文件中，using 引入了哪些命名空间 ，即执行时不知道哪些扩展方法是可用的。
+
+	不仅不能调用动态值的扩展方法，也不能调用将动态值作为参数的扩展方法。
+
+	解决方案：
+	在方法内，将动态值 转换为正确类型，
+	调用静态方法一样调用扩展方法。
+
+	#
+	dynamic Size=5;
+	var numbers=Enumerable.Range(10,10);
+	var workaround1=numbers.Take((int)Size);
+	var workaround2=Enumerable.Take(numbers,Size);
+
+	# 委托与动态类型之间的转换限制

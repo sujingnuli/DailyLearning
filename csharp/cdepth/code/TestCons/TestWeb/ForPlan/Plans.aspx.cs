@@ -8,6 +8,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using TestWeb.cs;
 using TestWeb.cs.Bean;
 
 namespace TestWeb.ForPlan
@@ -157,12 +158,19 @@ namespace TestWeb.ForPlan
         }
         protected void btnExcel_Click(object sender, EventArgs e)
         {
+            string sqlName = string.Format("select distinct Name from tPlan");
+            DataTable dtName = DBWZHelper.GetReader(sqlName);
             string date = this.SearchDate.Text.Trim();
-            string name = this.DdlNames.SelectedValue;
-            string dateWhere = date.Equals("") ? "" : string.Format(" and datediff(day,date,'{0}')", date);
-            string sql = string.Format("select row_number() over(order by date) as id,name,date,content,status from tplan where name like '%{0}%' {1}", name, dateWhere);
-            DataTable dt = DBWZHelper.GetReader(sql);
-
+            List<DataTable> dts = new List<DataTable>();
+            for (int i = 0; i < dtName.Rows.Count; i++)
+            {
+                string name = dtName.Rows[i][0].ToString();
+                string dateWhere = date.Equals("") ? "" : string.Format(" and datediff(day,date,'{0}')", date);
+                string sql = string.Format("select row_number() over(order by date) as id,name,date,content,status from tplan where name like '%{0}%' {1}", name, dateWhere);
+                DataTable dt = DBWZHelper.GetReader(sql);
+                dts.Add(dt);
+            }
+            ExcelUtil.ExportExcel(dts);
         }
      
     }

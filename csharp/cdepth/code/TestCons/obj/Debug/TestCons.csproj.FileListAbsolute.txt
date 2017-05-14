@@ -1,6 +1,9 @@
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\bin\Debug\TestCons.exe.config
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\bin\Debug\TestCons.exe
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\bin\Debug\TestCons.pdb
-D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.csprojResolveAssemblyReference.cache
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.exe
 D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.pdb
+D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\bin\Debug\test\app.py
+D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.test.chp14.AsyncForm.resources
+D:\GitHub\DailyLearning\csharp\cdepth\code\TestCons\obj\Debug\TestCons.csproj.GenerateResource.Cache

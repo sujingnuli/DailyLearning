@@ -1,0 +1,267 @@
+c#5 包含一个大特性(异步函数) 和两个小特性
+
+第15章 ，都是异步的内容，异步函数特性(async/await) 的目标是简化异步编程 ，
+之前异步编程：一个异步调用结束并开始调用另一个时 ，逻辑执行路径将从一个方法，跳到另一个方法。
+有了异步函数，代码看起来是同步的。使用熟悉的控制结构 try/catch/finally. 采用了新关键字await 来触发异步执行流 。
+
+第16章，涵盖另外两个特性，foreach迭代有了小改变，另外针对c#4 引入了可变参数。
+
+第十五章 ：使用async/await 进行异步编程 
+
+异步的基本目标/ 编写异步方法和委托/编译器对异步的转换/基于任务的异步模式/WinRT中的异步
+
+异步编程 ，可能在等待某个任务完成时，便面线程的占用。
+在 .net framework 中，有 3钟不同模式 来简化异步编程 
+.net 1x 引入的BeginFoo/EndFoo方法，使用IAsyncResult 和 AsyncCallback来传播结果
+.net 2.0 中基于事件 的异步模式，使用BackgroundWorker和WebClient实现。
+.net 4.0 引入并游.net 4.5 扩展的任务并行库(TPL)
+
+c#5 的主要特性基于TPL,因此可以在适用于异步的地方编写同步形式的代码。
+回调，事件订阅，和错误处理，消失不见。
+包含一个新的语言构造,await. await 看上去是一个普通的阻塞调用，剩余的代码在异步操作完成前不会执行
+实际上并没有阻塞当前线程 ，
+
+.net Framework 4.5 之后，开始加大异步变成。 基于任务的新异步模式。
+横跨多个api 提供一致的体验。
+微软创建了一个NuGet包，(Microsoft.Bcl.Async)，
+c# 无法算出哪里需要并行或者异步的执行操作。
+
+15.1 异步函数简介(async/await)
+15.2 思考异步编程
+15.3 语法和语义
+
+15.1 异步函数简介(async/await)
+	c#5 简化了异步编程 ，
+	c#5 引入了异步函数(asynchrnous function) 的概念，通常是由async修饰符声明的，可包含await表达式的方法或匿名函数
+	async 声明 ，包含await表达式的 方法或匿名函数。
+
+	await表达式，正是有意思的地方：
+		如果表达式的值不可用，异步函数立刻返回。
+		当值可用，异步函数将回到离开的地方，继续执行。
+	
+	#初始异步类型
+	class AsyncForm:Form{
+		Label label;
+		Button button;
+		public AsyncForm(){
+			label=new Label{Location=new Point(10,10),Text="Length"};
+			button=new Button{Location=new Point(10,50),Text="Click me"};
+			button.Click+=DisplayWebSiteLength;
+			AutoSize=true;
+			Controls.Add(label);
+			Controls.Add(button);
+		}
+		async void DisplayWebSiteLength(object sender,EventArgs e){
+			label.Text="Fetching...";
+			using(HttpClient client=new HttpClient()){
+				string text=await client.GetStringAsync("http://www.baidu.com");
+				label.Text=text.Length.ToString();
+
+			}
+		}
+
+	}
+	Application.Run(form);
+
+        # 在开发windows Form时的两个关于线程的金科玉律
+		不要在 UI 线程上执行任何耗时的操作
+		不要在除了UI线程之外的其他线程上访问UI控件。
+
+	# 分解第一个示例
+	 async void DisplayWebSiteLength(object sender,EventArgs e){
+		lable.Text="Fetching..."；
+		using(HttpClient client=new HttpClient()){
+			Task<string> task=client.GetStringAsync("http://www.baidu.com")；
+			string text=await task;
+			label.Text=text.Length.ToString();
+		}
+	}
+	await 表达式 执行的是 拆包操作。
+	await 的主要目的，是 在的等待耗时操作 时 避免阻塞。
+
+	方法在 执行到 await 处就返回了。在此之前，它与事件处理程序，都在UI 线程中执行。
+	到达 await 后，代码将检查其结果是否存在。如果不存在，安排一个web操作，完成时，将要执行的后续操作。
+#15.2 思考异步编程
+
+	# 异步执行的基础
+	static async Task<int> GetPageLengthAsync(string url){
+		using(HttpClient client=new HttpClient()){
+			Task<string> FetchTextClient=client.GetStringAsync(url);
+			int length=(await FetchTextClient).Length;
+			return length;
+		}
+	}
+	static void PrintPageLength(){
+		Task<int> lengthTask=GetPageLengthAsync("http://www.baidu.com");
+		Console.WriteLine(lengthTask.Result);
+	}
+	
+	___________________________________________
+	|调用方法   |	异步方法    |	异步操作  |
+	|———————————|———————————————|—————————————|
+
+
+	PrintPageLength 是调用方法
+	GetPageLengthAsync是异步方法
+	HttpClient.GetStringAsync 是异步操作。
+	调用方法和异步方法的边界是 Task<int>,
+	异步方法和异步操作的边界是Task<string>,
+
+15.3 语法和语义
+	信息在 不同部分进行转换的方法就会称谓难点。特别是错误发生的时候。
+	
+	# 声明异步方法
+		异步方法声明与其它方法一样，但是包含async上下文关键字
+
+	async 上下文关键字
+	yield return ,yield break ,是编译器进入迭代器模式。
+	await 是编译器进入异步模式。
+
+	#异步方法的返回类型
+	异步类型的返回类型包括三种
+	void 
+	Task
+	Task<TResult>
+	
+	对于一个异步方法，只有在作为事件订阅者的时候，才应该返回void .
+	在不需要特定返回值的时候，最好将方法声明为Task,这样调用者可以等操作完成，以及探测失败情况。
+
+	#异步方法，签名约束，不能使用Out，ref。
+
+
+	# 可等待模式
+	异步方法几乎包含了所有常规c#方法，所包含的方法。只是多了一个await表达式。
+	可以使用任何流，循环，异常，using .
+	await 的用途，及返回值是如何传递的。
+
+        异步方法 如何 与其他异步操作交换。
+	一般我们只能等待一个异步操作。
+	
+	这里只涉及一个接口 ，并且只涵盖了“附加后续操作” 这一部分。
+	位于System.Runtime.CompilerServices命名空间 。如下所示。
+	public interface INotifyCompletion{
+		void OnComplete(Action continuation);
+	}
+	大量工作都是通过模式完成的，有点类似 foreach 和 Linq查询。
+	这里虚拟一个 接口 
+	public interface IAwaitable<T>{
+		Awaiter<T> GetAwaiter();
+	}
+	public interface IAWaiter<T>:INotifyComplation{
+		bool IsComplate{get;}
+		T GetResult();
+	}
+	public interface IAwaitable{
+		AWaiter GetAwaiter();
+	}
+	public interface IAwaiter:INotifyComplete{
+		bool IsComplete();
+		void GetReault();
+	}
+	IEnumerable<T>,IEnumerator<T>,foreach循环迭代一个集合。
+	编译器生成的代码，首先调用GetEnumerator(),然后使用MoveNext()方法，和Current。
+	同样，在异步方法中，对于一个await 表达式，编译器生成的代码，先调用GetAwaiter()，
+	然后使用awaiter的成员来等待结果。
+	c# 编译器，要求Awaiter必须实现 INotifyCompletion。这主要是效率的原因。
+	GetAwaiter()方法，不一定是一个标准的实例方法。它可以是await表达式中对象的扩展方法。
+	IsCompleted和 GetResult必须是GetAwaiter()方法返回类型的真正成员。但是不一定具有公共属性。
+	只要能由await表达式的代码访问就可。
+	如果GetResult()返回void ,则则会给你个await表达式，都没有类型。而只是一个独立的语句。
+	否则，其类型与GetResult()的类型相同。
+	Task<TResult>.GetAwaiter()，返回一个TaskAwatier<TResult>,其，GetResult()方法，返回TResult .
+
+
+	#
+	Task<TResult>.GetAwaiter()
+			TaskAwaiter
+				TResult  GetResult();
+	
+	用法： 
+	using(var client=new HttpClient()){
+	 Task<string> task=client.GetStringAsync(...);
+	 string result=await task;
+	}
+	静态方法
+	Task.Yield()
+		YieldAwaitable
+			GetAwaiter()
+				YieldAwaiter()
+					void GetResult()
+	用法：
+	await Task.Yield();
+	
+	#await 表达式的流
+
+	await 只是在操作一个值 。
+
+	示例 ：
+	假设有两个方法，GetHourlyRateAsync();GetHoursWorkedAsync();分别返回Task<decimal>和Task<int>
+	AddPayment(await employee.GetHourlyRateAsync()*employee.GetHoursWorkedAsync(employeeId));
+
+	拆开步骤： 
+	Task<decimal> hourlyRateTask=employee.GetHourlyRateAsync();
+	decimal hourlyRate=await hourlyRateTask;
+	Task<int> hoursWorkedTask=employee.GetHoursWorkedAsync();
+	int hoursWorked=await hoursWorkedTask;
+	AddPayment(hourlyRate*hoursWorked);
+
+	这暴露了一个效率问题。
+
+	# 可见的行为
+
+	执行过程到 await 后有两种可能
+		异步操作已完成。
+		未完成
+	如果已经完成： 
+		继续执行。
+	如果失败，并由一个代表该失败的异常捕获，抛出异常。
+
+	在异步API 中，从与磁盘文件相关联的流中，异步读取数据。也许作为之前 ReadAsync
+	调用请求的结果。
+	如果等待的只是一个普通Task或类似对象，获取结果意味着 ，检查操作是否成功。
+	一般应避免在异步方法中，执行耗时的操作，应将其分离到其他方法，并为其创建一个Task();
+	调用异步方法，与在单独的线程中启动一个新任务 不同，并且你应确保总是能快速返回的异步方法
+	# 使用可等待模式的成员
+	可等待模式的成员
+	本图包含了调用该模式-可等待模式的成员-的代码。
+	异步方法返回类型的限制，
+	
+	通过可等待模式处理await 
+	对表达式求值 
+
+	获取awaiter
+	awaitable.GetAwaiter()
+
+	awaiter.IsCompleted
+
+		是			否
+
+				    记住 awaiter
+
+				    附加后续操作
+				    awaiter.OnCompleted();
+
+				    返回
+		获取结果
+		awaiter.GetResult();
+
+	# 从异步方法返回
+	static async Task<int> GetPageLengthAsync(string url){
+		using(HttpClient client=new HttpClinet()){
+			Task<string> fetchText=client.GetStringAsync(url);
+			int length=(await fetchText).length;
+			return lengt;
+		} 
+
+	}
+	length 是int 类型，但是方法返回Task<int>,生成的代码，帮我们进行了包装。
+	因此调用者将得到,Task<int>;并最终在方法完成时 ，返回该值 。
+	只返回Task的方法，类似于普通的void方法，如果有为简单的return .
+	而在这两种情况下，任务都会在异步方法中传播抛出的异常。
+	在到达return 语句之前，几乎必须会返回调用者，一个Task<T> 是对未来生成的值或者
+	抛出的异常所做的promise.
+	和普通的执行流一样，如果return 语句出现在finally块的try块中，表达式会被立即提醒。
+	意味着如果finally块抛出一个异常，整个代码都会失败，
+	自动包装 wrap 和拆包 unwrap才使得异步特性工作如此和谐
+
+	#异常

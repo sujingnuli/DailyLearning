@@ -32,10 +32,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronPython, Version=2.7.5.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\All\Dll\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\All\Dll\Microsoft.Scripting.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -74,7 +87,22 @@
     <Compile Include="test\chp12\Paralle\OrderedParallelRangeGenerator.cs" />
     <Compile Include="test\chp12\SampleData.cs" />
     <Compile Include="test\chp12\TestObservable.cs" />
+    <Compile Include="test\chp13\Configuration.cs" />
     <Compile Include="test\chp13\IFactory.cs" />
+    <Compile Include="test\chp13\TDuck.cs" />
+    <Compile Include="test\chp13\TDyn.cs" />
+    <Compile Include="test\chp13\TDyn2.cs" />
+    <Compile Include="test\chp13\TExcel.cs" />
+    <Compile Include="test\chp13\TFan.cs" />
+    <Compile Include="test\chp13\TPython.cs" />
+    <Compile Include="test\chp14\AsyncForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="test\chp14\AsyncForm.Designer.cs">
+      <DependentUpon>AsyncForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="test\chp14\PrintCount.cs" />
+    <Compile Include="test\chp14\PrintLen.cs" />
     <Compile Include="test\Clzz\Shape\Circle.cs" />
     <Compile Include="test\Clzz\Shape\IShape.cs" />
     <Compile Include="test\Clzz\Shape\Point.cs" />
@@ -91,18 +119,26 @@
     <Compile Include="test\util\StreamUtilEx.cs" />
     <Compile Include="test\util\StringUtils.cs" />
     <Compile Include="test\util\TestEx.cs" />
+    <Compile Include="test\util\TimeSpanEx.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="test\chp14\AsyncForm.resx">
+      <DependentUpon>AsyncForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="test\app.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="test\LTSClaz\DefectModel.dbml">
       <Generator>MSLinqToSQLGenerator</Generator>
       <LastGenOutput>DefectModel.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="test\tt.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="test\wars\" />

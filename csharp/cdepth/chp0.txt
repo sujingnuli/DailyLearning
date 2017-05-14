@@ -88,3 +88,5 @@ public Thread(ParameterizedThreadStart start,int maxStackSize);
 public delegate void ThreadStart();
 public delegate void ParameterizedThreadStart(object o);
 
+第11章 14.4.5 ，和14.5 没有看。
+

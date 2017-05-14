@@ -1,7 +1,12 @@
-public event EventHandler Click;
-线程安全的实现方式，发生了该案。
-c#4 之前，字段风格的事件 生成的代码 锁定的是this,事件实例，或声明事件的类型，静态类型
-c#4 中，编译器实现了线程安全。对原子订阅和退订使用了Interlocked.CompareExchange<T>
-其次，声明事件的类时，事件名称的含义改变了。
-click+=DefaultClickHandler,
-add/remove.
+再来看看这个返回数据的示例，
+static async Task<int> GetPageLengthAsync(string url){
+	using(HttpClient client=new HttpClient()){
+		Task<string> fetchText=client.GetStringAsync(url);
+		int length=(await fetchText).Length;
+		return length;
+	}
+}
+
+length 是 int 型 ，但是返回的类型是 Task<int>,
+
+生成的代码，帮我们

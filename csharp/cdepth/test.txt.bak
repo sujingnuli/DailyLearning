@@ -1,1 +1,1 @@
-public event EventHandler Click;
+AddPayment(await employee.GetHourlyRateAsync()*employee.GetHoursWorkedAsync());
