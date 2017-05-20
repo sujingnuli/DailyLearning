@@ -1,0 +1,223 @@
+本章会涵盖这些核心概念，详细介绍设计模式 design pattern 和 用于构建 ASP.NET MVC 框架的原则。
+并探讨如何用这些design pattern 和原则 patterns and principles 来构建ASP.NET MVC Web应用程序
+
+#模型-视图-控制器模式
+
+  MVC 是一种 用户界面 架构模式，促进跨多个应用程序层的分离关注点、
+  MVC 模式不提倡将所有的逻辑 和 数据访问代码 的应用程序放在一个地方，
+
+ 1.MVC
+	#分离关注点
+		分离关注点，这种原则 提倡将跨多个组件的应用程序或者用例责任分离开，每个组件
+		都有自己的特定职责，
+		关注，可以用一组特定的功能或者行为相关联。
+
+		分离关注点 可以通过划分 表示层，presentation ,业务逻辑层，business logic 
+		和数据访问层 data access .来设计应用程序架构，
+		虽然组件或依赖其他组件，但是每个组件只专注于自己的责任，并把其他的责任留给其他组件处理
+2.MVC 和Web框架
+	在所有的Web应用程序中，所有的东西都是无状态的。而视图运行在客户端的浏览器中。
+
+	前端控制器模式：
+		主要理念：当发送一个Http请求时 ，控制器截获并处理他 。控制器负责如何处理请求
+			并将结果发送给客户端。
+		
+	在 ASP.NET MVC 应用程序中，路由和视图引擎 涉及处理HTTP请求的工作。
+	返回结果时 ，ASP.NET MVC框架，会把加载和呈现相应视图的任务委派给视图引擎。
+		
+	ASP.NET MVC框架的核心 设计 就是分离关注点原则。除了路由和视图引擎外，
+	ASP.NET MVC 框架，提倡使用过滤器，用于处理横切关注点，crossing-cutting concerns
+	例如，安全，缓存，和错误处理。
+	当设计和构建一个ASP.NET MVC Web应用程序时 ，根据过滤器来设计应用程序。
+	
+
+	#逻辑设计
+	
+	组件设计 的目标就是 强化 分离关注点 和使用抽象 跨组件通信。
+	横切点关注点，是将 安全，日志， 缓存 等隔离到不同的应用程序服务中。
+	这些服务 是即插即用的模块方法。切换不同的安全身份验证，和使用不同的日志记录，不会影响应用程序的其他部分。
+
+	#ASP.NET MVC Web 应用程序的逻辑设计 
+	ASP.NET MVC 
+		1.分离 视图，控制器，模型
+		2.包括 处理不同类型的  横切关注点 的几个 操作过滤器 
+		3.为 视图，JSON,XML ,部分页面定义的 多种 操作 结果类型
+
+	#组件
+	Client 
+		Security ,logging,localStorage ,BrowserCache
+	WebService
+		Security ,Logging,Monitoring,Session State/Caching
+	External Serivce //外部服务
+
+	#逻辑设计的 最佳实践 
+	Web 应用程序时 ，在哪里强制业务和验证规则，
+	MVC 提倡 模型负责业务逻辑。
+
+	#物理设计
+2.项目命名空间或程序集名称
+	应用程序的项目结构
+		
+	设计一个Web应用程序时 ，最重要的4个因素是： 性能，可扩展性，带宽 ，和延迟时间。
+
+	#性能和可伸缩性
+
+	如果说一个程序 需要 保留大量的缓存数据，就会影响应用程序的内存使用。
+	IIS 辅助进程要考虑内存要求正确分配：如果分配态度内存，则工作进程被收回。
+	.net 垃圾啊回收期释放资源 也有非常重要的作用。
+	不断向会话状态里，保存大型集合或数据集对象可能导致对象代领增加。
+
+	 Web农场 是一种提高Web应用程序可扩展性的好方法。
+	 关键理由是通过应用程序技术 设计实现的。Web农场 会影响应用程序处理的瞬时状态。
+	 如果硬件和软件支持负载平衡，则可以使用保留会话的方法确保用户总是将路由定位到
+	 它最初建立绘画的服务器。
+	 另一种提高可扩展性的方法，是使用绘画状态服务器或持久化会话状态。通用要尽量减少
+	 使用会话状态，并确保已经为缓存的数据 定义超时规则。
+
+	 由于 会话状态和数据 被保存起来的位置，是可配置的，因此要保证 所有可能使用的类，已经正确设置序列化。
+	 这可以使用.net SerializerAttribute标记属性
+
+	 # 宽带和延迟时间
+	 延迟时间 通常是恒定的约束。
+	 有很多方法可以解决这个问题：包括压缩JavaScript文件，使用图片映射，以及限制请求的数目。
+	 带宽通常是变化的，但是如果应用程序跨网络发送大量数据，成本会非常的高。
+
+	 处理这些问题，最佳的选择就是减少请求，保持较小的有效负荷 。好的策略是，对大型结果集，启用分页，网络上只发送必要的字段。利用客户端进行验证和缓存。
+
+
+	 #设计原则
+	 当设计应用程序，框架，或者类时 ，最重要的是考虑代码的可扩展性。
+	 ASP.NET MVC 整个框架都是提倡使用面向对象 设计的最佳设计和基本原则。
+
+	 #SOILD 原则
+	 SOILD 原则 是一些特定的 面向对象应用程序的一些原则的简称。
+	 用来指导 面向对象的设计和开发工作。
+
+	 SOILD 包含一下原则：
+		单一职责原则 SRP:  例如使用HomeController,ProductController,避免使用ErrorLoggerManager，这种类。
+
+		开放封闭原则 OCP:(Open/Closed Priciple).扩展开放，修改关闭。
+				  如横切关注点的服务。例如错误日志记录，都不是在相同的类中
+				  添加保存错误到数据库或者问价。而是创建一个抽象类，并由不同的子类实现自己的日志记录方法。
+		里氏替换原则 LSP :Liskow Substitution Principle.
+		接口隔离原则 ISP: Interface Segregation Principle. 
+				  鼓励整个应用程序 使用接口的同时，限制接口的大小。
+				  即应该使用更多更小的特定接口 。
+				  .net 为序列化和销毁对象，分别定义了单独的接口 。ISerializeable,IDisposiable.
+
+		依赖倒置原则 DIP: Dependency Inversion Principle .
+				  相互依赖的组件 应该 通过抽象进行交互，而不应该通过具体实现来直接交互。 
+				  有个很好的例子：依赖于一个抽象类或者接口的控制器与数据库进行交互。
+				  控制反转：实现某些特定的依赖倒置原则。
+				  使用IOC 容器来管理依赖。
+	  #
+	  遵守这些原则 实现的 松耦合 的组件设计会带来许多好处 。
+	  public interface ILogSource{
+		void LogError(Exception e);
+	  }
+	  public class EventLogSource:ILogSource{
+		public void LogError(Exception e){
+		
+		}
+	  }
+	  public class FileLogSource:ILogSource{
+		public void LogError(Exception e){
+			
+		}
+	  }
+	  这样实现了 SRP 单一职责原则，OCP ，开放封闭原则。
+
+	  #ISP 
+	  ISearchProvider,
+	  IRepositoryProvier,
+	  如果 允许任何一个人 搜索产品，但是只有管理员可以删除/添加产品。就可以使用ISP来确保匿名访问搜索控制器。
+
+	  public interface ISearchProvider{
+		IList<T> Search<T>(Criteria criteria);
+	  }
+	  public interface IRepository<T>{
+		T GetById(string id);
+		void Delete(T);
+		void Save(T);
+	  }
+	  public class ProductRespository<Product>:ISearchProvider,IRespository<Product>{
+		public IList<Product> Search(Criteria criteria){
+		
+		}
+		public Product GetById(string id){
+		
+		}
+		public void Delete(Product product){
+		
+		}
+		public void Save(Product product){
+			
+		}
+	  }
+
+	  public class SearchController:Controller{
+		private ISearchProvider searchProvider;
+		public SearchController(ISearchProvider provider){
+			this.searchProvider=provider;
+		}
+		public ActionResult SearchForProducts(Criteria criteria) {
+			IList<Product> products=searchProvider.Search<Product>(criteria);
+			return View(products);
+		}
+	  }
+
+	  # 依赖反转 
+
+	  public class SearchController:Controller{
+		private ISearchProvider searchProvider;
+		public SearchController(ISearchProvider provider){
+			this.searchProvider=provider;
+		}
+	  }
+
+	  public class ProductRepository:IRespository,ISearchProvider{
+	  
+	  }
+	  public interface ISearchProvider{
+		List<T> Search<T>(Criteria criteria);
+	  }
+
+2.控制反转
+	  SOILD 设计原则： 单一职能原则，开放原则，  里氏替换原则，接口隔离原则，反转控制原则
+	  控制反转：提倡松耦合，组件和类的设计原则。
+	  IOC :使用分离执行特定问题处理代码的概念，允许单独开发各个组件，例如在MVC 应用程序中，可以独立设计构建mvc
+
+	  控制反转设计原则 最流行的两个实现 ：依赖注入，服务定位
+	  这两种方式使用相同的 中心容器 的概念来管理依赖项的生存周期
+	  两种实现方式(依赖注入，服务定位) 的主要区别，是如何访问依赖项 ：
+	  服务定位依赖调用者调用依赖。依赖注入通过类的构造函数，属性或执行方法来实现。
+
+	  #理解依赖
+	  了解 不同类型的 依赖关系 以及 如何管理依赖项 之间的关系，是减少应用程序复杂性的关键所在。
+
+	  依赖关系有多种形式： 
+		.NET 程序集 可以引用一个或者多个其他程序集
+		MVC 控制器 必须继承 ASP.NET MVC 的基类控制器
+		ASP.NET 应用程序 需要一个 IIS Web服务器托管。
+
+	# 使用IOC 容器替换工厂类。
+		作为一种手段来管理控制器和存储库中类之间的依赖关系。
+		历史：
+		1.直接创建
+		Controller ---->Create------>Responsitory .紧耦合，如果开发人员，改默认参数，多或少一个参数，都影响。
+		2.使用工厂类和接口 
+		Controller----->Factory.Create()------->IRepository(),松耦合，但是引入了控制器和工厂类之间的关系
+		3.使用控制反转
+		IOC 容器负责创建并注入 到该控制器的实例。
+	#服务定位
+		使用服务定位 Service locator pattern .开发人员只需要通过IOC 容器 获取一个特定的服务类。
+
+	  
+
+
+
+
+
+
+
+	

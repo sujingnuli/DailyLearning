@@ -1,0 +1,54 @@
+1.使用JavaScript
+	
+	#获取窗口的高度和宽度
+	 var winWidth ,winHeight;
+	 if(typeofwindow.innerWidth!='undefined'){
+		winWidth=window.innerWidth;
+		winHeight=window.winHeight;
+	 }else{
+		winWidth=document.documentElement.clientWidth;
+		winHeight=document.documentElement.clientHeight;
+	 }
+
+	 用 JQuery获取，可以屏蔽 浏览器的差异性 
+	 var winWidth=$(window).width();
+	 var winHeight=$(window).height();
+	 
+	 $(window).width("480px");
+	 $(window).height("940px");
+	
+	#选择器
+	jQuery的所有方法，都返回一个jQuery对象，这里封装了原生dom元素。允许链式调用。
+	> 表示 父子关系 $(".normal >span")
+	.contains() 筛选出包含特定文本的元素。如过没有ID 和 class，唯一区分的就是内容，
+	可以用contains() 区分，
+
+	#处理事件
+	function dosomething(){
+		alert("ok you have click me");
+	}
+	$(function(){
+		$("#normal").click(dosomething);
+	})
+	<div>
+		<input type="button" id="normal" value="click me"/>
+	</div>
+
+	#$("#normal").bind("click",handler);
+	dom 树是从上往下加载的。
+	$(function) 告诉浏览器，在 加载dom的时候，附加事件处理函数。
+	$("#myDiv").remove("p");删除p标签
+	$("#myDiv").append("<p>I was inserted <i>dynamic</i></p>");
+	.prepend();加入之前
+	.after(),匹配元素之后，.before(),插入元素之前
+
+	 #AJAX
+	 AJAX 的核心技术 是 XmlHttpRequest .
+	 使用JQuery插件，可以继续使用模型定义里的DataAnnotation数据标记属性。
+
+	 如果使用服务器端验证， 数据到服务器端，如果出现错误，回传给客户端，并刷新页面，显示给用户
+	 如果是客户端验证，数据不用传到服务端，无刷新直接显示给用户。
+
+	 使用了JavaScript客户端验证后，ASP.NET MVC 会在 data-val ,存储对应的验证条件和
+	 提示信息。JQuery会使用这些值 来确定验证规则和对应的错误提示信息
+

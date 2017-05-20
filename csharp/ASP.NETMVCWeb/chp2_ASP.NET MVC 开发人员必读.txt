@@ -1,0 +1,115 @@
+﻿ASP.NET MVC 与 Web Form 架构区别很大。
+但是都是 以 ASP.NET API 和 .NET 框架 为 基础结构 。
+基于ASP.NET 平台 开发网站的框架。可以分为两个部分：
+	可视化用户界面 Web Form
+	后台 Web 组件 
+通过命名空间 进去区分。
+	System.Web.UI.* ,是Web Form
+	System.Web.* 是ASP.NET 
+
+1.工具，语言和API 
+	ASP.NET MVC 与 Web Form 都使用并扩展了 .NET 框架。
+	MVC 和 Web Form 的代码可以复用。
+	web.config .Global.asax .在 ASP.NET MVC 和 Web Form 中起着重要作用。
+
+	#Http 处理程序和模块
+	ASP.NET MVC 和 Web Form 共享的著名部分 HTTP 处理程序和 模块。
+	虽然大部分 WebForm API 在 ASP.NET MVC 下不会运行。
+	但是HTTP 处理程序和模块是 ASP.NET API 的一部分。但是仍然可以在 ASP.NET MVC 下运行。
+	事实上，ASP.NET MVC 管道本身，正是从 HTTP 处理程序处理外部请求开始的。
+
+	管道状态
+	ASP.NET MVC 抛弃了视图状态机制。
+	
+        # 部署和运行时。
+	部署和运行与 Web Form 一样。
+	IIS,NET 应用程序池 ，跟踪，错误调试，部署程序集bin 文件夹等。
+	
+	# 应用程序业务和视图分离
+
+	# URL 和 路由
+	Web Form 框架 基于页面的请求处理方式 与 ASP.NET MVC 的请求处理方法不同
+	ASP.NET MVC 依赖于复杂的路由规则动态映射 外部的URL 到控制器的操作。
+	并允许操作动态指定要显示给用户的视图。
+
+	URL :auctions/details/1234
+	Ajax的访问和 URL跳转是不同的。
+	ajax的请求头里包含了一个 ajax 请求的标识 。
+	ajax 请求返回的是 Auction对象的 序列化数据。
+	服务器可以选择不同的格式来序列化对象，JSON ,XML 等。取决于请求要求的数据格式。
+
+	URL直接访问，服务器可以访问包含整个页面的html,JavaScript,CSS等。
+
+	# 状态管理
+	ASP.NET MVC 抛弃了视图状态。
+	ASP.NET MVC 完全用户了Web标准无状态的属性。
+
+	Web 是基于HTTP 请求的，每个请求 都对应一个客户请求和服务器应答。
+	Web 服务器必须分开处理每个请求。
+	因为无法知道客户端请求的前后信息，客户端和服务器不能进行有效对话。
+
+	为了在 无状态的中介上实现 有状态的交互。就必须抽象出来一层。即视图状态。
+	视图状态： 序列化了 客户端和服务器端的交互信息。把它们存储在每个页面的隐藏域中。
+	随后发送给客户端。客户端在后续请求中，把这些会话状态传回给服务器。
+
+	ASP.NET MVC 保留了 无状态的本性。但是并没有提供视图状态的机制。而是利用了
+	缓存和会话状态。
+
+	#渲染HTML代码
+	Razor 帮助开发人员编写html代码，Web Form 视图依赖于服务器端控件来渲染html代码。
+	@model IEnumerable<Auction>
+
+	@{
+		ViewBag.Title="EBuy Auction Listings";
+	}
+	@section HeaderContent{
+		@Html.Partial("SecondaryActions");
+	}   
+	<div class="container">
+		<header>
+			<h3>Auctions</h3>
+		</header>
+		<ul id="auctions">
+		     @foreach(var auction in Model.Auctions){
+			<li>
+				<h4 class="title">
+					<a href="@auction.Url">@auction.Title</a>
+				</h4>
+			</li>
+		     }
+		</ul>
+	</div>
+
+     #HTML 帮助方法与服务器控件
+     从逻辑上讲 ，HTML帮助方法，与服务器控件的效果一样，都是基于组件的，并在视图里执行，以帮助生成Html代码。
+
+     HTML帮助方法扩展了 ASP.NET MVC 视图对象的 HtmlHelper对象
+
+     HTML帮助方法与服务器控件的另一个重要不同： 服务器控件可能使用了视图状态，
+     而HTML帮助方法却完全没有使用。
+
+     除了这些不同，大部分服务器控件使用了HTML帮助类相同的类。
+     <asp:HyperLink>
+
+     Html.ActionLink() 方法。
+     Html.ActionLink(auction.Title,"Details","Auctions");
+     auction.Title 文本，Details ,操作，Auctions 控制器。它们来构建Url 
+     <a href="/Auctions/Details/">My Auction Title</a>
+
+     #部分视图和用户控件
+     HTML 帮助方法，与 Web Form 的服务器 控件等价。
+
+     #布局与母版页
+
+     布局 ,layout .
+     ASP.NET MVC 布局，可以让开发人员 定义每个页面 共享的HTML 代码。
+
+     # 使用Web Form 语法 编写 ASP.NET MVC 视图
+
+
+     ASP.NET MVC 和 ASP.NET Web Form 共用了 基础架构
+
+
+
+
+	

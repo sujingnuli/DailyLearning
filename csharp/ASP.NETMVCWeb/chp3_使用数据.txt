@@ -1,0 +1,169 @@
+﻿EBuy 电子交易网站，网站中最重要的场景，允许用户创建要销售的产品信息，及商品列表
+
+# 构建表单
+
+ASP.NET MVC 提供了一系列HTML 帮助方法来生成HTML标签
+
+Html.TextBox ,Html.Password,Html.HiddenField.
+Html.LabelFor,Html.EditorFor .
+
+1.Create 
+public class AuctionsController :Controller{
+	[HttpGet]
+	public ActionResult Create(){
+		return View();
+	}
+}
+/Views/Auctions/Create.cshtml
+@model Auction 
+<h3>Create Auction </h3>
+@using(Html.BeginForm()){
+	<p>
+		@Html.LabelFor(model=>model.Title)
+		@Html.EditorFor(model=>model.Title)
+	</p>	
+	<p>
+		@Html.LabelFor(model=>model.Description)
+		@Html.EditorFor(model=>model.Description)
+	</p>
+	<p>
+		@Html.LabelFor(model=>model.StartPrice)
+		@Html.EditorFor(model=>model.StartPrice)
+	</p>
+	<p>
+		@Html.LabelFor(model=>model.EndTime)
+		@Html.EditorFor(model=>model.EndTime)
+	</p>
+	<p>
+		<input type="submit" value="Create"/>
+	</p>
+}
+
+  # 处理表单 POST 
+  在处理 数据之前，首先将数据从请求中取出来。
+  这样做最简单的方式，就是把 模型当做操作参数。
+  [HttpPost]
+  public ActionResult Create(Auction auction){
+	return View(auction)
+  }
+  ASP.NET MVC 模型绑定机制 会从请求消息中提取字段的值 ，并赋值给Auction 对象。
+
+  #保存到数据库
+  ASP.NET MVC 的 Entity Framework 是其中之一。
+  EntityFramework 是一个简单 ，灵活的 对象关系映射。object relationship mapping .ORM
+  EntityFramework是 .NET 框架的一部分。
+  EntityFramework 提供了一些定义数据模型和使用数据模型访问数据库的方法，但是应该代码优先。
+
+  #代码优先
+  数据库交互 使用简单的模型类 进行 对象 Plain Old CLR Objects .POCO .
+  代码优先方法，通过遵守 特定的惯例 ，来自动评估 模型层中各种属性和模型类的信息。
+  它们之间的关系 以及如何使用数据库表示模型关系。
+  EntityFramework 代码优先，可以处理更复杂的映射关系。
+
+  # 使用Entity Framework 代码优先模式 创建 数据访问层
+
+  Entity Framework 代码优先 模式的 核心 依赖于  System.Data.Entity.DbContext类。
+  System.Data.Entity.DbContext 是 代码访问数据库的网关，提供了数据库相关的操作。
+
+  如果要对保存到数据库里的数据进行严格的限制，就需要使用数据验证机制。
+
+  # 验证数据
+  ASP.NET MVC 把数据验证 作为重要部分 ，集成到请求处理中
+  ASP.NET MVC 框架 验证每个 传递给 操作的数据 是否有效
+  控制器操作 可以通过检查 ModelState来检查请求是否有效。
+  保存有效数据到数据库，后缀返回包含 错误提示信息 的原始表单给用户。
+  [HttpPost]
+  public ActionResult Create(Auction auction){
+	if(ModelState.IsValid){
+		var db=new EbuyDataContext();
+		db.Auctions.Add(auction);
+		db.SaveChanges();
+		return RedirectToAction("Index");
+	}
+	return View(auction);
+  }
+
+  开发者，可以自由添加 自己的逻辑 去发现没有 被捕获的错误 ，并添加错误验证信息。
+  ModelState.AddModelError(string key,string message)来添加错误验证信息。
+
+  #
+  [HttpPost]
+  public ActionResult Create(Auction auction){
+	if(auction.EndTime<=DateTime.Now.AddDayds(1)){
+		ModelState.AddError("EndTime","Auction must be at least last one day long");
+	}
+	if(ModelState.IsValid){
+		BeanUtils.BeanAdd(auction,"Auctions");
+		RedirectToAction("Index");
+	}
+	return View(auction);
+
+  }
+  这个方法，是有效的，但是没有分离应用程序的关注点，控制器不应该包含这种应用逻辑。
+  该业务逻辑更专注与模型，所以要把业务逻辑 转移到模型中。
+
+  # 使用数据声明 指定业务规则
+  确保数据的有效性 。
+  通常情况下，开发人员，都是尽可能帮助现有的框架来完成数据验证工作。
+  数据标注：微软提供了 非常高效的、便捷的数据验证API 。称谓数据标注。是.NET的核心框架。
+  数据标注API 提供了一系列.NET 标记属性。开发人员可以直接 标记在对象的属性上。
+  这些标记 提供了验证规则的声明式方式。
+
+  ASP.NET MVC 模型绑定 提供了数据标记支持。不需要额外的配置。
+  #必填字段
+  [Required,StringLength(50)]
+  public string Title{get;set;}
+
+  #验证范围 
+  [Range(1,10000)]
+  public decimal StartPrice{get;set;}
+
+  RequiredAttribute,StringLengthAttribute ,RangeAttribute,RangeAttribute(type,min,max)
+
+  [Range(typeof(DateTime),"1/1/2012","12/31/9999")]
+  public DateTime EndTime{get;set;}
+
+  #自定义错误信息
+  数据标记提供了ErrorMessage的属性，可以指定返回给用户的错误信息，
+  而不是用DataAnnotations API 生成的默认信息。
+  public class Auction{
+	[Required]
+	[StringLength(50,ErrorMessage="Title cannot be longer than 50 characters")]
+	public string Title{get;set;}
+
+	[Required]
+	public string Description{get;set;}
+
+	[Range(1,10000,ErrorMessage="The auction's price must be at least 1 ")]
+	public decimal StartPrice{get;set;}
+
+	public deicmal CurrentPrice{get;set;}
+	public DateTime EndTime{get;set;}
+  }
+
+  # 显示验证错误 
+   @Html.ValidationMessage();
+   @Html.ValidationMessageFor();
+   @Html.ValidationSummary();
+
+   显示所有的错误信息
+   @Html.ValidationSummary()
+   <p>
+	@Html.LabelFor(model=>model.Title)
+	@Html.EditorFor(model=>model.Title)
+	@Html.ValidationMessageFor(model=>model.Title)
+   </p>
+
+   # 包含更简短错误信息
+   @Html.ValidationMessageFor(model=>model.Title,“this is an error");
+
+
+
+
+
+
+
+
+
+
+  

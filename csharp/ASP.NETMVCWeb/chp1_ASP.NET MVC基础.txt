@@ -1,0 +1,331 @@
+ASP.NET MVC 框架完全支持提倡松耦合，高可维护性的开发模式和实践原则
+在本章，首先学习ASP.NET MVC的运行原理-从它支持的架构，到如何开发功能完整的ASP.NET MVC Web网站。
+然后深入 学习 ASP.NET MVC Web项目。包括创建网页，使用内置Form验证机制允许用户登录注册你的网站。
+
+1.历史：
+# ASP 活动服务页面		脚本语言和代码在同一个文件
+# ASP.NET Web表单		代码和html标签在不同文件
+# ASP.NET MVC			抛弃了基于页面的架构风格，使用了全新的MVC架构
+
+
+2.MVC架构
+  MVC 是一种严格实现应用程序各部分隔离的架构模式。【分离关注点】【松耦合】
+  MVC 包括后面的ASP.NET MVC 框架，都是以实现应用程序模块之前的隔离为目标的。
+
+  MVC 有三个层，Model,View,Controller.各层有自己的职责，不需关注其他层如何工作。
+  Model，包括实体的属性和行为。暴露属性，同时一些行为。
+  View， 转换模型，并传递给表示层。
+  Controller, 充当视图和模型之间协调的角色
+
+3.ASP.NET MVC4 的新特性
+  # 异步控制器
+	IIS会用新线程来处理每个请求，每个新请求与IIS的有限可用线程息息相关，甚至包括空闲线程。
+	在.net 4.0 和 IIS 7中已经增加了默认线程池的线程数量。
+	避免长时间占用资源仍是最好的实践开发原则，
+	为了更好的处理耗时长的请求，ASP.NET 引入了异步控制器机制。通过使用异步控制器，
+	可以告诉框架，释放处理时长的线程，在等待期间优先完成其他任务 。
+	一旦临时任务结束，就返回原长请求的任务 。
+	只要异步控制器正常执行完成，一样返回结果。
+  # 显示模式
+	是自己网站支持移动设备
+  # 绑定与压缩
+  # Web API 简单的Http数据服务为应用程序，设备，平台数据的首选方式。
+4.新建MVC 项目
+
+  # 项目模板
+	空模板
+	基本模板
+	Internet Application ，互联网应用程序模板,源于空模板，包含简单HomeController,AccountController,
+	Intranet Application ,以太网应用程序模板 ，与Internet Application 很像。针对移动设备进行了优化，包含JQuery Mobile Javascript.以及与JQuery Mobile 完美兼容的视图模板
+	Web API ,预定了Web API 控制器，Web API 是一种新的轻量级 RESTful HTTP Web服务框架，可以与MVC 无缝继承。
+
+  # 惯例优先原则
+5.ASP.NET MVC 请求的生命周期
+	       Request		Routing
+	       _________>	路由      __________
+						    |
+	Browser					    |
+	浏览器					Controller
+						控制器
+	 	  Response	View		    |
+		<_________	视图	  __________|	
+
+   #路由
+   所有的ASP.NET MVC 请求与其他的网站一样，都带有一个URL请求，这意味着尽管没有提到路由，
+   但是ASP.NET Routing 是ASP.NET MVC 的核心。
+   ASP.NET 路由是一个模式匹配系统。
+	开始时 ，应用程序使用路由表注册一种或多种模式，告诉路由如何处理这些与模式匹配的请求。路由引擎在接收到请求以后，
+	会根据是事先注册号的URL模式，匹配当前的请求URL
+	如果发现匹配模式，把请求转发给特定的处理器来处理。
+	如果没有匹配的任何路由，返回404状态码。
+	
+   路由匹配
+   
+   Request Url[请求Url]
+	   Routing enginge[路由引擎]
+			Parse Url[解析Url]
+				Locate matching route[定位匹配的路由]
+					Route found?[找到路由]
+						Route is processed[处理路由]
+   配置路由：
+   ASP.NET MVC 路由，负责确定由哪个控制器，来处理特定的Url请求，
+   由以下属性组成：
+	Unique name
+	URL pattern 将Url解析成有意义词语的简单模式语法
+	Defaults   URL模式里定义的参数变量的默认值
+	Constrains  为URL模式匹配定义更严格的规则约束
+   
+   默认的ASP.NET MVC 项目，添加了通用的路由 ，它使以下URL习惯来解析特定的URL请求。
+   分为三个部分，controller,action,id
+   {controller}/{action}/{id}
+   注册路由 使用的扩展方法是MapRoute();在程序启动的时候，注册 
+   routes.MapRoute(
+	"Default",
+	"{controller}/{action}/{id}",
+	new{contoller="Home",action="Index",id=UrlParameter.Optional}
+   );
+   匹配路由模式的URL及其值
+   url				Controller		Action		ID
+   /				HomeController		Index
+   /auctions			AuctionsController      Index
+   /auctions/recent		AuctionsController	Recent
+   /auctions/auction/1234	AucionsController	Actuion		1234
+
+   当应用程序启动时 ，ASP.NET MVC 会在程序集里查找所有可用的控制器。
+   这些控制器都继承自System.Web.Mvc.IController接口或它的子接口。并且名字带有Controller后缀。
+   当路由器框架确定需要访问的控制器以后，就会去掉后缀，直接获取名称。
+   并且路由控制器和设置操作不区分大小写。
+
+   URL路由包含了路由引擎可以提取的丰富信息。
+   为了处理ASP.NET MVC的请求，路由引擎，必须能够确定两个信息：控制器和操作。
+   运行时，路由引擎会把这些值 ，传递给ASP.NET 去创建和执行特定的控制器和操作。
+
+ 
+   # 控制器
+   在MVC的上下文中，控制器响应用户的输入，并协调模型，视图以及数据访问层。
+   在ASP.NET MVC程序里，控制器就是被路由框架请求处理时调用的方法的类。
+   using System.Web.Mvc;
+
+   namespace Ebuy.WebSite{
+	public class HomeController:Controller{
+		public ActionResult Index(){
+			ViewBag.Message="...";
+			return View();
+		}
+		public ActionResult About(){
+			ViewBag.Message="..."；
+			return View();
+		}
+		public ActionResult Contact(){
+			ViewBag.Message="...";
+			return View();
+		}
+	} 
+   }
+
+   #控制器操作
+   控制器类里的方法做了处理请求过程的主要工作。
+   #操作结果
+   控制器的工作，告诉ASP.NET MVC框架下一步该做什么。
+   沟通过程通过 ActionResult来实现。
+
+   #
+   Content():	ContentResult	文本类型	"Hello World"
+   File():	FileResult	文件类型	pdf
+   HttpNotFound() HttpNotFoundResult 
+   JavaScript() JavaScriptResult JavaScript	"function Hello{alert(Hello world)}";
+   Json()	JsonResult	Json格式数据	{"Message":"Hello World!"};
+   PartialView() PartialViewResult 包含部分视图
+   Redirect()	RedirectResult	302跳转状态	"302http://www.baidu.com";
+   RedirectToAction(),RedirectToRoute().
+   View()	ViewResult	渲染视图
+   MVC 提供了各种情况下需要的操作类型结果。
+
+   操作参数
+   模型绑定：控制器，当执行操作时 ，可以使用ASP.NET MVC请求，传递过来的参数。
+
+   之前：
+   public ActionResult Create(){
+	var auction=new Auction(){
+		Title=Request["title"],
+		CurrentPrice=decimal.Parse(Request["currentPrice"]),
+		StartTime=DateTime.Parse(Request["startTime"]),
+		EndTime=DateTime.Parse(Request["endTime"])
+	}
+   }
+   这种例子，很脆弱。只要有任何一种类型，解析失败，整个操作都会失败。
+
+6.模型绑定
+#模型绑定的基本概念
+  使用模型绑定之后： 
+  public ActionResult Create(string title,decimal currentPrice,DateTime startTime,DateTime endTime){
+	var auction=new Auction(){
+		Title=title,
+		CurrentPrice=currentPrice,
+		StartTime=startTime,
+		EndTime=endTime
+	}
+  }
+  这里不需要解析Request参数，因为操作方法已经声明了这些值作为参数。
+  当ASP.NET MVC框架，在执行这个方法时 ，会自动给操作的方法赋值 。
+  Request对象并不是ASP.NET MVC模型绑定器获取值的唯一方法。
+  事实上，MVC可以从几个地方查找需要的值，例如 路由数据，查询字符串参数，Post提交的数据值。
+  甚至是序列化的JSON对象。
+  public ActionResult Auction(long id){
+	var context=new EBuyContext();
+	var auction=context.Auctions.FirstOrDefault(x=>x.id==id);
+	return View("auction",auction);
+  }
+
+  #模型绑定复杂对象
+  ASP.NET MVC 支持绑定复杂的数据类型
+
+7.操作过滤器
+	操作过滤器 提供更简单强大的机制去修改和增强ASP.NET MVC管道，在特定的点注入逻辑。
+	帮助处理贯穿程序中各个模块的横切关注点，crossing-cutting concerns.
+
+	应用程序的日志--无论组件的主要职责是什么，日志贯穿于程序中的任何模块。
+
+	操作过滤器逻辑：
+		首先：将ActionFilterAttribute标记到操作上，影响操作执行。
+		例如：
+			[Authorize]
+			public ActionResult Profile(){
+				return View();
+			}
+	
+ 布局模板 包含基本的标签(Scripts,CSS以及诸如导航和内容容器等Html元素)。网站的每个视图可引用这个布局。
+
+ #部分视图
+ 在网站中的各个位置 显示高级别的信息
+ 例如，EBuy 交易网站，可以要显示一个交易列表， 只显示交易名称，价格，摘要，在网站的多个页面显示。搜索页面，网站的主页。
+ #
+ @model Auction
+ <div class="auction">
+       <a href="@Model.Url">
+       	    <img src="@Model.ImageUrl"/>
+       </a>
+       <h4><a href="@Model.Url">@Model.Title</a></h4>
+       <p>CurrentPrice:@Model.CurrentPrice</p>
+ </div>
+ 为以后，可以单独使用这个文件，可保存在/Views/Shared/Auction.cshtml,然后调用
+
+ #遍历调用
+ @model IEnumerable<Auction>
+
+ @foreach(var auction in @Model){
+	@Html.Partial("Auction",auction);
+ }
+ Html.Partial()帮助方法的基础 是强大的 ASP.NET MVC 引擎视图。渲染部分视图，与控制器
+ 操作方法中调用View() 方法，返回视图结果，过程类似。引擎使用 视图名去查找，并渲染特定读的视图。
+ 同样，部分视图的 查找和 执行过程与View()方法，十分类似。
+
+ Html.Partial() 帮助方法的第二个参数，接收的是，部分视图的模型。这个参数不是必须的。
+ 例如，第二个参数没传递，就会传递，原来View视图的Model属性。
+
+ #显示数据
+  MVC 架构 依赖于模型，视图，控制器。
+  控制器和视图如何交互？
+
+  ASP.NET MVC 提供了两种方式在 MVC边界 进行数据传递： ViewData,TempData.
+  从控制器向视图传递数据，只用在控制器里赋值 。
+
+  HomeController.cs
+
+  public ActionResult About(){
+	ViewData["UserName"]=User.Identity.Name;
+	ViewData["Company"]="EBuy: The ASP.NET MVC Demo Site";
+	ViewData["CompanyDescription"]="EBuy is the best demo in ASP.NET MVC";
+	return View("About");
+  }
+
+  About.cshtml
+  <h1>@ViewData["CompanyName"]</h1>
+  <div>@ViewData["CompanyDescription"]</div>
+
+  # 通过ViewBag 访问ViewData的值 。
+  ViewBag 与ViewData类似。
+  ViewBag 把 ViewData 包装为了dynamic 动态对象。任何使用ViewData字典取值的代码，都可以
+  改为ViewBag对象的属性方式。
+  除了基本的属性，ViewData对象，也提供了Model属性。
+  CompanyInfo.cs
+  public class CompanyInfo{
+	public string Name{get;set;}
+	public string Description{get;set;}
+  }
+  HomeController.cs
+  public ActionResult About(){
+	ViewBag.UserName=User.Identity.Name;
+	var company=new CompanyInfo{
+		Name="EBuy:The ASP.NET MVC Demo Site",
+		Description="EBuy is the world leader in ASP.NET MVC Demoing"
+	}
+	return View("About",company);
+  }
+  About.cshtml
+  @{var company=(CompanyInfo)ViewData.Model;}
+  <h1>@company.Name</h1>
+  <div>@company.Description
+  </div>
+  View() 的重载方法，第二个参数要赋值给ViewData.Model属性的对象。
+  
+  #强类型视图
+  @model CompanyInfo
+  <h1>@model.Name</h1>
+  <div>@model.Description</div>
+
+  #HTML 和 URL 帮助方法
+  HtmlHelper帮我们生成Html代码
+  UrlHelper帮我们生成Url代码。
+
+  #模型
+   数据模型，域模型。负责管理数据
+
+   每个ASP.NET MVC 请求，都至少包含3个东西，路由，控制器，视图。
+
+   路由：举例 ;http://www.ebuy.biz/Auctions/Details/1234     默认的路由，已经支持这个Url.
+
+  
+   #控制器模板
+	空 MVC 控制器 	    - 仅有一个Index()类。
+	包含读/写操作的控制器和视图，使用EF 框架
+			    - 包含访问ef对象的代码，CRUD.
+	包含空读/写操作的MVC控制器
+			    - 增加了标准数据操作的方法，CRUD.
+	Web API 控制器模板
+		            - 
+
+   #AuctionsController.cs   ->Details.cshtml
+   两个Html帮助方法，Html.DisplayNameFor();DisplayFor();
+
+   #验证
+   如何在用户访问控制器操作之前验证他们的身份以保护网站的安全。
+   传统的ASP.NET 网站添加身份验证的方式 是在 web.config 中添加设置。
+   ASP.NET MVC 依赖于控制器操作。而不是物理页面。
+   ASP.NET MVC 框架提供了AuthorizeAttribute标记属性，可以直接应用到每个控制器的操作上，限制只有验证通过的用户，特定的用户
+   或者用户角色才可以访问。
+   public class UserController{
+	[Authorize]
+	public ActionResult GetProfile(){
+		var user=_respository.GetUserByUserName(User.Identity.Name);
+		return View("Profile",user);
+	}
+   }
+   只有通过用户验证的，才会进入操作。
+   其他的，重定向到 URL:AccountController  的 Login操作。
+   AuthorizeAttribute 暴露了 User 属性，可以设置 访问的白名单，用户名 。
+
+   # 账号控制
+   ASP.NET MVC 的 互联网模板 InternetApplication 包含了 AccountController
+   AccountController提供了现成的功能，登录，退出，注册，修改密码。
+
+
+
+
+
+
+
+
+
+
+   
