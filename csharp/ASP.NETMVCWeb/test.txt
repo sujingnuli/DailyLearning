@@ -1,0 +1,7 @@
+控制器 和 存储库类 。Repository .
+
+IRepository .
+创建存储类的代码，移动到工厂。
+控制器现在只依赖 IRepository .
+并且对存储库类 Repository 的构造函数的任何更改都不影响控制器。
+消除了 控制器和 Repository 之间的紧耦合，引入了一种控制器和工厂类之间的新关系。‘

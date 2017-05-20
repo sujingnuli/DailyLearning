@@ -28,14 +28,14 @@ namespace TestWeb.cs
             {
                System.Data.DataTable dt = dts[mk-1];
                 Microsoft.Office.Interop.Excel.Worksheet worksheet = (Microsoft.Office.Interop.Excel.Worksheet)workbook.Worksheets.Add(workbook.Worksheets.get_Item(mk));
-                worksheet.Name = dt.Rows[1]["Name"].ToString();       
+                worksheet.Name = dt.Rows[0]["Name"].ToString();       
                 long totalCount = dt.Rows.Count;
                 string[] titles = new string[] { "序号", "昵称", "日期", "内容", "状态" };
                 //首行标题
                 range = worksheet.get_Range("A1", "E1");
                 range.ClearContents();
                 range.MergeCells = true;
-                worksheet.Cells[1, 1] = "计划表 — " + dt.Rows[1]["Name"].ToString();
+                worksheet.Cells[1, 1] = "计划表 — " + dt.Rows[0]["Name"].ToString();
                 range = worksheet.Cells[1, 1];
                 range.Font.Name = "黑体";
                 range.Font.Size = 15;

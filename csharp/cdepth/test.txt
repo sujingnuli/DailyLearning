@@ -1,12 +1,5 @@
-再来看看这个返回数据的示例，
-static async Task<int> GetPageLengthAsync(string url){
-	using(HttpClient client=new HttpClient()){
-		Task<string> fetchText=client.GetStringAsync(url);
-		int length=(await fetchText).Length;
-		return length;
-	}
-}
-
-length 是 int 型 ，但是返回的类型是 Task<int>,
-
-生成的代码，帮我们
+虽然，这个方法，不错，但是ASP.NET MVC 提供了更好的额方法。
+来渲染特定属性的错误嘻嘻你。
+Html.ValidationMessageFor(model=>model.Title);
+为 模型的每个属性，都添加 调用 
+@Html.ValidationMessage() ASP.NET MVC 会在相关

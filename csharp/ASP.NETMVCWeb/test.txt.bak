@@ -1,0 +1,22 @@
+public class ProductResponsitory:ISearchProvider,IRepository{
+
+}
+public interface ISearchProvider{
+	List<T> Search<T>(Criteria criteria);
+}
+public interface IRespository{
+	T GetById(string id);
+	void Delete(T t);
+	void Save(T t);
+}
+
+public class SearchController:Controller{
+	private ISearchProvider searchProvider;
+	public SearchController(ISearchProvider provider){
+		this.searchProvider=provider;
+	}
+	public ActionResult SearchForProducts(Criteria criteria){
+		List<Product> products=searchProvider.Search(Criteria criteria);
+		return View(products);
+	}
+}
