@@ -1,0 +1,31 @@
+﻿@model IEnumerable<EBuy.Models.Auction>
+
+@{
+    ViewBag.Title = "Ebuy Auctions Listings";    
+}
+
+@*@section HeaderContent{
+    @Html.Partial("SecondaryActions")    
+}*@
+
+<div class="container">
+
+    <header>
+        <h3>Auctions</h3>
+
+    </header>
+    <ul id="auctions">
+        @foreach (var auction in Model) { 
+            <li>
+                <h4>
+                    <a href="@auction.Url">@auction.Title</a>
+                </h4>
+            </li>
+        }    
+    </ul>
+
+    <div>
+        姓名：@Html.TextBox("name")
+        密码：@Html.Password("pwd")
+    </div>
+</div>

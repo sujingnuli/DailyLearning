@@ -1,0 +1,72 @@
+﻿@model EBuy.Models.Auction
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View1</title>
+</head>
+<body>
+    <fieldset>
+        <legend>Auction</legend>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Title)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Title)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Href)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Href)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.CurrentPrice)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.CurrentPrice)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.StartTime)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.StartTime)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.EndTime)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.EndTime)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.Url)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Url)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.ImageUrl)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.ImageUrl)
+        </div>
+    </fieldset>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id=Model.id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
