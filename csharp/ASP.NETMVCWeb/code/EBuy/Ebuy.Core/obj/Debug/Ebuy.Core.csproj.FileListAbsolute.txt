@@ -1,0 +1,5 @@
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\Ebuy.Core.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\Ebuy.Core.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\Ninject.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\obj\Debug\Ebuy.Core.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\obj\Debug\Ebuy.Core.pdb

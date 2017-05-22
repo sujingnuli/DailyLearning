@@ -1,6 +1,7 @@
 ﻿using DAL;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -31,9 +32,30 @@ namespace EBuy.Utils
             string Instr = string.Format("insert into {0}({1}) values({2})", table, key, val);
              DBWZHelper.GetScalar(Instr);
         }
+        public static T GetById<T>(long id,string table){
+            string sql = string.Format("select * from {0} where id={1}", table, id);
+            DataTable dt=DBWZHelper.GetReader(sql);
+            if (dt == null || dt.Rows.Count <= 0) { return default(T); }
+            Type type = typeof(T);
+            T instance =(T)Activator.CreateInstance(type);
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            DataRow dr=dt.Rows[0];
+            foreach (PropertyInfo prop in properties) {
+                string tp = prop.PropertyType.Name.ToLower();
+                string name = prop.Name;
+                object value = dr[name];
+               value= HackInsObj(value,tp);
+                prop.SetValue(instance, value, null);
+            }
+            return instance;
+
+        }
         private static object HackInsObj(object value, string type) {
             if (type.Equals("string")) {
                 value = value == null || string.IsNullOrEmpty(value.ToString()) ? null : value;
+            }
+            if (type.Equals("datetime")) {
+               value= value == null||string.IsNullOrEmpty(value.ToString()) ? Convert.ToDateTime("1900-01-01") : Convert.ToDateTime(value);
             }
             return value;
         }

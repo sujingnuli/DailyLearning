@@ -20,22 +20,12 @@ namespace EBuy.Controllers
 
         //
         // GET: /Auctions/Details/5
-        [Authorize]
-        public ActionResult Details(int id)
-        {
-
-            var auction = new Auction
-            {
-                id = id,
-                Title = "Brand new Widget 2.0",
-                Description = "This is a brand new version 2.0 Widget",
-                StartPrice = 1.00m,
-                CurrentPrice = 13.40m,
-            
-
-            };
-            return View(auction);
+        public ActionResult Auction(long id) {
+            Auction auction=BeanUtil.GetById<Auction>(id,"Auctions");
+            return PartialView("Auction", auction);
         }
+
+
         public ActionResult Lists( ) {
             List<Auction> auctions = new List<Auction>();
             for (int i = 0; i < 5; i++)

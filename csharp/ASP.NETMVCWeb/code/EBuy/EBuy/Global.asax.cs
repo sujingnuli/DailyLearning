@@ -24,5 +24,6 @@ namespace EBuy
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
         }
+      
     }
 }

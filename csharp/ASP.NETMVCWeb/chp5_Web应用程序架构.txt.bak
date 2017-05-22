@@ -211,8 +211,143 @@
 		IOC 容器负责创建并注入 到该控制器的实例。
 	#服务定位
 		使用服务定位 Service locator pattern .开发人员只需要通过IOC 容器 获取一个特定的服务类。
+		用容器检查请求类是否配置，服务器定位的功能十分强大。
+		如果直接访问数据库的某项服务，单个方法，仅需服务器的名称，并不需要接口 。
+		这种模式的缺点，要直接访问IOC 容器。会导致IOC 和 API 之间的紧密耦合。
 
+		使用接口 ，降低耦合
+		public class AuctionsController:Controller{
+			private readonly IRepository _repository;
+			public AuctionsController(){
+				IRepository repository=Container.GetService<IRepository>();
+				_repository=repository()
+			}
+		}
 	  
+	  #依赖注入
+	  与服务器定位相比，依赖注入方式提倡采用更松散耦合的方法。
+	  DI 通过 构造方法，属性或方法，来传递依赖。
+	  通常情况下，使用构造函数，注入依赖，因为需要立即使用依赖。
+	  IOC 容器允许 延迟加载 lazy-loading .方法来注入依赖，在属性之前不会加载依赖项 。
+
+	  构造方式注入：
+	  public class AuctionsController:Controller{
+		private readonly IRepository _repository;
+		public AuctionsController(IRepository repository){
+			_repository=repository;
+		}
+	  }
+	  控制器并没有直接引用 数据库存储代码，而是通过接口 IRepository .IOC会确定正确的IRepository实现类。
+	  并在运行时 ，注入它。
+
+	  注入依赖真正显示威力的时候，有多级依赖关系的时候，例如 自己的依赖，有其他依赖项 。
+	  当IOC 容器注入一个依赖项时 ，会检查是否有一个以前加载依赖项的实例，如果没有，创建
+	  并查看是否需要转入其他依赖项 。在此方案中，当IOC容器遍历依赖项，就会创建，必要的依赖项 。
+
+	  依赖链
+	  当IOC 容器 创建AuctionsController实例的时候，会检测是否依赖，IRepository接口 ，
+	  然后会检查是否注册了IRepository的实例，如果没有，就创建AuctionRepository对象。
+
+	  public interface IRepository<T>{
+		T GetById(string id);
+		void Delete(T t);
+		void Save(T t);
+	  }
+	  public class AuctionRepository:IRepository<Auction>{
+		private readonly IErrorLogger _logger;
+		public AuctionRepository(IErrorLogger logger){
+			_logger=logger;
+		}
+		public Auction GetById(string id){
+		
+		}
+		public void Delete(Auction auction){
+		
+		}
+		public void Save(Auction auction){
+		
+		}
+	  }
+	  public interface IErrorLogger{
+		void Log(Exception e);
+	  }
+	  public class ErrorLogger:IErrorLogger{
+		public void Log(Exception e){
+		
+		}
+	  }
+
+	 #选择IOC 容器
+	 当使用控制反转时，需要记住两件事情：性能和错误处理。
+	 使用IOC 容器来管理并注入依赖的代价，可能非常大 。依赖需要合适的生命周期
+	 不要使用IOC 容器来创建大的集合对象。
+	 如果某个依赖配置为单例模式，就可能引起跨线程的问题，而且需要安全管理外部资源。
+	 有几个可以使用的.NET IOC 容器，每个都提供了不同的注入和管理依赖的方法。
+
+	 Ninject IOC 容器。
+		1.设置启动程序项目。启动程序项目 ，负责管理使用Ninject注册的模块
+		  要检查的最重要的模块就是 BindingsModule .
+		2.bootstarpper类的start()和 stop()方法。这些方法需要在 Global.asax应用程序启动时调用。
+		3.Ninject bootstrapper类。
+3.使用控制反转扩展ASP.NET MVC 
+	ASP.NET MVC 框架严重依赖控制反转原则。
+	这个框架包含了现成的控制器工厂类，可以通过拦截输入的请求，读取MVC路由信息来创建
+	特定的控制器，最后根据由定义来调用控制器的方法。IOC 的另一个主要应用领域是，管理应用程序中的视图引擎，
+	以及控制控制器及相应的视图之间的执行过程。
+	只有我们通过使用自定义IOC 容器，重写默认 依赖解析器 扩展ASP.NTE MVC 框架来获取直接控制 ASP.NET MVC 管理依赖和创建对象的权限时 ，才能体会IOC的强大
+	重写ASP.NET MVC 默认的依赖解析器 和实现 IDependencyResolver接口 一样简单，而且可以使用ASP.NET MVC 框架注册自定义依赖解析器
+
+	public class CustomDependencyResolver:IDependencyResolver{
+		private readonly Ninject.IKernel _kernel;
+		public CustomDenpendencyResolver(Ninejct.IKernel kernel){
+			_kernel=kernel;
+		}
+		public object GetSerivce(Type serviceType){
+			return _kernel.TryGet(serviceType);
+		}
+		public IEnumerable<object> GetAll(Type serviceType){
+			return 	_kernel.GetAll(serviceType);
+		}
+	}
+	创建Ninject.IKernel实例，并传递给CustomDependencyResolver的。
+	虽然IOC容器的实现方式，不同，但是大多数IOC 框架，在创建和解析依赖关系之前，都要配置容器。
+	public void test(){
+		Ninject.IKernel kernel=new Ninject.StandardKernel();
+		DependencyResolver.SetResolver(new CustomDependencyResolver(kernel));
+	}
+	public class CustomDependencyResolver:IDependencyResolver{
+		private readonly Ninject.IKernel _kernel;
+		public CustomerDependencyResovler(Ninject.IKernel kernel){
+			  _kernel=kernel;
+		}
+		public object GetService(Type serviceType){
+			return _kernel.TryGet(serviceType);
+		}
+		public IEnumerable<object> GetAll(Type serviceType){
+			return _kernel.GetAll(serviceType);
+		}
+	}
+	   
+	上面的代码，还不能正常执行，必须先告诉StandardKernel.需要他来管理接口和类。
+	使用Ninject框架，可以使用Bind<T>()方法来实现。
+	kernel.Bind<IErrorLogger>().To<ErrorLogger>();
+
+	#DRY 原则   don't repeat yourself 
+	鼓励开发人员避免重复相同或相似的代码
+
+	例如：CheckUserRight() 方法，每个Controller都有，移动到控制器基类，是一个方法。
+	但是ASP.NET MVC 提供了一个更好的方法：创建一个操作过滤器ActionFilter来处理。
+
+	本章总结：分离关注点，反转控制，SOILD
+
+
+	
+
+
+
+
+
+
 
 
 

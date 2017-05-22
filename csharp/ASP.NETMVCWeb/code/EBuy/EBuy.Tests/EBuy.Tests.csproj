@@ -123,9 +123,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EBuy\EBuy.csproj">
+    <ProjectReference Include="..\EBuy\EBuy.WebSite.csproj">
       <Project>{E06F42B2-42F7-47B0-9E6A-CFEAFCBA8052}</Project>
-      <Name>EBuy</Name>
+      <Name>EBuy.WebSite</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
