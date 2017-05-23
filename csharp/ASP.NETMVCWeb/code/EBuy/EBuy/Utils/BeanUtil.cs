@@ -50,6 +50,29 @@ namespace EBuy.Utils
             return instance;
 
         }
+        public static List<T> GetSelTable<T>(string table, string whereStr, string orderStr) {
+            whereStr = string.IsNullOrEmpty(whereStr) ? "" : string.Format(" where {0}", whereStr);
+            orderStr = string.IsNullOrEmpty(orderStr) ? "" : string.Format(" order by {1}", orderStr);
+            string selStr = string.Format("select * from {0} {1} {2}", table, whereStr, orderStr);
+            DataTable dt = DBWZHelper.GetReader(selStr);
+            if (dt == null && dt.Rows.Count <= 0) {  return  null; }
+            List<T> lists = new List<T>();
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                DataRow dr = dt.Rows[i];
+                Type tp = typeof(T);
+                T instance =(T) Activator.CreateInstance(tp);
+                PropertyInfo[] properties = tp.GetProperties(BindingFlags.Instance | BindingFlags.Public);
+                foreach (PropertyInfo prop in properties) {
+                    string name = prop.Name;
+                    string type = prop.PropertyType.Name.ToLower();
+                    object value = dr[name];
+                    value = HackInsObj(value, type);
+                    prop.SetValue(instance, value, null);
+                }
+                lists.Add(instance);
+            }
+            return lists;
+        }
         private static object HackInsObj(object value, string type) {
             if (type.Equals("string")) {
                 value = value == null || string.IsNullOrEmpty(value.ToString()) ? null : value;

@@ -1,3 +1,17 @@
-上面的代码，还不能正常执行。
-要告诉，
-Ninject.IKernel kernel=new Ninject.StandardKernel();
+JsonModelBinder 
+
+public class JsonModelBinder:DefaultModelBinder{
+	
+	public override object BindModel(ControllerContext controllerContext,ModelBindingContext bindingContext){
+		string json=string.Empty;
+		var provider=bindingContect.ValueProvider;
+		var providerValue=provider.GetValue(bindingContext.ModelName);
+		if(providerValue!=null){
+		json=providrValue.AttemptedValue;	
+		}
+		if(Regex.IsMax(json,@"^(\[.*\]|{.*})$")){
+			return new JavaScriptSerializer().Deserialize(json,bindingContext.ModeType);
+		}
+		return base.BindModel(controllerContext,bindingContext);
+	}
+}

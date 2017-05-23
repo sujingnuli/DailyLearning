@@ -188,3 +188,6 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\zh-H
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\obj\Debug\EBuy.Tests.csprojResolveAssemblyReference.cache
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\obj\Debug\EBuy.Tests.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\obj\Debug\EBuy.Tests.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ebuy.Core.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ninject.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ebuy.Core.pdb

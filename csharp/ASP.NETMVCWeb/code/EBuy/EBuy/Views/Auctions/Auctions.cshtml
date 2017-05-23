@@ -1,0 +1,37 @@
+﻿@model IEnumerable<EBuy.Models.Auction>
+
+<h2>Auctions</h2>
+<section class="auctions">
+    @foreach (var auction in Model) { 
+        <section class="auction" style="border:1px solid gray;" >
+            @Html.Partial("Auction",auction)
+        </section>
+    }
+</section>
+
+<section id="auction-details">
+    @Html.Partial("Auction", Model.First())
+ </section>
+
+<script id="auction-templete" type="text/x-template">
+    <div class="Title" >{{Title}}</div>
+    <div class="overview">
+        <img src="{{ImageUrl}}" alt="{{Title}}"/>
+        <p>
+            <strong>CurrentPrice:</strong>
+            <span class="current-price">{{CurrentPrice}}</span>
+        </p>
+    </div>
+    <h3>Description</h3>
+    <div class="description">
+        {{Description}}
+    </div>
+</script>
+<script src="~/Scripts/mustache.js"></script>
+<script src="~/Scripts/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var source = $("#auction-template").html();
+        $(".auction")
+    });
+</script>

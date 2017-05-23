@@ -1,1 +1,23 @@
-上面的代码，还不能正常执行。
+Auction 
+里的代码，简化了一个新的Auction对象。Create
+
+var auction={
+"Title":"New Auction",
+"Description":"This is an awesome item!",
+"StartPrice":"5.00",
+"StartTime":"01/12/2012 6:00 PM",
+"EndTime":"01/19/2012 6:00 AM"
+};
+$.post('@Url.Action("Create","Auctions")',auction);
+
+记住，控制器操作，并不需要做什么特别处理，JSON格式的数据会自动映射到操作方法的参数上。
+整个控制器操作方法 ，要做的就是 执行逻辑代码以及返回结果。
+
+[HttpPost]
+public ActionResult Create(Auction auction){
+	if(ModelState.IsValid){
+		BeanUtil.BeanAdd(auction);
+		return View("Auction",auction);
+	}
+	return View("Create",auction);
+}

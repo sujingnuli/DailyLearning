@@ -26,6 +26,7 @@
 -
 -ASP.NET MVC Web编程 	p108	 2017-05-21 00:43
 -ASP.NET MVC Web编程    p113     2017-05-22 08:43
+-ASP.NTE MVC Web编程    p127	 2017-05-22 16:05
 -mvc是一种框架，前端开发的框架，主要的学习还是后端语法和应用。
 
 you didn't do anything ,but you hope something will happen
@@ -47,3 +48,4 @@ that's strange.
 --每个人都可以很厉害的是吧，只要你愿意相信自己。
 --愿上天收走我一切的幸福快乐安然，置我于无心无我之境。--听古刹晚钟
 --今天一个ashx重命名的问题，折腾了我半天，好郁闷。
+--在网络中传输html是一种浪费，传输必要的数据，然后在客户端动态创建html。

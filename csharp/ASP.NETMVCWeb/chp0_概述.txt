@@ -1,15 +1,12 @@
-本书全面介绍了 最新的 ASP.NET MVC4框架，包括如何设计，构建，测试，部署ASP.NET MVC4 Web应用程序。
-
-1.ASP.NET MVC 与 ASP.NET Web Form 框架的底层差别
-2.Web应用程序 架构设计，网站性能优化
-3.JQuery框架 进行客户端开发
-4.Ajax实现网站无刷新互交
-5.Entity Framework与Web数据交互
-6.各种Cache缓存机制
-7.开发 ASP.NET Web API 服务
-8.移动设备开发网站
-9.错误处理，自动化测试，以及自动化生成技术
-10.部署 MVC4 应用程序
-11.OOP面向对象编程和Web架构设计
-12.ASP.NET MVC4 开发时间经验和指导原则
-
+1.尽量从服务器端获取数据，在客户端进行渲染，这样，就可以少在网络传输数据。
+2.mustache.js ,使用客户端模板，用起来很棒。（还好没放弃）
+   用法：var template=$("#auction-template").html();
+	var key=$(this).data(key);
+	$.ajax({
+		url:'@Action.Url("JsonAuction","Auctions")/'+key,
+		success:function(data){
+			var view=Mustache.render(template,data);
+			$("#auction-details").html(view);
+		}
+	});
+3.方法扩展还要多用，public static bool IsAjaxRequest(this HttpRequestBase request){...}

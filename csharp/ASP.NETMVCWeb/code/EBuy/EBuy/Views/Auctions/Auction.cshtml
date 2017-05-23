@@ -1,15 +1,13 @@
-﻿@model  EBuy.Models.Auction
-<div class="title">
-    @Model.Title
-</div>
+﻿@model EBuy.Models.Auction
+<div class="title">@Model.Title</div>
 <div class="overview">
-    <img src="@Model.ImageUrl" alt="@Model.Title" />
+    <img src="@Model.ImageUrl" alt="@Model.Title"/>
     <p>
         <strong>CurrentPrice:</strong>
         <span class="current-price">@Model.CurrentPrice</span>
     </p>
 </div>
 <h3>Description</h3>
-<div class="Description">
+<div class="description">
     @Model.Description
 </div>

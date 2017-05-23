@@ -1,4 +1,5 @@
-﻿using EBuy.Models;
+﻿using EBuy.Filters;
+using EBuy.Models;
 using EBuy.Utils;
 using System;
 using System.Collections.Generic;
@@ -20,22 +21,16 @@ namespace EBuy.Controllers
 
         //
         // GET: /Auctions/Details/5
+        [MultipleResponseFormats]
         public ActionResult Auction(long id) {
             Auction auction=BeanUtil.GetById<Auction>(id,"Auctions");
-            return PartialView("Auction", auction);
+
+            return View("Auction",auction);
         }
+       
 
-
-        public ActionResult Lists( ) {
-            List<Auction> auctions = new List<Auction>();
-            for (int i = 0; i < 5; i++)
-            {
-                auctions.Add(new Auction()
-                {
-                    Title = "This is brand " + i,
-                    Url = "http://www.baidu.com"
-                });
-            }
+        public ActionResult Lists() {
+            List<Auction> auctions = BeanUtil.GetSelTable<Auction>("Auctions", "", "");
             return View(auctions);
         }
 

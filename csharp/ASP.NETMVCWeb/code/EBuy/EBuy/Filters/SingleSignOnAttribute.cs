@@ -8,10 +8,10 @@ namespace EBuy.Filters
 {
     public class SingleSignOnAttribute:ActionFilterAttribute,IActionFilter
     {
-        void OnActionExecuted(ActionExecutedContext filterContext) { 
+        public override void OnActionExecuted(ActionExecutedContext filterContext) { 
             //检查用户令牌并验证用户
         }
-         void OnActionExecuting(ActionExecutingContext filterContext) { 
+        public  override void OnActionExecuting(ActionExecutingContext filterContext) { 
             //用来检查安全令牌是否存在预处理代码
          }
     }

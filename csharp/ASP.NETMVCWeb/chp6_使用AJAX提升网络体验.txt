@@ -4,7 +4,164 @@ ajax请求包含两中类型内容：
 	1.服务端生成html,可以直接嵌套也页面，
 	2.生成序列化数据，客户端JavaScript用来生成html代码，或者更新浏览器页面。
 
+
 1.部分渲染
 	部分渲染包含：发送异步请求到服务器，服务器返回包含html的数据并插入到页面区域
+	partialViewResult 只渲染HTML 标签内容，不包含外围布局和母版页内容，
+	部分视图和正常的视图一样，
+
+	JavaScript渲染
+	渲染HTML的方法，很简单，高效，但是浪费资源，因为有些Html代码，可以在浏览器在客户端创建。
+	而无需网络传输。因此，改进渲染的方法之一，就是从服务端，获取原始数据，在客户端动态创建html代码。直接操作dom对象。
+
+	使用客户端渲染，具备两个条件：1.服务端能产生序列化数据。2.客户端知道如何将序列化数据转化为标准html代码。
+
+	Json数据渲染
+	对象标记(JSON),是互联网上一种，简单，高效的数据传输格式。
+	JSON对象，使用两种数据结构，名值对集合以及有序值列表。
+
+	ASP.NET MVC 提供了对原生JSON的支持。使用JsonResult操作结果对象。它可以接受可序列化的JSON模型对象。
+	Controller.Json()方法来创建可序列化对象JsonResult
+	public ActionResult JsonAuction(long id){
+		Auction auction=BeanUtil.GetById<Auction>(id,"Auctions");
+		return Json(auction,JsonRequestBehaviro.AllowGet);
+	}
+
+	#使用 JsonRequestBehhavior 防止JSON劫持。
+	Json的第二个参数，JsonRequestBehavior可以通过ASP.NET MVC框架，来接收Get方式的Http请求。然后返回JSON数据格式。
+	默认情况下，ASP.NET MVC 框架，不允许Get请求，返回JSON数据。
+	不要给不可知的请求，返回JSON数据。
+	当需要通过JSON应答消息传递敏感信息时 ，可以通过在控制方法上，添加 HttpPostAttribute属性，
+	来标记，只让HttpPost方法，提交请求。以避免安全漏洞。
+	[HttpPost]
+	public ActionResult JsonAuction(long id){
+		Auction auction=BeanUtil.GetById<Auction>(id,"Auctions");
+		return Json(auction);
+	}
+
+	#请求JSON数据
+
+	#客户端模板
+	客户端模板，可以让我们按可维护的方式，快速，搞笑把json数据转换为html代码。
+
+	#mustache.js
+	@model IEnumerable<Auction>
+
+	<h2>Auctions</h2>
+	<ul class="auctions">
+		@foreach(var auction in Model){
+			<li class="auction" data-key="@auction.id">
+			<a href="javascript:void(0);">
+				<img src="@auction.ImageUrl" alt="@auction.Title"/>
+				<p>
+					<strong>CurrentPrice</strong>
+					<span>@auction.Title</span>
+				</p>
+			</a>
+			</auction>
+		}
+	</ul>
+	<section id="auction-details">
+	   @Html.Partial("Auction",auction);
+	</section>
+
+	<script id="auction-template" type="text/x-template">
+		<div class="Title">{{Title}}</div>
+		<div class="overview">
+			<img src="{{ImageUrl}}" alt="{{Title}}"/>
+			<p>
+				<strong>CurrentPrice:</strong>
+				<span class="current-price">{{CurrentPrice}}</span>
+			</p>
+		</div>
+		<h3>Description</h3>
+		<div class="description">
+		      {{Description}}
+		</div>
+	</script>
+	<script type="text/javascript">
+	      $(function(){
+	      	 var template=$("#auction-template").html();
+		 $(".auction").click(function(){
+			$.ajax({
+			   url:'@Action.Url("JsonAuction","Auctions")/'+$(this).data(key),
+			   success:function(data){
+			       var view=Mustache.render(template,data);
+			       $("#auction-details").html(view);
+			   }
+			});
+		 });
+	      });
+	</script>
+
+	#重用跨AJAX 和 非AJAX 请求逻辑代码
+	为了减少重复的逻辑代码，MVC 提供了Request.IsAjaxRequest() 扩展方法。
+	public static class JsonRequestExtendsion{
+		public static bool IsAjaxRequest(this HttpRequestBase request){
+			return string.Equals(request["format"],"json");
+		}
+	}
+	public ActionResult Auction(long id){
+		Auction auction=BeanUtil.GetById(id);
+		if(Request.IsAjaxRequest()){
+			return Json(auction,JsonRequestBehavior.AllowGet);
+		}
+		return View("Auction",auction);
+	}
+
+	#跨控制器操作指定统一逻辑
+	ASP.NET MVC 提供了完美的机制，在多个控制器操作上重用统一的逻辑规则：操作过滤器
+
+	public class MultipleResponseFormatsAttribute:ActionFilterAttribute{
+		public override void OnActionExecuted(ActionExecutedContext filterContext){
+			var request=filterContext.HttpCotext.Request;
+			var viewResult=filterContext.Result as ViewResult;
+			if(viewResult==null){
+				return ;
+			}
+			if(request.IsAjaxRequest()){
+				filterContext.Result=new PartialResult{
+				  TempData=viewResult.TempData,
+				  ViewData=viewResult.ViewData,
+				  ViewName=viewResult.ViewName
+				};
+
+			}
+			if(request.IsJsonResult){
+				filterContext.Result=new JsonResult{
+					Data=viewResult.Model
+				}
+			}
+		}
+	}
+	可以使用MultipleResponseFormatsAttribute 操作过滤器属性标记任意操作方法，
+	可以动态确定返回的结果类型，是视图，部分视图或者Json。
+
+	#发送数据到服务器
+	向Web服务器发送请求：
+		1.通过URL查询参数和通过表单提交数据(HttpGet 和 HttpPost )
+		2.
+	$.Post  ASP.NET MVC 可以向操作控制器 发送JSON格式数据的请求消息。
+		只要提供URL及要发送的数据，jQuery就会把对象序列化成JSON格式的数据，作为表单请求的数据。
+
+        #提交复杂的JSON对象
+	表面上，给模型绑定提交JSON对象看起来不错，实际上，有很多弊端
+	1.客户端必须动态构建整个消息，而且需知道每个对象的每个字段
+	2.服务器只会以ContentType 为 application/json 的json请求消息。这种方式对标准HTTP/GET请求没有用，支队正确包含头部类型的AJAX请求有效
+	3.如果只有一个字段有效，默认绑定的逻辑下，会认为整个对象无效。
+
+	为了避免这些问题，可以通过自定义模型绑定器 来替换内置的 JSON 绑定模型逻辑。
+	JsonModelBinder 与JSON工厂提供值 不同。它允许JSON包含别的字段，而不用强制整个消息为JSON格式，
+
+	因为 JsonModelBinder 模型绑定器，分别处理每个属性，可以混用不同的额字段，部分支持JSON，部分可以不支持JSON。
+	对于大部分 自定义 模型绑定器 JsonModelBinder来说，JsonModelBinder 继承自 DefaultModelBinder,所以可以在 不包含Json数据时 ，退到模型的绑定逻辑。
+
 
 	
+
+
+	
+
+
+
+
