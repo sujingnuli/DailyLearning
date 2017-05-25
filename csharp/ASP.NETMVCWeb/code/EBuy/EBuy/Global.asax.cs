@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ebuy.Core.Binder;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -23,6 +24,9 @@ namespace EBuy
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
+
+            //更换DefaultModelBinder
+            ModelBinders.Binders.DefaultBinder = new JsonModelBinder();
         }
       
     }

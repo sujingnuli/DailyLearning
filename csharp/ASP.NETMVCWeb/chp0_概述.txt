@@ -10,3 +10,20 @@
 		}
 	});
 3.方法扩展还要多用，public static bool IsAjaxRequest(this HttpRequestBase request){...}
+4.模型绑定本身就是为请求模型而生的
+  有两种，1.替换模型绑定器  
+	public void Application_Start(){
+		BinderModels.Binders.DefaultBinder=new JsonModelBinder();
+	}
+	  2.使用System.Web.Mvc.CustomModelBinderAttribute .属性来标记。
+	public class JsonModelBinderAttribute:CustomModelBinderAttribute{
+		public override IModelBinder GetBinder(){
+			return new JsonBinder();
+		}
+	
+	}
+	public class CreateProductRequest{
+		[Required]
+		[JsonModelBinder]
+		public IEnumerable<CurrencyRequest> {get,set}
+}

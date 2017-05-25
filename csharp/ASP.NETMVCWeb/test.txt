@@ -1,17 +1,5 @@
-JsonModelBinder 
-
-public class JsonModelBinder:DefaultModelBinder{
-	
-	public override object BindModel(ControllerContext controllerContext,ModelBindingContext bindingContext){
-		string json=string.Empty;
-		var provider=bindingContect.ValueProvider;
-		var providerValue=provider.GetValue(bindingContext.ModelName);
-		if(providerValue!=null){
-		json=providrValue.AttemptedValue;	
-		}
-		if(Regex.IsMax(json,@"^(\[.*\]|{.*})$")){
-			return new JavaScriptSerializer().Deserialize(json,bindingContext.ModeType);
-		}
-		return base.BindModel(controllerContext,bindingContext);
+public class JsonModelBinderAttribute:CustomModelBinderAttribute{
+	public override IModelBinder GetBinder(){
+		return new JsonModelBinder();
 	}
 }

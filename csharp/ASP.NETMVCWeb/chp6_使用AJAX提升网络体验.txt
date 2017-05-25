@@ -156,6 +156,47 @@ ajax请求包含两中类型内容：
 	因为 JsonModelBinder 模型绑定器，分别处理每个属性，可以混用不同的额字段，部分支持JSON，部分可以不支持JSON。
 	对于大部分 自定义 模型绑定器 JsonModelBinder来说，JsonModelBinder 继承自 DefaultModelBinder,所以可以在 不包含Json数据时 ，退到模型的绑定逻辑。
 
+	public 	 class JsonModelBinder:DefaultModelBinder{
+		public override object BindModel(ControllerContext controllerContext,
+		ModelBindingContext bindingContext){
+			String json=string.Empty;
+			var provider=bindingContext.ValueProvider;
+			var providerValue=provider.GetValue(bindingContext.ModelName);
+			if(providerValue!=null){
+				json=providerValue.AttempedValue;
+			}
+			if(Regex.IsMatch(json,@"^(\[.*\]|{.*})$")){
+				return new JavaScriptSerializer().Deserialize(json,bindingContext.ModeType);
+			}
+			return base.BindMode(controllerContext,bindingContext);
+		}
+	}
+
+	# 选择模型绑定器
+	MVC 框架，查找模型绑定器
+
+	ModelBinderDictionary.GetBinder();
+
+	#
+	private IModelBinder GetBinder(Type modelType,IModelBinder fallbackBinder){
+		....
+	}
+
+	#替换默认绑定器
+	ASP.NET MVC 如果没有其他配置，会为所有的模型，使用DefaultModelBinder.
+	可以通过设置 ModelBinders.Binders.DefaultBinder 属性，来将新模型绑定器替换为默认模型绑定器。
+
+	protected void Application_Start(){
+		ModelBinders.Binders.DefaultModelBinder=new JsonModelBinder();
+	}
+
+	# 为模型使用自定义标记属性
+	绑定模型最优雅的方式：使用抽象System.Web.Mvc.CustomModelBinderAttribute;
+	声明 方式来标记属性和类。最好是和请求模型绑定，因为模型绑定，本身就是为请求模型而生的。
+
+
+
+
 
 	
 
