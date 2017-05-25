@@ -1,17 +1,18 @@
-JsonModelBinder 
-
-public class JsonModelBinder:DefaultModelBinder{
-	
-	public override object BindModel(ControllerContext controllerContext,ModelBindingContext bindingContext){
-		string json=string.Empty;
-		var provider=bindingContect.ValueProvider;
-		var providerValue=provider.GetValue(bindingContext.ModelName);
-		if(providerValue!=null){
-		json=providrValue.AttemptedValue;	
-		}
-		if(Regex.IsMax(json,@"^(\[.*\]|{.*})$")){
-			return new JavaScriptSerializer().Deserialize(json,bindingContext.ModeType);
-		}
-		return base.BindModel(controllerContext,bindingContext);
+public class AuctionCsvFormatter:BufferedMediaTypeFormatter{
+	public AuctionCsvFormatter(){
+		this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
 	}
+}
+为了序列化和反序列化实体 ，重写CanWriteType,Can ReadType() 方法 可以自定义个格式化类型
+protected override bool CanWriteType(Type type){
+	if(type==typeof(Auction)){
+		return true;
+	}
+	else{
+		Type enumerableType=typoef(IEnunerable<Auction>);
+		return enumerableType.IsAssignableFrom(type);
+	}
+}
+protected override bool canReadType(Type type){
+	return false;
 }

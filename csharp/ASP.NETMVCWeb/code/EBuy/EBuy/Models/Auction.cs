@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ebuy.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
@@ -18,7 +19,7 @@ namespace EBuy.Models
         //}
     }
 
-    public class Auction
+    public class Auction:IEntity
     {
         public int id { get; set; }
         [Required]

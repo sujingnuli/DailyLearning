@@ -1,0 +1,14 @@
+ASP.NET MVC 的核心组件：Controller,View,Model.
+
+数据访问层的相关技术。如何使用ORM 数据访问模式，来构建ASP.NET MVC Web应用程序
+
+1.数据访问模式
+	ASP.NET MVC 框架 的一个最大特点，就是扩展性。
+	允许开发者灵活插入其他组件和框架。
+	ASP.NET MVC 构建在 .NET 4.5 以上。
+	流行的数据访问框架：ADO.NET ,LINQ TO SQL ,ADO.NET EntityFramework 或者Nhibernet ，都可以使用ASP.NET MVC 数据访问层。
+
+	# Plain Old CLR Objects 
+	POCO : 代表业务实体类的.net 类。专注于 业务属性和业务行为。不需要任何数据库结构代码。
+
+	# 使用repository模式

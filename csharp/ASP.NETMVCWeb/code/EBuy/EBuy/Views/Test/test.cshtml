@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "test";
+}
+<script src="~/Scripts/jquery-1.8.2.js"></script>
+<script src="~/Scripts/mustache.js"></script>
+<script type="text/javascript">
+    function btn_click() {
+        $.getJSON("/api/auctions/7",
+            function (data) {
+                alert(data);
+                $("#auctions").removeClass("disnone");
+                var template = $("#auctions").html();
+                var val = Mustache.render(template, data);
+                $("#auctions").html(val);
+            });
+    }
+</script>
+<style type="text/css">
+    .disnone {
+        display:none;
+    }
+</style>
+<h2>test1</h2>
+<input type="button" onclick="btn_click()" value="Click Me!"/>
+<ul id="auctions" class="disnone">
+    <li>{{Title}}</li>
+    <li>{{Description}}</li>
+    <li>{{href}}</li>
+    <li>{{StartPrice}}</li>
+    <li>{{StartTime}}</li>
+</ul>

@@ -1,4 +1,5 @@
 ﻿using Ebuy.Core.Binder;
+using Ebuy.Core.Clz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,10 @@ namespace EBuy
 
             //更换DefaultModelBinder
             ModelBinders.Binders.DefaultBinder = new JsonModelBinder();
+            //设置默认解析器
+            //GlobalConfiguration.Configuration.DependencyResolver = new NinjectWebApiResolver(kernel);
+            //添加自定义Mime格式化器
+            
         }
       
     }

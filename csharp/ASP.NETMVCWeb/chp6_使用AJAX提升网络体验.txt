@@ -193,6 +193,43 @@ ajax请求包含两中类型内容：
 	# 为模型使用自定义标记属性
 	绑定模型最优雅的方式：使用抽象System.Web.Mvc.CustomModelBinderAttribute;
 	声明 方式来标记属性和类。最好是和请求模型绑定，因为模型绑定，本身就是为请求模型而生的。
+        public class JsonModelBinderAttribute:CustomModelBinderAttribute{
+		public override IModelBinder GetBinder(){
+			return new JsonModelBinder();
+		}
+	}
+	public class CreateProductRequest{
+		[Required]
+		[JsonModelAttribute]
+		public IEnumerable<CurrencyRequest> UnitPrice{get;set;}
+	}
+
+	#注册全局绑定器
+	我们可以为单独的类型，注册模型绑定器
+	ModelBinders.Binders.Add(typeof(Currency),new JsonModelBinder());
+
+	#高效收发Json数据
+	富互联网应用  RIA ,Rich Internet Application .具有高互动性，丰富用户体验及功能强大的客户端。
+	Json 是 基于 AJAX 的 构建 RIA Web 应用的基础模块。
+
+	Json 数据的序列化 。
+	复杂对象通常包含很多关系，或者依赖访问技术 。Entity Framework .
+	当使用JSON 时 ，可能出现无法序列化现象，返回500状态码，表示服务器内部错误。
+
+	解决问题： 定义轻量级 实体类型。   DTO :数据转换对象
+
+	# 跨域 AJAX 请求
+	默认情况下，浏览器只允许来自本站的请求。这种限制可以避免很多问题，例如跨站脚本攻击，XSS.
+	有时候，应用确实需要与外部 托管的 REST API 交互。比如 Twitter Google.
+
+	这种情况下，外部的Web应用，必须支持 JSONP 请求。
+        
+	JSONP 
+	JSONP  Json With Padding .巧妙的利用了跨站请求，伪造技术。允许我们实现AJAX跨域调用。
+	不过浏览器会非常辛苦
+	#启用跨站资源共享
+	跨站AJAX调用的首选方法，是跨站资源共享CORS.与JSONP不同，CORS 不会利用安全漏洞。
+
 
 
 

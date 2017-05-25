@@ -19,6 +19,9 @@ namespace EBuy.Controllers
         public ActionResult TestAjax1() {
             return View();
         }
+        public ActionResult Test() {
+            return View();
+        }
         //
         // GET: /Test/Details/5
 

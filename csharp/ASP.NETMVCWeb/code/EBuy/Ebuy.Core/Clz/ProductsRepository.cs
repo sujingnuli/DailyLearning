@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ebuy.Core.Clz
 {
-    public class ProductsRepository<T>:ISearchProvider,IRepository<T>
+    public class ProductsRepository<T>:ISearchProvider
     {
         public T GetById(string id)
         {

@@ -1,0 +1,318 @@
+随着Web应用客户端UI AJAX 请求数量的增长，ASP.NET MVC 基于JsonResult的控制器操作，
+无法满足高级AJAX前端的请求。现在开始使用ASP.NET MVC API.
+
+ASP.NET MVC API 框架，使用了Web标准规范。比如Http,JSON,XML . 以及一系列构建REST数据服务的操作原则
+ASP.NET Web API 与 ASP.NET MVC 很像。使用了一些相同的核心概念。比如，路由，控制器，及控制器操作结果。
+但它使用这些核心概念是为了支持不同的场景，哪些需要使用数据服务。而非HTML标签的场景。
+
+ASP.NET Web API . AJAX 调用服务。
+1.构建Data Service
+  1.构建API Controller:ApiController
+  public class AuctionsController:ApiController{
+	public IEnumerable<string> Get(){
+		return new string[]{"value1","value2"}
+	}
+	public string Get(int id){
+		return "value";
+	}
+	public void Post([FromBody]string value){
+		
+	}
+	public void Put(int id,[FromBody]string value){
+	
+	}
+	public void Delete(int id){
+	
+	}
+  }
+  2.注册Web API 路由
+  使用这个控制器之前，必须在 ASP.NET 路由里，注册它，否则无法接收请求消息。
+  ASP.NET MVC 框架。ASP.NET Web API 请求消息，基于路由。注册过程与普通的控制器路由注册过程相同。
+  唯一区别是，Web API 使用的是 RouteTable.MapHttpRoute()扩展方法。而不是RouteTable.MapRoute();
+   Web Api 框架是使用 惯例 优先原则，来查找正确的控制器方法。
+
+   #Web API 路由注册
+   WebApiConfig.cs
+   public static void Register(HttpConfiguration config){
+	config.Routes.MapHttpRoute(
+	  name:"DefaultApi",
+	  routeTemplate:"api/{controller}/{id}",
+	  defaults:new {id=RouteParameter.Optional}
+	);
+   }
+   #普通controller路由注册 
+   RouteConfig.
+   public static void Register(RouteCollection routes){
+	routes.MapRoute(
+	  name:"default",
+	  url:"{controller}/{action}/{id}",
+	  defaults:new {controller="Home",action="Index",id=UrlParameter.Optional}
+	);
+   }
+
+   # 依赖惯例优先原则
+   ASP.NET Web API 也使用了大量的 惯例优先原则 来减轻开发工作
+   ApiController 依赖名称来关联不同的Http 操作。
+   使用这些惯例 ，很容易执行crud操作。
+   标准的HTTP动词，对应的CRUD操作。
+   GET 
+   PUT		//更新现有资源
+   POST		//创建新资源
+   DELETE .
+   调用ASP.NET Web API 的数据服务非常简单。
+   #使用Web API 步骤。
+   1.注册API Route
+   WebApiConfig .
+   public static void Register(HttpConfig config){
+	config.Routes.MapHttpRoute(
+		name:"DefaultApi",
+		routeTemplate:"api/{controller}/{id}",
+		defaults:new {id=RouteParameter.Optional}
+	)
+   }
+   2.写WebApi .
+   public class AuctionsController:ApiController{
+	public IEnumerable Get(){
+		return new string[]{"",""};
+	}
+	public string Get(string id){
+		return "";
+	}
+	public void Put(string value){
+	
+	}
+	public void Post(string value){
+	
+	}
+	public void Delete(int id){
+		
+	}
+   }
+   3.前端调用：
+	$.getJSON("/api/auctions/",function(data){
+		$.each(data,function(key,value){
+			var str=value.Description;
+			$("<li/>",{html:str}).appendTo($("#auctions"));
+		})
+	})
+	
+   #重写惯例
+
+   控制器的命名惯例 ，只适用那些名字包含标准HTTP动词，CRUD的控制器操作方法。
+   如果想使用别的名称，调用ASP.NET Web API 的功能，使用AcceptVerbsAttribute标记属性或者HttpGetAttribtue ,HttpPostAttribute标记属性
+   直接标记到WebAPI 的控制方法上。与标记ASP.NET MVC 控制器操作方法一样。
+   [HttpGet]
+   public Auction   FindAuction(int id){
+	
+   }
+
+   # 钩住API 
+    之前创建的Web API 控制器的设置，可以执行CRUD操作。
+
+    WebAPI 控制器 需要默认构造参数。因为要传递IRepository给控制器，所以启动应用程序时 ，需要初始化
+    自定义依赖解析器 。
+    GlobalConfiguration.Configuration.DependencyResolver=new NinjectWebApiResolver(kernel);
+    Ninject IOC 容器。的自定义依赖解析器。因为每个请求都要创建Web API 控制器，所以，自定义依赖解析器，
+    需要为每个请求，创建一个新的依赖域。
+
+    NinjectWebApiResolver:NinjectWebApiScope,IDependencyResolver;
+    NinjectWebApiScope:	IDependencyScope;
+
+    #
+    public class NinjectWebApiScope:IDependencyScope{
+	protected IResolutionRoot resolutionRoot;
+	public NinjectWebApiScope(IResolutionRoot resolutionRoot){
+		this.resolutionRoot=resolutionRoot;
+	}
+	public object GetService(Type serviceType){
+		return resolutionRoot.Resolve(this.CreateRequest(serviceType)).SingleOrDefault();
+	}
+	public object GetServices(Type serivceType){
+		return resolutionRoot.Resolve(this.CreateRequest(serviceType));
+	}
+	private IRequest CreateRequest(Type serviceType){
+		return resolutionRoot.CrateRequest(serviceType,null,new Parameter[0],true,true);
+	}
+	public void Dispose(){
+		resolutionRoot=null;
+	}
+    }
+    public class NinjectWebApiResolver:NinjectWebApiScope,IDependencyResolver{
+    		private IKernel kernel;
+		public NinjectWebApiResolver(IKernel kernel){
+			this.kernel=kernel;
+		}
+		public IDependencyScope BeginScope(){
+			return new NinjectWebApiScope(kernel.BeginBlock());
+		}
+    }
+
+    #Auctions 类中执行CROD 的操作
+    public class AuctionsDataController:ApiController{
+	private readonlY IRepository _repository;
+	public AuctionsDataController(IRepository repository){
+		this._repository=repository;
+	}
+	public IEnumerable<Auction> Get(){
+		return this._repository.All<Auction>();
+	}
+	public Auction Get(string id){
+		return _repository.Sinlge<Auction>(id);
+	}
+	public Auction Post(Auction auction) {
+		_repository.Add<Auction>(auction);
+	}
+	public void Put(string id,Auction auction){
+		var currentAuction=_repository.Single<Auction>(id);
+		if(currentAuction!=null){
+			currentAuction=Mapper.DynamicMap<Auction>(auction);
+		}
+	}
+	public void Delete(string id){
+		_repository.Delete<Auction>(id);
+	}
+    }
+
+    #
+    ASP.NET Web API 最强大的功能之一，就是可以通过开放数据协议(Open Data Protocol)
+    使用URL参数来支持，过滤和分页。
+    $filter	/api/Auction?$filter=CurrentBid gt 2
+    $orderby	/api/Auction?$orderby=Description
+    $skip	/api/Auction?$skip=2
+    $top	/api/Auction?$top=3
+
+    为了支持分页和过滤，ASP.NET Web API 控制器操作，必须返回IQueryable<T>类型的结果。
+    数据结果，没有存在IQueryable<T>中时 ，也可以使用AsQueryable() 的Linq扩展方法。
+    ASP.NET Web API 会处理Linq表达式的查询结果，并转换成JSON对象。这样数据就可以按照HTTP协议传输了
+
+    # 异常处理
+    开发人员，构建AJAX 的应用程序时 ，还需要额外关注异常处理的问题。
+    默认情况下，如果服务器端AJAX请求出错，就会返回500错误。
+
+    而且，如果错误不进行封装过滤，很可能带来系统安全奉献。错误信息可能包含异常调用堆栈，或者包含其他攻击者的可以利用的信息。
+    调用堆栈的错误信息。
+
+    ASP.NET Web API 提供了异常处理机制，可以返回更加合理的信息给客户端应用。
+    使用HttpResponseException 返回HTTP状态吗404 ，及自定义错误信息。
+    public Auction Get(string id){
+	Auction auction=_repository.Single<Auction>();
+	if(auction==null){
+		var errorMessage=new HttpResponseMessage(HttpStatusCode.NotFound);
+		errorMessage.Content=new StringContent(string.Format("Invalid id,no auction avaliable for id:{0}.",id));
+		errorMessage.ReasonPhrase("Not Found");
+		
+		throw new HttpResponseException(errorMessage);
+	}
+	return auction;
+
+    }
+
+    除了使用HttpResponseException 外，ASP.NET Web API 还允许我们创建 异常过滤器，exception filters.
+    异常过滤器，exception filter 可以处理，控制器里，非HttpReponseException 的异常。
+
+    创建异常过滤器：
+	1.继承 System.Web.Http.Filters.IExceptionFilter.
+	2.继承 ExceptionFilterAttribute.
+     创建自定义标记属性 是创建异常过滤器的一个 简单方法。要求重写OnException();
+     public class CustomExceptionFilter:ExceptionFilterAttribute{
+		public override void OnException(HttpActionExecutedContext context){
+			if(context==null){
+				context.Response=new HttpResponseMessage();
+			}
+			context.Response.StatusCode=HttpStatusCode.NotFound;
+			context.Response.Content=new StringContent("Custom Message");
+			base.Exception(context);
+		}
+     }
+     在 创建完成后，还要注册，才能完成。
+     #
+     public class CustomExceptionFilter:ExceptionFilterAttribute{
+	public override void OnException(HttpActionExecutedContext context){
+		if(context==null){
+			context.Response=new HttpResponseMessage();
+		}
+		context.Response.StatusCode=HttpStatusCode.NotFound;
+		context.Response.Content=new StringContent("Custom Message");
+		base.OnException(context);
+	}
+     }
+     注册有 两种方式
+	第一：全局异常处理
+		config.Filters.Add(new CustomExceptionFilter());
+	第二：在 控制器操作方法上注册。
+		[HttpGet]
+		[CustomExceptionFilter]
+		public Auction Get(string id){
+			Auction auction=_repository.Single<Auction>(id);
+			if(auction==null){
+				throw new Exception("Not Found");
+			}
+			return auction;
+		}
+     
+	 # Media 格式化器
+	 ASP.NET Web API 强大的功能之一，就是 处理不同的多媒体类型(MIME).
+	 MIME ：用来描述HTTP请求中不同的数据格式。
+	 MIME: 类型+子类型 如 text.html 表示Html格式。
+	 客户端 可以通过Http Accept 消息头，来告诉服务器客户端想要的，MIME类型。
+	 Accept:text/html,application/xhtml+xml,application
+	 ASP.NET Web API 使用媒体类型 来决定如何序列化和反序列化 HTTP消息体 。
+	 它支持XML,JSON 和 编码的html 表单数据。
+
+	 #
+	 创建自定义 媒体格式化 器
+		1.继承MediaTypeFormatter
+			使用异步 读/写方法
+		2.继承BufferedMediaTypeFormatter.
+			继承自 MediaTypeFormatter .包装异步读/写方法，暴露为异步操作，仍然可能引发线程阻塞问题。
+	当执行格式化器时 ，OnWriteStream（） 会把类型序列化为 Stream流 。
+	OnReadFromStream() ,会从流里读取数据反序列化成特定类型对象。Encode方法对字符编码。
+
+	public class AuctionCsvFormatter:BufferedMediaTypeFormatter{
+		public AuctionCsvFormatter(){
+			this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
+		}
+		public override bool CanReadType(Type type){
+			return false;
+		}
+		public override bool CanWriteType(Type type){
+			if(type==typeof(Auction)){
+				return true;
+			}else{
+				var enumerableType=typeof(IEnumerable<Auction>);
+				return enumerableType.IsAssignableFrom(type);
+			}
+		}
+		public override void WriteToStream(Type type,object value,Stream stream,HttpContext context){
+			var source=value as IEnumerable<Auction>;
+			if(source!=null){
+				foreach(var item in source){
+					WriteItem(item,stream);
+				}
+			}
+		}
+		private void WriteItem(Auction Item,Stream stream){
+			var writer=new SteamWriter(stream);
+			writer.Write("{0},{1},{2}",
+				Encode(Item.Title),
+				Encode(Item.Description),
+				Encode(Item.CurrentPrice)
+			)
+			writer.Flush();
+		}
+		private  string Encode(object o){
+			var result="";
+			if(o!=null){
+				var data=o.ToString();
+				if(data.IndexOfAny(_specialChars)!=-1){
+					result=string.Format("\"{0}\"",data.Replace("\"","\"\""));
+				}
+				
+			}
+			return result;
+		}
+	}
+	# 一旦注册完毕，自定义媒体格式化器，就会处理任何包含text/csv消息头的请求消息。
+
+
+

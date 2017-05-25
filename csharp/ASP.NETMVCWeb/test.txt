@@ -1,5 +1,1 @@
-public class JsonModelBinderAttribute:CustomModelBinderAttribute{
-	public override IModelBinder GetBinder(){
-		return new JsonModelBinder();
-	}
-}
+config.Formatters.Add(new AuctionCsvFormatter());

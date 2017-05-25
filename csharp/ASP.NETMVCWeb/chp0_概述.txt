@@ -1,3 +1,69 @@
+Filter：
+	#CustomModelBinderAttribute:
+	public class JsonModelBinderAttribute:CustomModelBinderAttribute{
+		public override IModelBinder GetBinder(){
+			return new JsonModelBinder();
+		}
+	}
+	#ExceptionFilterAttribute
+	public class CustomExceptionFilter:ExceptionFilterAttribute{
+		public override void OnException(HttpActionExeutedContext context){
+			if(context==null){
+				context.Response=new HttpResponseMessage();
+			}
+			context.Response.StatusCode=HttpStatusCode.NotFound;
+			context.Response.Content=new StringContent("Custom Message");
+			base.OnException(context);
+		}
+	}
+	#Global.asax.cs 全局注册异常过滤器
+	config.Filters.Add(new CustomExceptionFilter());
+	#操作器方法上注册过滤器
+	[HttpGet]
+	[CustomExceptionFilter]
+	public Auction Get(string id){
+		Auction auction=_repository.Single<Auction>(id);
+		if(auction==null){
+			throw new Exception("Item not Found");
+		}
+		return auction;
+	}
+ModelBinder:
+	DefaultModelBinder:
+	public class JsonModelBinder:DefaultModelBinder{
+		public override object BindModel(ControllerContext controllerContext,ModelBindingContext bindingContext){
+			string json=string.Empty;
+			var provider=bindingModel.ValueProvider;
+			var providerValue=provider.GetValue(bindingContext.ModelName);
+			if(providerValue!=null){
+				json=providerValue.AttempedValue;
+			}
+			if(Regex.IsMatch(json,@"^(\[.*\]|{.*})$")){
+				return new JavaScriptSerializer().Deserialize(json,bindingContext.ModelType);
+			}
+			return base.BindModel(controllerContext,bindingContext);
+		}
+	}
+	Global.asax.cs
+	ModelBinders.Binders.DefaultBinder=new JsonBinder();
+Controller:
+	RouteConfig:
+	public static void RegisterRoute(RouteCollection routes){
+		routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+		routes.MapRoute(
+			name:"Default",
+			url:"{controller}/{action}/{id}",
+			defaults:new {controller="Home",action="Index",id=UrlParameter.Optional}
+		)
+	}
+	WebApiConfig
+	public static void Register(HttpConfiguration config){
+		config.Routes.MapHttpRoute(
+			name:"DefaultApi",
+			routeTemplate:"api/{controller}/{id}",	
+			defaults:new {id=RouteParameter.Optional}
+		)
+	}
 1.尽量从服务器端获取数据，在客户端进行渲染，这样，就可以少在网络传输数据。
 2.mustache.js ,使用客户端模板，用起来很棒。（还好没放弃）
    用法：var template=$("#auction-template").html();
@@ -11,11 +77,15 @@
 	});
 3.方法扩展还要多用，public static bool IsAjaxRequest(this HttpRequestBase request){...}
 4.模型绑定本身就是为请求模型而生的
-  有两种，1.替换模型绑定器  
+  有三种，1.替换默认模型绑定器  
 	public void Application_Start(){
 		BinderModels.Binders.DefaultBinder=new JsonModelBinder();
 	}
-	  2.使用System.Web.Mvc.CustomModelBinderAttribute .属性来标记。
+	2.替换类型绑定器
+	public void Application_Start(){
+		ModelBinders.Binders.Add(typeof(Currency),new JsonModelBinder());
+	}
+	3.使用System.Web.Mvc.CustomModelBinderAttribute .属性来标记。
 	public class JsonModelBinderAttribute:CustomModelBinderAttribute{
 		public override IModelBinder GetBinder(){
 			return new JsonBinder();

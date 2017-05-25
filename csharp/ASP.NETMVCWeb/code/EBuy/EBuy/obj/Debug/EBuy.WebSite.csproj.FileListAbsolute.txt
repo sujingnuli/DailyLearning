@@ -101,3 +101,6 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\ko\System.Spatia
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\ru\System.Spatial.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\System.Spatial.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hant\System.Spatial.resources.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\EntityFramework.SqlServer.resources.dll

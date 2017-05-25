@@ -191,3 +191,6 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\obj\Debug\EBuy
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ebuy.Core.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ninject.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Ebuy.Core.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\EntityFramework.SqlServer.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\EntityFramework.SqlServer.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
