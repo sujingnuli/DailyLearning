@@ -1,4 +1,5 @@
-﻿using EBuy.Models;
+﻿using Ebuy.Common.Entities;
+using EBuy.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;

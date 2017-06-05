@@ -97,3 +97,32 @@ Controller:
 		[JsonModelBinder]
 		public IEnumerable<CurrencyRequest> {get,set}
 }
+
+#####
+	IQueryable 和 IList 区别
+	IList会立即在内存里创建持久数据，没有实现延期执行，如果被加载的实体，有关联实体，associations.此关联实体 ，就不会被加载(即不立即加载，也不延迟加载)
+	IQueryable 不会立即在内存中创建持久数据，只有遍历它，把它转换成list的情况下，才会向内存加载数据，它可以延期执行，如果被加载的实体，含有关联实体，associate,关联实体可被接下来的访问加载。
+#####
+
+#####
+IsNullOrEmpty与IsNullOrWhiteSpace区别
+	string lt="   ";用IsNullOrEmpty判断，为false;
+public static bool IsNullOrEmpty(string value){  return (value==null||value.Length==0);}
+public static bool IsNullOrWhiteSpace(string value){
+	if(value==null) return true;
+	for(int i=0;i<value.Length;i++){
+		if(!Char.isWhiteSpace(value[i]) return false;)
+	}
+	return true;
+}
+
+#####
+
+#####
+{1:N2};n或N，表示数字转换为dddd.dddd...,2表示小数位
+#####
+
+#####
+获取Dictioanry的key .
+CurrencyCodesBySymbol.Single(x=>x.Value=code).Key;
+#####

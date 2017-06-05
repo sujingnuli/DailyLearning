@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
-namespace Ebuy.Core.Binder
+namespace Ebuy.Common.Binder
 {
     public class JsonModelBinder:DefaultModelBinder
     {

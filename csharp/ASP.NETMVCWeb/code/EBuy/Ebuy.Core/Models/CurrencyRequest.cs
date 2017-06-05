@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebuy.Core.Models
+namespace Ebuy.Common.Models
 {
    public  class CurrencyRequest
     {

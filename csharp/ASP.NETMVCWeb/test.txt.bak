@@ -1,18 +1,18 @@
-public class AuctionCsvFormatter:BufferedMediaTypeFormatter{
-	public AuctionCsvFormatter(){
-		this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
+public class string{
+	private constant int TrimHead=1;
+	private constant int TrimTail=1;
+	private constant int TrimBoth=2;
+
+	public string Trim(){
+		return TrimHelper(TrimBoth);
 	}
-}
-为了序列化和反序列化实体 ，重写CanWriteType,Can ReadType() 方法 可以自定义个格式化类型
-protected override bool CanWriteType(Type type){
-	if(type==typeof(Auction)){
-		return true;
+	private string TrimHelper(int trimType){
+		int end=this.Length-1;
+		int start=0;
+		if(trimType!=TrimTail){
+			for(start=0;start<this.Length;start++){
+				
+			}	
+		}
 	}
-	else{
-		Type enumerableType=typoef(IEnunerable<Auction>);
-		return enumerableType.IsAssignableFrom(type);
-	}
-}
-protected override bool canReadType(Type type){
-	return false;
 }

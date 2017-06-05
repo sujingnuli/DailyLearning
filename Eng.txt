@@ -1,1 +1,5 @@
 Resolver:解析器 CustomDependencyResolver
+featured: 有特征的
+Category:类别，目录
+Symbol:符号，象征，标志
+implicit:内含的。

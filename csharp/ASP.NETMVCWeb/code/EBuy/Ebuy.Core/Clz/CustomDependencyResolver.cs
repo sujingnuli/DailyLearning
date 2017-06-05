@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace Ebuy.Core.Clz
+namespace Ebuy.Common.Clz
 {
    
     /// <summary>

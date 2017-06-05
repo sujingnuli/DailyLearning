@@ -8,7 +8,7 @@ using System.Web.Http.Filters;
 
 namespace EBuy.Filters
 {
-    public class CustomExceptionFilter:ExceptionFilterAttribute
+    public class CustomExceptionFilter:ExceptionFilterAttribute,IExceptionFilter
     {
         public override void OnException(HttpActionExecutedContext context)
         {

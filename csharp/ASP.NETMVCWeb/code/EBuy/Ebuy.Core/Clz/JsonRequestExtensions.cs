@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Ebuy.Core.Json
+namespace Ebuy.Common.Json
 {
     public static class JsonRequestExtensions
     {

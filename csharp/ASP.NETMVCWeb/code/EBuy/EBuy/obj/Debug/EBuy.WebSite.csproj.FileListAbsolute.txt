@@ -104,3 +104,4 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hant\System.S
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\EntityFramework.SqlServer.resources.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\AutoMapper.dll

@@ -1,5 +1,5 @@
-﻿using Ebuy.Core.Entities;
-using Ebuy.Core.Inter;
+﻿using Ebuy.Common.Entities;
+using Ebuy.Common.Inter;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebuy.Core.Clz
+namespace Ebuy.Common.Clz
 {
     public class Repository:IRepository
     {

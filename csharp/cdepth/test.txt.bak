@@ -1,25 +1,14 @@
-Create 操作里。设置断点。
-来查看验证规则。
-提交 无效的值 。
-ModelState属性。
-Create 视图。
-验证规则的正确性 。
-Create 没有返回错误提示嘻嘻你
+public class Auction:Entity<TId>{
+	public virtual string Title{get;set;}
+	public virtual string Description{get;set;}
+	public virtual DateTime StartTime{get;set;}
+	public virtual DateTime EndTime{get;set;}
+	public virtual Currency CurrentPrice{get;set;}
 
-<p>
-	@Html.LabelFor(model=>model.Title)
-	@Html.EditorFor(model=>model.Title)
-	@ViewData.ModelState["Title"]
-</p>
+	public Guid? WinningBidId{get;set;}
+	public virtual Bid WinningBid{get;private set;}
 
-添加  与 Title 相关的 验证信息。
-ModelState["Title"]
-ViewData.ModelState["Title"];
-迭代集合，把错误信息渲染到页面。
-<p>
-	@Html.LabelFor(model=>model.Title)
-	@Html.EditorFor(model=>model.Title)
-	@foreach(var error in ViewData.ModelState["Title"].Errors){
-		<span class="error">@error.ErrorMessage</span>
+	public bool IsCompleted{
+		get{return EndTime<=Clock.Now;}
 	}
-</p>
+}

@@ -1,4 +1,5 @@
-﻿using Ebuy.Core.Inter;
+﻿using Ebuy.Common.Entities;
+using Ebuy.Common.Inter;
 using EBuy.Filters;
 using EBuy.Models;
 using EBuy.Utils;
@@ -13,6 +14,10 @@ namespace EBuy.Api
 {
     public class AuctionsController : ApiController
     {
+        private readonly IRepository _repository;
+        public AuctionsController(IRepository repository) {
+            this._repository = repository;
+        }
        
          //GET api/auctions
         public IEnumerable<Auction> Get()

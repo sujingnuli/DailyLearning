@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Dependencies;
 
-namespace Ebuy.Core.Clz
+namespace Ebuy.Common.Clz
 {
     public class NinjectWebApiScope:IDependencyScope
     {

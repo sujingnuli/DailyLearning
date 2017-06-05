@@ -1,11 +1,11 @@
-﻿using Ebuy.Core.Inter;
+﻿using Ebuy.Common.Inter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebuy.Core.Clz
+namespace Ebuy.Common.Clz
 {
     public class ProductsRepository<T>:ISearchProvider
     {

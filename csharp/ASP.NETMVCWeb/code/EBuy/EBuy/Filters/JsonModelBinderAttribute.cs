@@ -1,4 +1,4 @@
-﻿using Ebuy.Core.Binder;
+﻿using Ebuy.Common.Binder;
 using System;
 using System.Collections.Generic;
 using System.Linq;

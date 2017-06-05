@@ -1,5 +1,5 @@
-﻿using Ebuy.Core.Binder;
-using Ebuy.Core.Clz;
+﻿using Ebuy.Common.Binder;
+using Ebuy.Common.Clz;
 using System;
 using System.Collections.Generic;
 using System.Linq;

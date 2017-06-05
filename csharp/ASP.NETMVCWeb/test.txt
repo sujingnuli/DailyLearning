@@ -1,1 +1,18 @@
-config.Formatters.Add(new AuctionCsvFormatter());
+public class string{
+	private constant int TrimHead=1;
+	private constant int TrimTail=1;
+	private constant int TrimBoth=2;
+
+	public string Trim(){
+		return TrimHelper(TrimBoth);
+	}
+	private string TrimHelper(int trimType){
+		int end=this.Length-1;
+		int start=0;
+		if(trimType!=TrimTail){
+			for(start=0;start<this.Length;start++){
+				if(!char.IsWhiteSpace(this[start])&&!IsBomWhiteSpace(this[start])) break;
+			}	
+		}
+	}
+}

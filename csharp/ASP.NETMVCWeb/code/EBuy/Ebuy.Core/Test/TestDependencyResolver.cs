@@ -1,5 +1,5 @@
-﻿using Ebuy.Core.Clz;
-using Ebuy.Core.Inter;
+﻿using Ebuy.Common.Clz;
+using Ebuy.Common.Inter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
-namespace Ebuy.Core.Test
+namespace Ebuy.Common.Test
 {
    public  class TestDependencyResolver
     {

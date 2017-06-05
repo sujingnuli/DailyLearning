@@ -1,5 +1,16 @@
-虽然，这个方法，不错，但是ASP.NET MVC 提供了更好的额方法。
-来渲染特定属性的错误嘻嘻你。
-Html.ValidationMessageFor(model=>model.Title);
-为 模型的每个属性，都添加 调用 
-@Html.ValidationMessage() ASP.NET MVC 会在相关
+public class Auction:Entity<TId>{
+	public virtual string Title{get;set;}
+	public virtual string Description{get;set;}
+	public virtual DateTime StartTime{get;set;}
+	public virtual DateTime EndTime{get;set;}
+	public virtual Currency CurrentPrice{get;set;}
+
+	public Guid? WinningBidId{get;set;}
+	public virtual Bid WinningBid{get;private set;}
+
+	public bool IsCompleted{
+		get{return EndTime<=Clock.Now;}
+	}
+	public virtual bool IsFeaturedAuction{get;private set;}
+
+}

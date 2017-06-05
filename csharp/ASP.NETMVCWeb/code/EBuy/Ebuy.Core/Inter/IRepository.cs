@@ -1,4 +1,4 @@
-﻿using Ebuy.Core.Entities;
+﻿using Ebuy.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebuy.Core.Inter
+namespace Ebuy.Common.Inter
 {
     public interface IRepository:IDisposable
     {

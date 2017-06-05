@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBuy.WebSite", "EBuy\EBuy.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBuy.Tests", "EBuy.Tests\EBuy.Tests.csproj", "{75ED34E0-DCB5-4007-87D8-D4830BB25CC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ebuy.Core", "Ebuy.Core\Ebuy.Core.csproj", "{E4B366D3-ECDF-4247-9D6D-109E12202526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ebuy.Comman", "Ebuy.Core\Ebuy.Comman.csproj", "{E4B366D3-ECDF-4247-9D6D-109E12202526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

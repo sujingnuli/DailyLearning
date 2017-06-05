@@ -14,4 +14,3 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\Syste
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\zh-Hans\EntityFramework.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\bin\Debug\zh-Hans\System.Net.Http.Formatting.resources.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\Ebuy.Core\obj\Debug\Ebuy.Core.csprojResolveAssemblyReference.cache

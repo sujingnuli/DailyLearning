@@ -1,4 +1,4 @@
-﻿using Ebuy.Core.Inter;
+﻿using Ebuy.Common.Inter;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http.Dependencies;
 
-namespace Ebuy.Core.Clz
+namespace Ebuy.Common.Clz
 {
     public  class NinjectWebApiResolver:NinjectWebApiScope,IDependencyResolver
     {

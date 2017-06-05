@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ebuy.Core.Entities
+namespace Ebuy.Common.Entities
 {
     public interface IEntity { 
         

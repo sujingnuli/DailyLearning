@@ -1,4 +1,6 @@
-﻿using EBuy.Filters;
+﻿using Ebuy.Common.Entities;
+using Ebuy.Common.Inter;
+using EBuy.Filters;
 using EBuy.Models;
 using EBuy.Utils;
 using System;
@@ -11,6 +13,11 @@ namespace EBuy.Controllers
 {
     public class AuctionsController : Controller
     {
+        private readonly IRepository _repository;
+        public AuctionsController(IRepository repository)
+        {
+            this._repository=repository;
+        }
         //
         // GET: /Auctions/
 
@@ -30,8 +37,9 @@ namespace EBuy.Controllers
        
 
         public ActionResult Lists() {
-            List<Auction> auctions = BeanUtil.GetSelTable<Auction>("Auctions", "", "");
-            return View(auctions);
+            //List<Auction> auctions = BeanUtil.GetSelTable<Auction>("Auctions", "", "");
+           // var auctions = _repository.All<Auction>();
+           return View();
         }
 
         //
