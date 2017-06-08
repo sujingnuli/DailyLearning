@@ -1,0 +1,22 @@
+﻿@model Ebuy.Common.Entities.CategoriesViewModel
+
+@{
+    ViewBag.Title = "Category Detail";    
+}
+<hgroup>
+    <h1>@ViewBag.Title</h1>
+    <h1> there is one detail for Category</h1>
+</hgroup>
+<fieldset>
+    <legend>Detail</legend>
+    <ol>
+        @foreach (var gory in Model.Categories) { 
+            <li>
+               
+               @Html.Label(@gory.Id.ToString())
+               @Html.Label(@gory.Name)
+
+            </li>
+        }
+    </ol>
+</fieldset>

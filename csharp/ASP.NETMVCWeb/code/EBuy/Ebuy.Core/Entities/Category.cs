@@ -8,6 +8,7 @@ namespace Ebuy.Common.Entities
 {
     public class Category:Entity<Guid>
     {
-
+        public object Id { get; set; }
+        public string Name { get; set; }
     }
 }

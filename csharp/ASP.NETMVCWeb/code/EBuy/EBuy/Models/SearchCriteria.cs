@@ -12,8 +12,9 @@ namespace EBuy.Models
             Price,
             RemainingTime
         }
-        public string SearchKeywork { get; set; }
+        public string SearchKeyword { get; set; }
         public string SortByField { get; set; }
+        
         public string PagingSize { get; set; }
         public int CurrentPage { get; set; }
 

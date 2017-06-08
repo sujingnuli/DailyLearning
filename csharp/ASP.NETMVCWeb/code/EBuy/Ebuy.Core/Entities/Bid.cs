@@ -10,6 +10,7 @@ namespace Ebuy.Common.Entities
     {
         public Guid Id { get; set; }
         public Auction Auction { get; set; }
+        public DateTime Timestamp { get; set; }
         public Bid(User user, Auction auction, Currency bidAmount) { 
             
         }

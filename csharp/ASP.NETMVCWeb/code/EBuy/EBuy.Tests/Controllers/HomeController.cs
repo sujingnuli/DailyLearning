@@ -5,7 +5,8 @@ using System.Text;
 
 namespace EBuy.Tests.Controllers
 {
-    class HomeController
+    public class HomeController
     {
+
     }
 }

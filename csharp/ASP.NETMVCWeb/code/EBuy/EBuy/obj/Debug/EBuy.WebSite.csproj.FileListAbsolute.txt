@@ -1,9 +1,7 @@
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.WebSite.csprojResolveAssemblyReference.cache
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.pdb
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EBuy.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EBuy.pdb
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Antlr3.Runtime.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\AutoMapper.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\DotNetOpenAuth.AspNet.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\DotNetOpenAuth.Core.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\DotNetOpenAuth.OAuth.Consumer.dll
@@ -12,12 +10,14 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\DotNetOpenAuth.O
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Ebuy.Core.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Data.Edm.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Data.OData.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Web.Infrastructure.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Web.WebPages.OAuth.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Newtonsoft.Json.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Ninject.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Net.Http.Formatting.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Spatial.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Web.Helpers.dll
@@ -33,9 +33,9 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Web.WebPa
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\WebGrease.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\WebMatrix.Data.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\WebMatrix.WebData.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Ninject.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Ebuy.Core.pdb
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Newtonsoft.Json.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Net.Http.Formatting.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Web.Helpers.xml
@@ -60,6 +60,7 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Data.E
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Data.OData.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Spatial.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\EntityFramework.resources.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\System.Net.Http.Formatting.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\System.Web.Helpers.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\System.Web.Http.resources.dll
@@ -101,7 +102,7 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\ko\System.Spatia
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\ru\System.Spatial.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\System.Spatial.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hant\System.Spatial.resources.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\EntityFramework.SqlServer.xml
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\AutoMapper.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.WebSite.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Web.Providers.dll

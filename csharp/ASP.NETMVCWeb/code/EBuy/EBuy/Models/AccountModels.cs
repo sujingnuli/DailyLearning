@@ -1,100 +1,78 @@
-﻿using Ebuy.Common.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using System.Globalization;
-using System.Web.Security;
+using System.Linq;
+using System.Web;
 
 namespace EBuy.Models
 {
-    public class UsersContext : DbContext
-    {
-        public UsersContext()
-            : base("DefaultConnection")
-        {
+    public class UsersContext : DbContext {
+        public UsersContext() : base("DataContext") { 
+            
         }
-
         public DbSet<UserProfile> UserProfiles { get; set; }
 
-        public DbSet<Auction> Auctions { get; set; }
     }
-
     [Table("UserProfile")]
-    public class UserProfile
-    {
+    public class UserProfile {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
     }
 
-    public class RegisterExternalLoginModel
-    {
+    public class LoginModel {
         [Required]
-        [Display(Name = "用户名")]
+        [Display(Name="User name")]
         public string UserName { get; set; }
-
-        public string ExternalLoginData { get; set; }
-    }
-
-    public class LocalPasswordModel
-    {
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "当前密码")]
-        public string OldPassword { get; set; }
-
-        [Required]
-        [StringLength(100, ErrorMessage = "{0} 必须至少包含 {2} 个字符。", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "新密码")]
-        public string NewPassword { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "确认新密码")]
-        [Compare("NewPassword", ErrorMessage = "新密码和确认密码不匹配。")]
-        public string ConfirmPassword { get; set; }
-    }
-
-    public class LoginModel
-    {
-        [Required]
-        [Display(Name = "用户名")]
-        public string UserName { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [Display(Name = "密码")]
+        [Display(Name="Password")]
         public string Password { get; set; }
-
-        [Display(Name = "记住我?")]
+        [Display(Name="Remember me?")]
         public bool RememberMe { get; set; }
     }
 
-    public class RegisterModel
-    {
+    public class RegisterExternalLoginModel {
         [Required]
-        [Display(Name = "用户名")]
+        [Display(Name="User Name")]
+        public string UserName { get; set; }
+        public string ExternalLoginData { get; set; }
+    }
+
+    public class RegisterModel {
+        [Required]
+        [Display(Name="User Name")]
         public string UserName { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "{0} 必须至少包含 {2} 个字符。", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "密码")]
+        [Display(Name="Password")]
+        [StringLength(100,ErrorMessage="The {0} must be at least {2} characters long.",MinimumLength=6)]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Display(Name = "确认密码")]
-        [Compare("Password", ErrorMessage = "密码和确认密码不匹配。")]
+        [Required]
+        [Display(Name="Confirm Password")]
+        [Compare("Password",ErrorMessage="The password and confirmation password do not match")]
         public string ConfirmPassword { get; set; }
+
     }
 
-    public class ExternalLogin
-    {
-        public string Provider { get; set; }
-        public string ProviderDisplayName { get; set; }
-        public string ProviderUserId { get; set; }
+    public class ChangePasswordModel {
+        [Required]
+        [Display(Name="OldPassword")]
+        [DataType(DataType.Password)]
+        [StringLength(100,ErrorMessage="The {0} must be at least {2} characters long.",MinimumLength=6)]
+        public string OldPassword { get; set; }
+        [Required]
+        [Display(Name="New Password")]
+        [StringLength(100,ErrorMessage="The {0} must be at least {2} characters long.",MinimumLength=6)]
+        public string NewPassword { get; set; }
+        [Required]
+        [Display(Name="Confirm Password")]
+        [Compare("NewPassword",ErrorMessage="the new password and confirm password do not match")]
+        public string ConfirmPassword { get; set; }
     }
 }

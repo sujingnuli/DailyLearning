@@ -1,4 +1,5 @@
-﻿using Ebuy.Common.Entities;
+﻿using Ebuy.Common.DataAccess;
+using Ebuy.Common.Entities;
 using Ebuy.Common.Inter;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,10 @@ namespace Ebuy.Common.Clz
 {
     public class Repository:IRepository
     {
-        private readonly DbContext _context;
+        private readonly DataContext _context;
         private readonly bool _isSharedContext;
 
-        public Repository(DbContext context, bool isSharedContext = true) {
+        public Repository(DataContext context, bool isSharedContext = true) {
             Contract.Requires(context != null);
             _context = context;
             _isSharedContext = isSharedContext;

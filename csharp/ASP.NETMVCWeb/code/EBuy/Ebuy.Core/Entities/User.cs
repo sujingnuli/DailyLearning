@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ebuy.Common.Entities
 {
-    public class User:Entity<Guid>
+    public class User
     {
 
     }

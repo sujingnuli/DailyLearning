@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,11 @@ namespace Ebuy.Common.Entities
 {
     public class Auction:Entity<Guid>
     {
+       
+        public int Id { get; set; }
+        [Required,StringLength(500)]
         public virtual string Title { get; set; }
+        [Required]
         public virtual string Description { get; set; }
         public virtual DateTime StartTime { get; set; }
         public virtual DateTime EndTime { get; set; }
@@ -31,8 +36,8 @@ namespace Ebuy.Common.Entities
         public virtual ICollection<Bid> Bids { get; set; }
         public virtual ICollection<WebsiteImage> Images { get; set; }
 
-        public long OwnerId { get; set; }
-        public virtual User Owner { get; set; }
+        private long OwnerId { get; set; }
+        
 
         public virtual CurrencyCode CurrencyCode {
             get { return (CurrentPrice != null) ? CurrentPrice.Code : null; }

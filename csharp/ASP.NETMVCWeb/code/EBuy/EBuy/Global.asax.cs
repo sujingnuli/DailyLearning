@@ -1,5 +1,6 @@
 ﻿using Ebuy.Common.Binder;
 using Ebuy.Common.Clz;
+using Ebuy.Common.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,8 @@ namespace EBuy
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            BundleTable.EnableOptimizations = true;//启动优化，把多个css,js文件放在一起，浏览器只发送一次请求。
             AuthConfig.RegisterAuth();
-
             //更换DefaultModelBinder
             ModelBinders.Binders.DefaultBinder = new JsonModelBinder();
             //设置默认解析器

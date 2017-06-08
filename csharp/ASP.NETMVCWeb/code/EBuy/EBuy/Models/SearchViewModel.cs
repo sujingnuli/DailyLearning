@@ -20,10 +20,11 @@ namespace EBuy.Models
     }
     public class AuctionViewModel {
         public string Image { get; set; }
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string CurrentPrice { get; set; }
         public string RemainingTimeDisplay { get; set; }
+        
     }
 }
