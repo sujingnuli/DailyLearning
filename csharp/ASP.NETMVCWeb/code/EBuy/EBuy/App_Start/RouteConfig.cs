@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBuy.Filters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,6 +12,7 @@ namespace EBuy
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+           
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.RouteExistingFiles = false;
             routes.MapRoute(

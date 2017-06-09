@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "测试实时数据，Persistent Connection";
+}
+<script src="/Scripts/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="/Scripts/jquery.signalR-2.2.2.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        var connection = $.connection("/echo");
+        connection.received(function (data) {
+            $("#Message").text( data );
+        });
+        connection.start();
+        $("#SendMsg").click(function () {
+            connection.send( new Date());
+        });
+    });
+   
+</script>
+
+<hgroup>
+    <h1>Persistent Connection</h1>
+    <h2>测试实时数据，persistentConnection ,on Microsoft SignalR</h2>
+</hgroup>
+
+@using(Html.BeginForm()){
+    <div id="Message">
+        
+    </div>
+    
+    <input id="SendMsg" type="button" value="Click"/>
+}

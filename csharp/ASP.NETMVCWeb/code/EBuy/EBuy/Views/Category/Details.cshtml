@@ -3,6 +3,17 @@
 @{
     ViewBag.Title = "Category Detail";    
 }
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var connection = $.connection("/echo");
+        connection.received(function (data) {
+            $("#Message").append("<li>" + data + "</li>");
+        });
+        connection.start();
+    });
+</script>
 <hgroup>
     <h1>@ViewBag.Title</h1>
     <h1> there is one detail for Category</h1>

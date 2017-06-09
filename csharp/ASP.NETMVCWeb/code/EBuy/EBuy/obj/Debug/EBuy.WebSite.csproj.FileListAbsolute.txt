@@ -106,3 +106,14 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.WebSi
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.dll
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\obj\Debug\EBuy.pdb
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\System.Web.Providers.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.AspNet.SignalR.Core.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.Security.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Owin.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.AspNet.SignalR.Core.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy\bin\Microsoft.Owin.Security.xml

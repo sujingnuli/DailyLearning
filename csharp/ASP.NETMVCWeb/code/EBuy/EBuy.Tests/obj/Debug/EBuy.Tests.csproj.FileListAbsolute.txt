@@ -195,3 +195,10 @@ D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\DotN
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\DotNetOpenAuth.OpenId.RelyingParty.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\DotNetOpenAuth.OpenId.xml
 D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\zh-Hans\Microsoft.Web.WebPages.OAuth.resources.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.AspNet.SignalR.Core.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Owin.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.Owin.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.Owin.Security.dll
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.AspNet.SignalR.Core.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.Owin.xml
+D:\GitHub\DailyLearning\csharp\ASP.NETMVCWeb\code\EBuy\EBuy.Tests\bin\Debug\Microsoft.Owin.Security.xml

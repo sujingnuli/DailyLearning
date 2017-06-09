@@ -1,6 +1,7 @@
 ﻿using Ebuy.Common.Binder;
 using Ebuy.Common.Clz;
 using Ebuy.Common.DataAccess;
+using EBuy.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,12 @@ namespace EBuy
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-
+            //注册自定义链接。
+            //RouteTable.Routes.MapConnection<EbuyCustomConnection>("echo", "echo/{*operation}");
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            //BundleConfig.RegisterBundles(BundleTable.Bundles);
             BundleTable.EnableOptimizations = true;//启动优化，把多个css,js文件放在一起，浏览器只发送一次请求。
             AuthConfig.RegisterAuth();
             //更换DefaultModelBinder
