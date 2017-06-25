@@ -9,7 +9,7 @@ namespace EBuy
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute { ExceptionType = typeof(System.Data.DataException), View = "DatabaseError" });
+            filters.Add(new CustomeHandleError());
             filters.Add(new HandleErrorAttribute());
            // filters.Add(new CustomExceptionFilter());
         }
