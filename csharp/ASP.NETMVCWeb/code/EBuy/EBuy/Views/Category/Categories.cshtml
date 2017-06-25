@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Categories";
+}
+
+<h2>Categories</h2>
+<aside>
+    <section id="categories">
+        @Html.Action("CategoriesChildAction", "Category");
+    </section>
+</aside>
+@DateTime.Now.ToString()

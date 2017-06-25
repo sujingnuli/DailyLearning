@@ -1,0 +1,6 @@
+﻿@model EBuy.Models.Product
+<h1>Test for Partial View</h1>
+<h1>hello World!</h1>
+@Html.TextBoxAccessible("name","lily")
+@Html.DisplayFor(@model=>@model.Name)
+@Html.Partial("_foot")

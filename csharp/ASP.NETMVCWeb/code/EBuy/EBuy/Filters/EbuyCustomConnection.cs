@@ -16,11 +16,12 @@ namespace EBuy.Filters
         /// <param name="connectionId"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        protected override Task OnReceived(IRequest request, string connectionId, string data)
-        {
+        //protected override Task OnReceived(IRequest request, string connectionId, string data)
+        //{
            
-            //向所有客户端广播消息
-            return Connection.Broadcast(data);
-        }
+        //    //向所有客户端广播消息
+        //    return Connection.Broadcast(data);
+        //}
+    
     }
 }

@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Hubs";
+    }
+
+<script src="~/Scripts/jquery-1.8.2.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.2.js"></script>
+<script src="/realtime/js"></script>
+<script type="text/javascript">
+    $(function () {
+        var hub = $.connection.serverHub;
+        hub.client.message= function (data) {
+            $("#Message").append("<li>" + data + "</li>");
+        };
+        $.connection.hub.start().done(function () {
+            $("#sendMsg").click(function () {
+                hub.server.message("Hello World" + new Date());
+            });
+        });
+       
+    });
+</script>
+<hgroup>
+    <h1>timereal data</h1>
+    <h2>Hubs pattern on Microsoft Hubs design pattern</h2>
+</hgroup>
+<ol id="Message">
+    <li>Hi</li>
+</ol>
+<input type="button" id="sendMsg" value="click"/>

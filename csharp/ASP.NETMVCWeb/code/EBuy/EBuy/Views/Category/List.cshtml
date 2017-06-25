@@ -1,0 +1,21 @@
+﻿@model Ebuy.Common.Entities.CategoriesViewModel
+@*@{
+    ViewBag.Title = "Categories";    
+}
+<hgroup>
+    <h1>Category List</h1>
+    <h2> test for donut hole cache</h2>
+</hgroup>
+
+*@
+
+@using (Html.BeginForm()) {
+    <ol>
+          @foreach (var gory in ViewBag.Categories.Categories) { 
+               <li>Html.ActionLink(@gory.Name, "Details", "category", new { id = gory.Id }, new { target="_blank"})</li>
+          }
+    </ol>
+  
+}
+
+@*@DateTime.Now.ToString();*@

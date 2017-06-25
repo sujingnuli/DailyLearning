@@ -51,6 +51,9 @@
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.0.0\lib\net45\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
@@ -218,18 +221,33 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuctionsController.cs" />
+    <Compile Include="Controllers\baseController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\DBWZHelper.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\Test2Controller.cs" />
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Extension\HtmlHelperExtension.cs" />
     <Compile Include="Filters\CustomExceptionFilter.cs" />
     <Compile Include="Filters\EbuyCustomConnection.cs" />
+    <Compile Include="Filters\EbuyCustomHub.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Filters\JsonModelBinderAttribute.cs" />
     <Compile Include="Filters\MultipleResponseFormatsAttribute.cs" />
+    <Compile Include="Filters\RouteAttribute.cs" />
+    <Compile Include="Filters\RouteGenerator.cs" />
+    <Compile Include="Filters\ServerHub.cs" />
     <Compile Include="Filters\SingleSignOnAttribute.cs" />
     <Compile Include="Filters\Startup.cs" />
+    <Compile Include="Filters\test\AspCompatHandler.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Filters\test\AspCompatRouteHandler.cs" />
+    <Compile Include="Filters\test\GetThreadState.cs" />
+    <Compile Include="Filters\test\SimpleHandler.cs" />
+    <Compile Include="Filters\test\SimpleRouteHandler.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -302,8 +320,11 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="html\2.manifest" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="html\AuctionHtml.html" />
+    <Content Include="html\error.html" />
+    <Content Include="html\testCache.html" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -335,6 +356,18 @@
     <Content Include="Views\Account\ChangePasswordSuccess.cshtml" />
     <Content Include="Views\Category\Details.cshtml" />
     <Content Include="Views\Test\Test1.cshtml" />
+    <Content Include="Views\Test\Test2.cshtml" />
+    <Content Include="Views\Test\Test3.cshtml" />
+    <Content Include="Views\Test\Test4.cshtml" />
+    <Content Include="Views\Category\List.cshtml" />
+    <Content Include="Views\Category\Categories.cshtml" />
+    <Content Include="Views\Test\Test5.cshtml" />
+    <Content Include="Views\Shared\_foot.cshtml" />
+    <Content Include="Views\Test\Test6.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\ServerExp.cshtml" />
+    <Content Include="Views\Test\DatabaseError.cshtml" />
+    <Content Include="Views\Test\Error.cshtml" />
     <None Include="Views\Test\TestAjax1.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

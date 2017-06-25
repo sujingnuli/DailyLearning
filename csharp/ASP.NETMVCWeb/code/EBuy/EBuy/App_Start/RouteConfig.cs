@@ -1,4 +1,5 @@
 ﻿using EBuy.Filters;
+using EBuy.Filters.test;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,8 @@ namespace EBuy
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-            
+            routes.Add(new Route("{controller}/{action}/{id}",new SimpleRouteHandler()));
+            routes.MapRoute("AspCompatRoute", "{controller}/{action}").RouteHandler = new AspCompatRouteHandler();
         }
     }
 }

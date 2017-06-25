@@ -23,11 +23,12 @@ namespace EBuy
             AreaRegistration.RegisterAllAreas();
             //注册自定义链接。
             //RouteTable.Routes.MapConnection<EbuyCustomConnection>("echo", "echo/{*operation}");
+            
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             //BundleConfig.RegisterBundles(BundleTable.Bundles);
-            BundleTable.EnableOptimizations = true;//启动优化，把多个css,js文件放在一起，浏览器只发送一次请求。
+            //BundleTable.EnableOptimizations = true;//启动优化，把多个css,js文件放在一起，浏览器只发送一次请求。
             AuthConfig.RegisterAuth();
             //更换DefaultModelBinder
             ModelBinders.Binders.DefaultBinder = new JsonModelBinder();

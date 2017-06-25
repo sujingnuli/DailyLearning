@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="../Scripts/jquery-1.8.2.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //var stor = window.localStorage;
+            //stor["userName"] = "Mr.Lin";
+            //stor["Age"] = 24;
+            //$("#ct").click(function () {
+            //    $("#name").text(stor["userName"]);
+            //    $("#age").text(stor["Age"]);
+            //});
+
+            var suc=IsLocalStorageSupported();
+            if (suc) {
+                alert("浏览器支持localStorage");
+            } else {
+                alert("浏览器不支持localStorage");
+            }
+        });
+        function IsLocalStorageSupported() {
+            try{
+                return 'localStorage' in window && window["localStorage"] != null;
+            } catch (e) {
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+	  <input type="button" value="click me" id="ct" />
+      姓名：<span id="name"></span>
+      年龄：<span id="age"></span>
+</body>
+</html>

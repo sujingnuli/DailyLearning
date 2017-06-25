@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin;
 using Owin;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,14 @@ namespace EBuy.Filters
 {
     public partial class Startup
     {
-        public void Configuration(IAppBuilder app) {
-            
-            app.Map("/echo", map =>
-            {
-                map.RunSignalR<EbuyCustomConnection>();
-            });
+        public void Configuration(IAppBuilder app)
+        {
+
+            //app.Map("/echo", map =>
+            //{
+            //    map.RunSignalR<EbuyCustomConnection>();
+            //});
+            app.MapSignalR("/realtime", new HubConfiguration());
         }
     }
 }

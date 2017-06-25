@@ -1,0 +1,17 @@
+CACHE MANIFESET
+#	Generated 01-01-2012 00:00PM :V2
+
+CACHE:
+/favicon.ico
+home.html
+site.css
+images/logo.png
+scripts/application.js
+
+NETWORK:
+login.asmx
+
+FALLBACK:
+/Home/Index /index.html
+images/ images/offline.png
+* /appOffline.html

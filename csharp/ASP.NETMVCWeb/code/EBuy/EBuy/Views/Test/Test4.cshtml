@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Test4";
+      
+}
+@using Ebuy.Common.Extensions
+
+
+
+<h2>donut caching</h2>
+
+<div class="userName">
+    the time is <span>@Html.Substitution(context => context.User.Identity.Name)</span>
+</div>
+
+
+
+<div>
+   时间为： @DateTime.Now.ToString()
+</div>

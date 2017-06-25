@@ -1,0 +1,13 @@
+CACHE MANIFESET
+#	Generated 01-01-2012 00:00PM :V2
+
+CACHE:
+*.jpg
+
+NETWORK:
+login.asmx
+
+FALLBACK:
+/Home/Index /index.html
+images/ images/offline.png
+* /appOffline.html
