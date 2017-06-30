@@ -1,0 +1,73 @@
+﻿body ,div,table,td,th,span,h1,h2,h3,h4{
+    padding:0px;margin:0px;
+}
+html, body {
+    height:100%;
+}
+.web_title {
+    margin-left:20px;
+    font-size:26px;color:skyblue;font-weight:800;line-height:50px;
+}
+.login_span {
+    color:skyblue;float:right;margin-right:20px;line-height:50px;
+}
+.layout_top {
+    border-bottom:1px solid #e1e1e1;
+}
+.index_div_search {
+    padding-top:200px;width:100%;text-align:center;vertical-align:middle;
+}
+    .index_div_search input[type="text"] {
+        height:30px;border:1px solid skyblue;width:400px;line-height:35px;border-radius:4px;text-align:center;
+    }
+    .index_div_search input[type="submit"] {
+        height:34px;color:white;background-color:skyblue;font-size:24px;font-weight:700;
+    }
+.search_div {
+    width:100%;
+    text-align:center;color:skyblue;margin-top:20px;
+}
+.Search_table {
+    width:60%;margin:auto;color:black;line-height:40px;border:1px solid skyblue;border-collapse:collapse;
+}
+    .Search_table td,th {
+        border:1px solid skyblue;padding:0px;
+    }
+    .Search_table th {
+        color:skyblue;font-weight:600;
+    }
+    .Search_table td:nth-child(2) {
+        text-align:left;padding-left:5px;
+    }
+.Inner_div {
+   height:90%;overflow:hidden;
+}
+.Inner_div_left {
+    display:inline-block;width:18%;height:100%;padding-left:20px;border-right:1px solid skyblue;
+}
+.Inner_div_right {
+    display:inline-block;width:80%;height:100%;
+}
+.Genre_table {
+    margin-top:20px;
+}
+    .Genre_table td {
+        line-height:40px;vertical-align:middle;text-align:left;padding-left:20px;
+    }
+        .Genre_table td a,.login_span a {
+            text-decoration:none;color:#03A9F4;
+        }
+.login_span a {
+    margin-left:10px;margin-right:10px;
+}
+.storeManger_index_table {
+    width:80%;margin:auto;border:1px solid skyblue;border-collapse:collapse;
+}
+    .storeManger_index_table th, .storeManger_index_table td {
+        border:1px solid skyblue;line-height:40px;vertical-align:middle;text-align:center;
+    }
+    .storeManger_index_table p {
+    }
+.storeManager_edit_div form {
+    width:80%;margin:auto;float:right;
+}

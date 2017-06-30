@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Genre>
+@{Layout = null;}
+<h1>Genres</h1>
+<table class="Genre_table">
+    @foreach(var item in Model){
+        <tr>
+            <td>@Html.ActionLink(item.Name, "/Home/Genre", new { id=item.GenreId})</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,10 @@
+﻿@model Plan.WebSite.Models.CUser
+<div id="Login" class="layout_login disnone">
+@using(Html.BeginForm()){
+   <span>@Html.Label("用户名")</span>
+   @Html.TextBoxFor(model=>model.Name)<br/>
+   <span>@Html.Label("密码")</span>
+   @Html.PasswordFor(model=>model.password)<br/>
+   <input type="submit" value="登录" />
+}
+</div>

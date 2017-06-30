@@ -1,0 +1,57 @@
+﻿body,div,table,h1,h2,h3 {
+    padding:0px;margin:0px;
+}
+.layout_header {
+    height:50px;background-color:skyblue;border:3px solid #e1e1e1;
+    padding-left:20px;color:white;
+}
+    .layout_header h1 {
+        line-height:50px;
+    }
+    .layout_header span {
+        position:fixed;right:20px;top:20px;
+    }
+.layout_body {
+    height:60%;
+}
+.disnone {
+    display:none;
+}
+
+.layout_foot_bottom {
+    text-align:center;border-top:3px solid #e1e1e1;
+    color:#808080;height:70px;vertical-align:middle;
+    position:fixed;bottom:0;width:100%;
+}
+/**************************登录*/
+#Login {
+    width:300px;
+    float:right;
+    border:2px solid skyblue;
+    border-top:30px solid skyblue;
+    border-bottom:30px solid skyblue;
+}
+    #Login input[type="text"],#Login input[type="password"] {
+        width:80%;text-align:center;height:30px;border:2px solid skyblue;border-radius:10px;margin-left:10%;
+    }
+    #Login span, input {
+        margin-top:10px;
+    }
+    #Login span {
+        display:block;margin-left:10%;font-family:STCaiyun;font-size:20px;font-weight:800;color:skyblue;
+    }
+    #Login input[type="submit"] {
+        width:100px;margin:10px;margin-left:35%;height:40px;background-color:skyblue;border-radius:10px;border:none;font-size:25px;color:white;font-family:STCaiyun;font-weight:800;
+    }
+    #Login input:focus {
+       outline:none;
+    }
+.layout_left {
+    width:38%;
+    height:100%;display:inline-block;
+}
+.layout_right {
+    width:60%;position:absolute;right:0px;
+   display:inline-block;
+}
+

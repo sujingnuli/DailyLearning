@@ -230,7 +230,9 @@
     <Compile Include="Controllers\Test2Controller.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Extension\HtmlHelperExtension.cs" />
+    <Compile Include="Filters\CustomeHandleError.cs" />
     <Compile Include="Filters\CustomExceptionFilter.cs" />
+    <Compile Include="Filters\CustomWebRequestErrorEvent.cs" />
     <Compile Include="Filters\EbuyCustomConnection.cs" />
     <Compile Include="Filters\EbuyCustomHub.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />

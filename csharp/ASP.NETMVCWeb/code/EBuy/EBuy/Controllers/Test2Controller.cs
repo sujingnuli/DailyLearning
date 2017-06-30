@@ -8,8 +8,9 @@ namespace EBuy.Controllers
 {
     public class Test2Controller : baseController
     {
-        public ActionResult test1() {
-            throw new Exception("just a Exception");
+        public ActionResult test1(Exception ex) {
+            Console.WriteLine(ex.Message);
+            return View();
         }
     }
 }

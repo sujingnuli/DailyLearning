@@ -1,0 +1,12 @@
+﻿@model GJBCTest.Website.Models.Album
+
+@{
+    ViewBag.Title = "Edit";
+}
+<script type="text/javascript">
+    $(function () {
+        var message = 'hello @Ajax.JavaScriptStringEncode(ViewBag.UserName)';
+        $("#message").html(message).show('slow');
+    });
+</script>
+<h2>Edit</h2>

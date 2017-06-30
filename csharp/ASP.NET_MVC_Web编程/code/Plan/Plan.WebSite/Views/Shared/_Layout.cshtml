@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderPage("~/Views/Shared/_Header.cshtml")
+</head>
+<body>
+     <div class="layout_left">
+        <img src="~/Images/center.jpg">
+    </div>
+     <div class="layout_right">
+        @RenderPage("~/Views/Account/Login.cshtml")
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+    @RenderPage("~/Views/Shared/_Footer.cshtml")
+</body>
+</html>

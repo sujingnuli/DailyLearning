@@ -1,0 +1,16 @@
+﻿@model GJBCTest.Website.Models.Genre
+@{ViewBag.Title = "Browser test";}
+<div>
+    <h3><em>财务报表系统</em></h3>
+    <ul>
+    @foreach(var album in @Model.Albums){
+        <li>
+            <a href="@Url.Action("Details",new{id=album.AlbumId})">
+                <img alt="@album.Title" src="@album.AlbumArtUrl"/>
+                <span>@album.Title</span>
+            </a>
+
+        </li>
+    }
+  </ul>
+</div>
