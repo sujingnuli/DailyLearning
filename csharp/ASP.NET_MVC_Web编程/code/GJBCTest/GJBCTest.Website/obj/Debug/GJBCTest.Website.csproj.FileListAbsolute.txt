@@ -37,7 +37,6 @@ D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Webs
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\zh-Hans\System.Web.WebPages.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\zh-Hans\System.Web.WebPages.Deployment.resources.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\zh-Hans\System.Web.WebPages.Razor.resources.dll
-D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\obj\Debug\GJBCTest.Website.csproj.GenerateResource.Cache
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\obj\Debug\GJBCTest.Website.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\obj\Debug\GJBCTest.Website.pdb
-D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\obj\Debug\GJBCTest.Website.Migrations.Initial.resources
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\obj\Debug\GJBCTest.Website.csprojResolveAssemblyReference.cache

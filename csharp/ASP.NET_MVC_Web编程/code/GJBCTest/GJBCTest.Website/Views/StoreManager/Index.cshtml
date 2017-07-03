@@ -46,6 +46,7 @@
             @Html.DisplayFor(modelItem => item.AlbumArtUrl)
         </td>
         <td>
+           
             @Html.ActionLink("Edit", "Edit", new { id=item.AlbumId }) |
             @Html.ActionLink("Details", "Details", new { id=item.AlbumId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.AlbumId })
@@ -54,3 +55,5 @@
 }
 
 </table>
+
+@Html.ActionLink("order","AddressandPayment", "Checkout")

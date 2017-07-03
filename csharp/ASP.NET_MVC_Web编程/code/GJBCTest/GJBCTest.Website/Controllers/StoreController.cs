@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GJBCTest.Website.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,21 +9,16 @@ namespace GJBCTest.Website.Controllers
 {
     public class StoreController : Controller
     {
-        //
-        // GET: /Store/
-
-        public string Index()
-        {
-            return "Hello form store.Index()";
+        private MusicStoreDBContext db = new MusicStoreDBContext();
+        public ActionResult Index() {
+            var albums = db.Albums;
+            return View(albums);
         }
+        [Authorize]
+        public ActionResult Buy(int id) {
+            var album = db.Albums.Single(m => m.AlbumId == id);
 
-        public string Browse(string genre) {
-            return genre;
+            return View(album);     
         }
-
-        public string Details(int id) {
-            return id+"";
-        }
-
     }
 }

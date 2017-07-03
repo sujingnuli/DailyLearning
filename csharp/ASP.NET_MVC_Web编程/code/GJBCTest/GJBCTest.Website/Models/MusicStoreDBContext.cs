@@ -20,5 +20,8 @@ namespace GJBCTest.Website.Models
         public DbSet<Album> Albums { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Artist> Artists { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> details { get; set; }
     }
 }

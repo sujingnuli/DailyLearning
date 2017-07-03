@@ -1,0 +1,10 @@
+﻿@model Order
+@{
+    ViewBag.Title = "AddressandPayment";
+    Layout = "~/Views/Shared/layout_Inner.cshtml";
+}
+
+<fieldset class="aap_fieldset">
+    <legend>Shipping Infomation</legend>
+    @Html.EditorForModel()
+</fieldset>

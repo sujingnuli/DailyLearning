@@ -11,11 +11,16 @@
     <div class="layout_top">
         <span class="web_title">Music Store</span>
         <span class="login_span">
-           @Html.ActionLink("主页","../StoreManager/Index")|
+           @Html.ActionLink("Home","../StoreManager/Index")|
+           @Html.ActionLink("Store","../Store/Index")|
+           @Html.ActionLink("Cart(0)","../Cart/Index")|
            @Html.ActionLink("登录","/Home/Login")|
            @Html.ActionLink("注册","/Home/Register")
            
         </span>
+    </div>
+    <div class="layout_title">
+        @Html.Action("Menu","Home")
     </div>
     <div class="Inner_div">
         <div class="Inner_div_left">

@@ -25,5 +25,10 @@ namespace GJBCTest.Website.Controllers
             var genres = db.Genres;
             return View(genres);
         }
+        [ChildActionOnly]
+        public ActionResult Menu() {
+            var menus = db.Menus.OrderBy(m => m.Order);
+            return PartialView(menus);
+        }
     }
 }

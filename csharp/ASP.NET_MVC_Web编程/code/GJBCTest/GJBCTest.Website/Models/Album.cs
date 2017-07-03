@@ -1,9 +1,11 @@
-﻿using System;
+﻿using GJBCTest.Website.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace GJBCTest.Website.Models
 {
@@ -19,6 +21,7 @@ namespace GJBCTest.Website.Models
         [StringLength(200)]
         [DataType(DataType.MultilineText)]
         public virtual  string Title { get; set; }
+        [Range(typeof(decimal),"0.00","49.99")]
         public virtual decimal Price { get; set; }
         public virtual string AlbumArtUrl { get; set; }
         public virtual Genre Genre { get; set; } //导航属性 

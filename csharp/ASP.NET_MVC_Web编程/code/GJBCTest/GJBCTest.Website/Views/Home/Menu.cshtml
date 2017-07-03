@@ -1,0 +1,6 @@
+﻿@model IEnumerable<Menu>
+    <ul class="menu-ul">
+        @foreach (var item in Model) { 
+            <li><a>@item.Name</a></li>
+        }
+    </ul>
