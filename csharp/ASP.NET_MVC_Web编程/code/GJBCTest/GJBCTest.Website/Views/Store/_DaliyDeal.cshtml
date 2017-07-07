@@ -1,0 +1,21 @@
+﻿@model Album
+<script src="~/Scripts/MusicStore.js"></script>
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.8.24.min.js"></script>
+
+<p>
+    <img alt="@Model.Title" src="~/Images/timg.jpg" id="dealImg" />
+</p>
+<div id="album-details">
+    <p>
+        <em>Artist:</em>
+        @Model.Artist.Name
+    </p>
+    <p>
+        <em>Price:</em>
+        @String.Format("{0:F}",Model.Price) 
+   </p>
+    <p class="button">
+        @Html.ActionLink("Add to cart", "../ShoppingCart/AddToCart", new {id=@Model.AlbumId })
+    </p>
+</div>

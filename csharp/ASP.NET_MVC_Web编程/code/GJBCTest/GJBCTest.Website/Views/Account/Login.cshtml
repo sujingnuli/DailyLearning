@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/layout_Inner.cshtml";
+}
+@model User
+<div class="login_div">
+    @using(Html.BeginForm()){
+    <fieldset>
+        <legend>Login</legend>
+        <p>
+            @Html.LabelFor(ModelItem=>Model.UserName)
+            @Html.TextBoxFor(ModelItem=>Model.UserName)
+            @Html.ValidationMessageFor(ModelItem=>Model.UserName)
+        </p>
+        <p>
+            @Html.LabelFor(ModelItem=>Model.Password)
+            @Html.PasswordFor(ModelItem=>Model.Password)
+            @Html.ValidationMessageFor(ModelItem=>Model.Password)
+        </p>
+        <p>
+            @Html.ValidationSummary()
+        </p>
+        <input type="submit" value="Login" />
+    </fieldset>
+    }
+</div>

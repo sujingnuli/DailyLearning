@@ -1,7 +1,9 @@
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\GJBCTest.Website.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\GJBCTest.Website.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\AntiXssLibrary.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\Antlr3.Runtime.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\HtmlSanitizationLibrary.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\Microsoft.Web.Infrastructure.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\Newtonsoft.Json.dll
@@ -16,6 +18,8 @@ D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Webs
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\System.Web.WebPages.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\System.Web.WebPages.Razor.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\WebGrease.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\AntiXssLibrary.xml
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\HtmlSanitizationLibrary.xml
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\EntityFramework.xml
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\Newtonsoft.Json.xml
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\GJBCTest.Website\bin\System.Net.Http.Formatting.xml

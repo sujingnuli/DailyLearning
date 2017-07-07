@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Wrox.ProMvc4.Security.Authorize</id>
+    <version>1.0.0</version>
+    <title>Wrox.ProMvc4.Security.Authorize</title>
+    <authors>Jon Galloway</authors>
+    <owners>Jon Galloway</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Sample code from Chapter 7 of the Professional ASP.NET MVC 4 book by Wrox.</description>
+    <summary />
+    <language>en-US</language>
+  </metadata>
+</package>

@@ -6,16 +6,33 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @{
+        var name = Session["UserName"] == null ? "游客" : Session["UserName"];
+        var tname = Session["UserName"];
+     }
+    <script src="~/Scripts/jquery-1.8.2.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            if ("@tname"!="") {
+                $(".log").hide();
+            } else {
+                $('.logout').hide();
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="layout_top">
         <span class="web_title">Music Store</span>
         <span class="login_span">
+           你好，@name 欢迎！|
            @Html.ActionLink("Home","../StoreManager/Index")|
            @Html.ActionLink("Store","../Store/Index")|
            @Html.ActionLink("Cart(0)","../Cart/Index")|
-           @Html.ActionLink("登录","/Home/Login")|
-           @Html.ActionLink("注册","/Home/Register")
+           @Html.ActionLink("搜索","../Home/Search")
+           @Html.ActionLink("|登录", "../Account/Login", null, new { @class="log"})
+           @Html.ActionLink("|注册", "../Account/Register", null, new {@class="log"})
+           @Html.ActionLink("|注销", "../Account/Logout", null, new { @class="logout"})
            
         </span>
     </div>
@@ -32,7 +49,7 @@
         
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+
     @RenderSection("scripts", required: false)
    
 </body>

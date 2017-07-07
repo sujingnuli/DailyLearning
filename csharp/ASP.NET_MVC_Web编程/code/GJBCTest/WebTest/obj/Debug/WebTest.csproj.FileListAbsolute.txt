@@ -2,3 +2,4 @@ D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\WebTest\bin\D
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\WebTest\bin\Debug\WebTest.pdb
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\WebTest\obj\Debug\WebTest.dll
 D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\WebTest\obj\Debug\WebTest.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\WebTest\obj\Debug\WebTest.csprojResolveAssemblyReference.cache

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace GJBCTest.Website.Common
 {
-    public class MaxWordsAttribute:ValidationAttribute
+    public class MaxWordsAttribute:ValidationAttribute,IClientValidatable
     {
         private readonly int _maxWords;
         public MaxWordsAttribute(int maxWords):base("{0} has too many words!") {
@@ -21,6 +22,15 @@ namespace GJBCTest.Website.Common
                 }
             }
             return ValidationResult.Success;
+        }
+
+        public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context)
+        {
+            var rule = new ModelClientValidationRule();
+            rule.ErrorMessage = FormatErrorMessage(metadata.DisplayName);
+            rule.ValidationParameters.Add("wordcount", _maxWords);
+            rule.ValidationType = "maxwords";
+            yield return rule;
         }
     }
 }

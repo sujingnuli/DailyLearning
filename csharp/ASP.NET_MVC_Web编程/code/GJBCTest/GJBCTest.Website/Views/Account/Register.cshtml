@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/layout_Inner.cshtml";
+}
+
+@model RegisterModel
+<div class="register_div">
+@using(Html.BeginForm()){
+<fieldset>
+    <legend>Register</legend>
+    <p>
+        @Html.LabelFor(ModelItem=>Model.UserName)
+        @Html.TextBoxFor(ModelItem=>Model.UserName)
+        @Html.ValidationMessageFor(ModelItem=>Model.UserName)
+    </p>
+    <p>
+        @Html.LabelFor(ModelItem=>Model.Password)
+        @Html.PasswordFor(ModelItem => Model.Password)
+        @Html.ValidationMessageFor(ModelItem=>Model.Password)
+    </p>
+    <p>
+        @Html.LabelFor(ModelItem=>Model.ConfirmPassword)
+        @Html.PasswordFor(ModelItem=>Model.ConfirmPassword)
+        @Html.ValidationMessageFor(ModelItem=>Model.ConfirmPassword)
+    </p>
+    <input type="submit" value="Register" />
+</fieldset>
+}
+</div>

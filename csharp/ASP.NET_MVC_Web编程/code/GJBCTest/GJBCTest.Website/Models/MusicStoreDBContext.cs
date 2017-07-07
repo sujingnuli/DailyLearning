@@ -23,5 +23,6 @@ namespace GJBCTest.Website.Models
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> details { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

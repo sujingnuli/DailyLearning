@@ -1,4 +1,5 @@
-﻿using GJBCTest.Website.Models;
+﻿using GJBCTest.Website.Filters;
+using GJBCTest.Website.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Web.Mvc;
 
 namespace GJBCTest.Website.Controllers
 {
+    [MyAuthorize]
     public class CheckoutController : Controller
     {
         private MusicStoreDBContext db = new MusicStoreDBContext();
@@ -25,8 +27,8 @@ namespace GJBCTest.Website.Controllers
                 db.SaveChanges();
 
                 //process the order
-                var cart = ShoppingCart.GetCart(this);
-                cart.CreateOrder(newOrder);
+                
+              
             }
             return View(newOrder);
         }

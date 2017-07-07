@@ -1,30 +1,26 @@
-﻿using GJBCTest.Website.Common;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
 namespace GJBCTest.Website.Models
 {
     public class Album
     {
-        
-        public virtual int AlbumId { get; set; }
+        public virtual int AlbumId {get; set; }
         [DisplayName("Genre")]
-        public virtual  int GenreId { get; set; }
+        public virtual int GenreId { get; set; }
         [DisplayName("Artist")]
-        public virtual  int ArtistId { get; set; }//外键属性，foreign key property
-        [Required(ErrorMessage="An Album title is required")]
-        [StringLength(200)]
-        [DataType(DataType.MultilineText)]
-        public virtual  string Title { get; set; }
-        [Range(typeof(decimal),"0.00","49.99")]
+        public virtual int ArtistId { get; set; }
+        [Required(ErrorMessage="An album title is required")]
+        [StringLength(160)]
+        public virtual string Title { get; set; }
+        [Required(ErrorMessage="Price is required")]
+        [DisplayFormat(DataFormatString="{0:c}")]
+        [Range(0.01,100.00,ErrorMessage="Price must be between 0.01 and 100.00")]
         public virtual decimal Price { get; set; }
         public virtual string AlbumArtUrl { get; set; }
-        public virtual Genre Genre { get; set; } //导航属性 
+       
+        public virtual Genre Genre { get; set; }//导航属性
         public virtual Artist Artist { get; set; }
+
     }
 }

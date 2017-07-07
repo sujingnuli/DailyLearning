@@ -9,7 +9,7 @@ html, body {
     font-size:26px;color:skyblue;font-weight:800;line-height:50px;
 }
 .login_span {
-    color:skyblue;float:right;margin-right:20px;line-height:50px;
+    float:right;margin-right:20px;line-height:50px;color:#03A9F4;
 }
 .layout_top {
     border-bottom:1px solid #e1e1e1;
@@ -46,7 +46,7 @@ html, body {
     position:absolute;display:inline-block;width:18%;height:100%;padding-left:20px;border-right:1px solid skyblue;
 }
 .Inner_div_right {
-    display:inline-block;width:80%;height:100%;position:absolute;left:300px;
+    display:inline-block;width:80%;height:100%;position:absolute;left:320px;
 }
 .Genre_table {
     margin-top:20px;
@@ -61,7 +61,7 @@ html, body {
     margin-left:10px;margin-right:10px;
 }
 .storeManger_index_table {
-    width:80%;margin:auto;border:1px solid skyblue;border-collapse:collapse;
+    width:80%;margin:auto;border:1px solid skyblue;border-collapse:collapse;margin-top:20px;
 }
     .storeManger_index_table th, .storeManger_index_table td {
         border:1px solid skyblue;line-height:40px;vertical-align:middle;text-align:center;
@@ -82,4 +82,58 @@ html, body {
 }
 .aap_fieldset {
     width:90%;height:100%;float:right;
+}
+.register_div {
+    width:60%;text-align:center;margin:auto;margin-top:20px;
+}
+    .register_div label {
+        width:100px;
+    }
+.register_div legend {
+    text-align:left;
+}
+.login_div {
+    width:80%;margin-top:20px;text-align:center;margin:auto;
+}
+    .login_div legend {
+        text-align:left;
+    }
+    .login_div ul {
+        list-style:none;
+    }
+.disnone {
+display:none;
+}
+  .tx {
+            width:60%;margin:auto;font-size:30px;font-weight:700;color:skyblue;padding-top:300px;
+        }
+        .er_mg {
+            width:200px;height:300px;float:left;margin-top:200px;margin-left:30%;
+        }
+        .hilight {
+            background-color:white;border:60px dashed  black;
+        }
+#daliydeal {
+    width:80%;margin:auto;margin-top:20px;
+}
+#dealImg {
+    width:100px;height:100px;
+}
+.store_search {
+    padding-top:20px;width:80%;margin:auto;text-align:right;height:60px;
+}
+.buf-panda {
+    width:100px;height:80px;position:absolute;right:650px;top:0px;
+}
+#index_div_table ul {
+    list-style:none;width:500px;float:right;text-align:left;position:absolute;right:10%;
+}
+    #index_div_table ul li {
+        font-weight:700;font-size:24px;color:skyblue;
+    }
+#index_div_table span {
+    float:right;width:500px;margin-right:10%;color:skyblue;
+}
+.buf_div {
+    display:inline-block;
 }
