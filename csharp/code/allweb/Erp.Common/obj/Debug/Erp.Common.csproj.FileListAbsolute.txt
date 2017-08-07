@@ -1,0 +1,5 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.Common\bin\Debug\Erp.Common.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.Common\bin\Debug\Erp.Common.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.Common\obj\Debug\Erp.Common.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.Common\obj\Debug\Erp.Common.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.Common\obj\Debug\Erp.Common.csprojResolveAssemblyReference.cache

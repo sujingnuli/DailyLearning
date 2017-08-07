@@ -1,0 +1,21 @@
+﻿body,div,h1,h2,h3,h4,table {
+    padding:0px;margin:0px;
+}
+.all_index_div_center {
+    font-size:25px;font-weight:700;width:100%;text-align:center;
+}
+.all_index_table {
+    width:600px;border-collapse:collapse;float:right;margin-right:10%;
+}
+.all_index_table td{
+    border:none;line-height:50px;
+}
+.all_index_div_header {
+    height:200px;width:90%;text-align:right;line-height:200px;
+}
+.all_body {
+    background:url(http://image.tupian114.com/20150110/22240190.jpg) no-repeat;background-size:100% auto;
+}
+.all_index_bottom {
+    position:absolute;bottom:40px;right:150px;font-family:STSong;color:white;text-align:right;color:#7F7272;
+}

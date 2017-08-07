@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+@model Entities.User
+<link href="~/Content/Common.css" rel="stylesheet" />
+<div  class="resigter_index">
+@using (Html.BeginForm()) { 
+    <div class="reg_login">
+        <p>
+            <span class="span_name">用&ensp;户&ensp;名</span>
+            @Html.TextBoxFor(ModelItem=>Model.Name)
+            @Html.ValidationMessageFor(ModelItem=>Model.Name)
+        </p>
+        <p>
+            <span class="span_name">密&emsp;&emsp;码</span>
+            @Html.PasswordFor(ModelItem=>Model.Password)
+            @Html.ValidationMessageFor(ModelItem=>Model.Password)
+        </p>
+        <p>
+            <span class="span_name">确认密码</span>
+            @Html.PasswordFor(ModelItem=>Model.ConfirmPassword)
+            @Html.ValidationMessageFor(ModelItem=>Model.ConfirmPassword)
+        </p>
+        <p>
+            <span class="span_name">电&emsp;&emsp;话</span>
+            @Html.TextBoxFor(ModelItem=>Model.Tel)
+            @Html.ValidationMessageFor(ModelItem=>Model.Tel) 
+            <span class="reg_sm">[选填]</span>
+        </p>
+        <p>
+            <span class="span_name">邮&emsp;&emsp;箱</span>
+            @Html.TextBoxFor(ModelItem=>Model.Email)
+            @Html.ValidationMessageFor(ModelItem=>Model.Email)
+        </p>
+        <p>
+            <span class="span_name">公&emsp;&emsp;司</span>
+            @Html.TextBoxFor(ModelItem=>Model.Company)
+            @Html.ValidationMessageFor(ModelItem=>Model.Company)
+             <span class="reg_sm">[选填]</span>
+        </p>
+        <input type="submit" value="注&emsp;册" />
+
+    </div>
+}
+
+</div>

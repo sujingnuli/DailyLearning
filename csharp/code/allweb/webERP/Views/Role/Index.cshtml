@@ -1,0 +1,301 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<link href="~/Content/jquery-easyui-1.3.1/themes/default/easyui.css" rel="stylesheet" />
+<link href="~/Content/jquery-easyui-1.3.1/themes/icon.css" rel="stylesheet" />
+<script src="~/Content/jquery-easyui-1.3.1/jquery-1.8.0.min.js"></script>
+<script src="~/Content/jquery-easyui-1.3.1/jquery.easyui.min.js"></script>
+<script src="~/Content/jquery-easyui-1.3.1/locale/easyui-lang-zh_CN.js"></script>
+<script src="~/Content/jquery-easyui-1.3.1/datapattern2.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //绑定用户的所有的用户信息
+        InitUserRoleType();
+        //实现用户添加角色信息
+        AddUserRoleInfo();
+        //实现用户修改角色信息
+        UpdateUserRoleInfo();
+        //设置搜索用户的信息
+        SearchRoleInfo();
+    });
+    //初始化用户的所有角色信息
+    function InitUserRoleType(queryData) {
+        $("#test").datagrid({
+            title: '用户角色管理',
+            iconCls: 'icon-Save',
+            height: 380,
+            nowrap: true,
+            autoRowHeight: false,
+            striped: true,
+            collapsible: true,
+            url: '/Role/GetAllUserRoleInfo',
+            sortName: 'Id',
+            sortOrder: 'asc',
+            border: true,
+            remoteSort: false,
+            idField: "Id",
+            pagination: true,
+            rownumbers: true,
+            queryParams: queryData,
+            columns: [[
+                  {field:'ck',checkbox:true},
+                  { field: 'Id', title: 'ID', width: 50, sortable: true },
+                  { field: 'RoleName', title: '角色名称', width: 200, sortable: true },
+                  {
+                      field: 'RoleType', title: '角色类型', width: 200, sortable: true,
+                      formatter: function (value, row, index) {
+                          if (value == 0) {
+                              return '普通用户';
+                          }
+                          if (value == 1) {
+                              return '管理员';
+                          }
+                          if (value == 2) {
+                              return "未知用户";
+                          }
+                      }
+                  },
+                  {
+                      field: 'SubTime', title: '添加时间', width: 250, sortable: true,
+                      formatter: function (value, row, index) {
+                          
+                        return (eval(value.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"))).pattern("yyyy-M-d h:m:s");
+                      }
+                  }
+            ]],
+            toolbar: [{
+                id: 'btnAdd',
+                text: '添加',
+                iconCls: 'icon-add',
+                handler: function () {
+                    ShowCreateUserRoleDialog();
+                }
+            }, '-', {
+                id: 'btncut',
+                text: '修改',
+                iconCls: 'icon-cut',
+                handler: function () {
+                    ShowUpdateUserRoleDialog();
+                }
+            }, '-', {
+                id: 'btnsave',
+                text: '删除',
+                iconCls: 'icon-remove',
+                handler: function () {
+                    DeleteUserRoleInfoByClick();
+                }
+            }]
+        });
+    }
+    //实现搜索的信息
+    function SearchRoleInfo() {
+        $("#btnSearch").click(function () {
+            var RoleType = $("#SOSearchRoleType").combobox("getValue");
+            var queryData = {
+                RoleName: $("#txtSearchRoleName").val(),
+                RoleType: RoleType
+            };
+            InitUserRoleType(queryData);
+            return false;
+        });
+    }
+    //添加用户角色
+    function ShowCreateUserRoleDialog() {
+        $("#AddUserRoleDialog").dialog('open').dialog('setTitle', '添加用户角色');
+
+        ClearUserRoleInfoTextBox();
+    }
+    //修改用户角色
+    function ShowUpdateUserRoleDialog() {
+        var updateUserRoleId = $("#test").datagrid("getSelections");
+        if (updateUserRoleId.length == 1) {
+            $("#UpdateUserRoleDialog").dialog('open').dialog('setTitle', "修改用户角色信息");
+            BindUpdateUserRoleShow();
+        } else {
+            $.messager.alert('友情提示', '每次选择一条数据');
+        }
+    }
+    function BindUpdateUserRoleShow() {
+        var UpdateUserRoleId = $("#test").datagrid("getSelections")[0].Id;
+        $.getJSON('/Role/BindUserRoleInfo', { Id: UpdateUserRoleId }, function (data) {
+            $("#Id").val(data.Id);
+            $("#RoleName1").val(data.RoleName);
+            $("#RoleType1").combobox('setValue', data.RoleType);
+        });
+    }
+    function UpdateUserRoleInfo() {
+        $("#btnUpdateUserRole").click(function () {
+            var validate = $("#UpdateUserRole").form("validate");
+            if (validate == false) {
+                return false;
+            }
+            var postData = {
+                Id: $("#Id").val(),
+                RoleName: $("#RoleName1").val(),
+                RoleType: $("#RoleType1").combobox('getValue'),
+            };
+            $.post('/Role/UpdateUserRoleInfo', postData, function (data) {
+                if (data == "OK") {
+                    $.messager.alert('友情提示', '修改成功');
+                    $("#test").datagrid("reload");
+                    $("#test").datagrid("clearSelections");
+                } else {
+                    $.messager.alert('友情提示', "修改失败");
+                }
+            });
+        });
+    }
+    //删除用户角色
+    function DeleteUserRoleInfoByClick() {
+        var DeleteUserRoleId = $("#test").datagrid("getSelections");
+        if (DeleteUserRoleId.length >= 1) {
+            var checkId = "";
+            for (var i = 0; i < DeleteUserRoleId.length; i++) {
+                checkId += DeleteUserRoleId[i].Id + ",";
+            }
+            checkId = checkId.substring(0, checkId.length - 1);
+            $.messager.confirm('友情提示', '确定要删除这些信息吗?', function (DeleteUserRole) {
+                if (DeleteUserRole) {
+                    $.post('/Role/DeleteUserRoleInfo', { Id: checkId }, function (data) {
+                        if (data == "OK") {
+                            $("#test").datagrid("reload");
+                            $("#test").datagrid("clearSelections");
+                        } else {
+                            $.messager.alert('友情提示', '删除失败' + data);
+                        }
+                    });
+                }
+            });
+        } else {
+            $.messager('友情提示', '请选择您要删除的数据');
+        }
+    }
+
+    function ClearUserRoleInfoTextBox() {
+        $("#RoleName").val("");
+    }
+    //实现添加用户信息
+    function AddUserRoleInfo() {
+        $("#btnAddUserRole").click(function () {
+            var validate = $("#UserRoleAdd").form("validate");
+            if (validate == false) {
+                return false;
+            }
+            var postData = {
+                RoleName: $("#RoleName").val(),
+                RoleType: $("#RoleType").combobox('getValue')
+            };
+            $.post('/Role/AddUserRoleInfo', postData, function (data) {
+                if (data == 'OK') {
+                    $.messager.alert("友情提示", "添加成功");
+                    $("#AddUserRoleDialog").dialog("close");
+                    $("#test").datagrid("reload");
+                } else {
+                    $.messager.alert("友情提示", "添加失败，请您检查");
+                }
+            });
+        });
+    }
+</script>
+@*---------------------------------------搜索---------------------------------*@
+<fieldset>
+    <legend>用户角色信息模糊搜索</legend>
+    <div>
+        <label for="txtSearchRoleName">角色名称:</label>
+        <input type="text" id="txtSearchRoleName" name="txtSearchRoleName" />&nbsp;&nbsp;
+        <label for="SOSearchRoleType">角色类型:</label>
+        <select id="SOSearchRoleType" name="SOSearchRoleType" class="easyui-combobox" editable="false">
+            <option value="-1" selected="selected">---请选择---</option>
+            <option value="0">普通用户</option>
+            <option value="1">管理员</option>
+            <option value="2">高级管理员</option>
+        </select>
+        <a href="#" class="easyui-linkbutton" iconcls="icon-search" id="btnSearch" name="btnSearch">模糊搜索</a>
+    </div>
+</fieldset>
+@*---------------------------------------实现对用户角色的显示-----------------*@
+<div>
+    <table id="test"></table>
+</div>
+@*---------------------------------------设置添加的弹出层----------------------*@
+<div id="AddUserRoleDialog" class="easyui-dialog" style="width:360px;height:200px;padding:10px 20px" closed="true" resizable="true" modal="true" buttons="#dlg-buttons" align="center">
+    <form id="UserRoleAdd" method="post" novalidate="novalidate">
+        <table id="tblAdd">
+            <tr>
+                <th colspan="2">添加用户角色信息</th>
+            </tr>
+            <tr>
+                <td>
+                    <label for="RoleName">角色名称:</label>
+                </td>
+                <td>
+                    <input type="text" id="RoleName" name="RoleName" class="easyui-validatebox" data-options="required:true,validType:'length[1,32]'" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="RoleType">角色类型：</label>
+                </td>
+                <td>
+                    <select id="RoleType" name="RoleType" class="easyui-combobox" editable="false" style="width:164px">
+                        <option value="0">普通用户</option>
+                        <option value="1">管理员</option>
+                        <option value="2">高级管理员</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;padding-top:10px;">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" id="btnAddUserRole" iconCls="icon-ok">确定</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#AddUserRoleDialog').dialog('close')">关闭</a>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+@*---------------------------------------设置修改的弹出层----------------------*@
+<div id="UpdateUserRoleDialog" class="easyui-dialog" style="width:360px;height:200px;padding:10px 20px " closed="true" modal="true" buttons="#dlg-buttons" align="center">
+    <form id="UpdateUserRole" method="post" novalidation="novalidation">
+        <table id="tblUpdate">
+            <tr>
+                <th colspan="2">修改用户角色</th>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Id">角色Id:</label>
+                </td>
+                <td>
+                    <input type="text" id="Id" name="Id" readonly="true" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="RoleName">角色名称:</label>
+                </td>
+                <td>
+                    <input type="text" id="RoleName1" name="RoleName" class="easyui-validationbox" data-options="required:true,validType:'length[1,32]'" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="RoleType">角色类型</label>
+                </td>
+                <td>
+                    <select id="RoleType1" name="RoleType" class="easyui-combobox" editable="false" style="width:164px">
+                        <option value="0">普通用户</option>
+                        <option value="1">管理员</option>
+                        <option value="2">超级管理员</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" id="btnUpdateUserRole" iconCls="icon-ok">确定</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="$('#UpdateUserRoleDialog').dialog('close')" iconCls="icon-cancel">取消</a>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</div>

@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src="../Scripts/jquery-1.8.2.min.js"></script>
+    <script src="../Scripts/knockout-2.2.0.js"></script>
+ 
+</head>
+<body>
+    <a class="delete" data-bind="attr: {'data-userinfo-id':Id}" href="#">删除</a>
+    <a class="update" data-bind="attr: {'data-userinfo-id':Id,'data-userinfo-name':Name,'data-userinfo-age':Age}" href="#">修改</a>
+    <form id="newUserInfoForm">
+        <fieldset>
+            <legend>新建</legend>
+            <input type="hidden" value="0" name="id" id="id" />
+            <label for="text">名称</label>
+            <input type="text" id="name" name="name" value="" />
+            <label for="text">年龄</label>
+            <input type="text" name="age" id="age" value="" />
+            <button type="submit">Submit</button>
+        </fieldset>
+    </form>
+    <script type="text/javascript">
+        var viewModel = {
+            userinfos: ko.observableArray([])
+        };
+        $.get('/api/userInfo', function (data) {
+            viewModel.userinfos(data);
+        });
+        alert(viewModel.userinfos());
+        ko.applyBindings(viewModel);
+        
+        $("#newUserInfoForm").submit(function () {
+            var form = $(this);
+            var userinfo = { Id: $("#id").val(), Name: $("#name").val(), Age: $("#age").val() };
+            var json = JSON.stringify(userinfo);
+            if ($("#id").val() == "0") {
+                $.ajax({
+                    url: '/api/userinfo',
+                    cache: false,
+                    type: 'POST',
+                    data: json,
+                    contentType: 'application/json;charset=utf-8',
+                    statusCode: {
+                        201: function (data) {
+                            viewModel.userinfos.push(data);
+                        }
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: '/api/userinfo' + $("#id").val(),
+                    cache: false,
+                    type: 'POST',
+                    data: json,
+                    contentType: 'application/json;charset=utf-8',
+                    statusCode: {
+                        200: function (data) {
+                            viewModel.userinfos.remove(function (userinfo) {
+                                return userinfo.Id == data.Id;
+                            });
+                            viewModel.userinfos.push(data);
+                        }
+                    }
+                });
+            }
+            return false;
+
+        });
+        $("a .update").live('click', function () {
+            $("#id").val($(this).data('userinfo-id'));
+            $("#name").val($(this).data('userinfo-name'));
+            $("#age").val($(this).data('userinfo-age'));
+        });
+        $("a.delete").live('click', function () {
+            var id = $(this).data('userinfo-id');
+            $.ajax({
+                url: '/api/userinfo/' + id,
+                cache: false,
+                type: 'DELETE',
+                statusCode: {
+                    200: function (data) {
+                        viewModel.userinfos.remove(function (userinfo) {
+                            return userinfo.Id = data.Id;
+                        })
+                    }
+                }
+            });
+            return false;
+        });
+    </script>
+</body>
+</html>

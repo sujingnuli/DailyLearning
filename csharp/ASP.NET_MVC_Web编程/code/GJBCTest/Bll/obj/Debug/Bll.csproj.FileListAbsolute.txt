@@ -1,0 +1,7 @@
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\obj\Debug\Bll.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\bin\Debug\Bll.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\bin\Debug\Bll.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\obj\Debug\Bll.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Bll\obj\Debug\Bll.pdb

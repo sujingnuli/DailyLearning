@@ -1,6 +1,7 @@
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\webERP.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\webERP.pdb
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Antlr3.Runtime.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Entities.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\EntityFramework.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Microsoft.Web.Infrastructure.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
@@ -16,6 +17,7 @@ D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\System.Web.WebPages.Deploy
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\System.Web.WebPages.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\System.Web.WebPages.Razor.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\WebGrease.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Entities.pdb
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\EntityFramework.xml
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Newtonsoft.Json.xml
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\System.Net.Http.Formatting.xml
@@ -40,3 +42,15 @@ D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\zh-Hans\System.Web.WebPage
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.csprojResolveAssemblyReference.cache
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.dll
 D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.BLL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.IBLL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.IDAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.DAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.BLL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.IBLL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.IDAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\bin\Erp.DAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.Migrations.scc.resources
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.csproj.GenerateResource.Cache
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.Migrations._07201754.resources
+D:\GitHub\DailyLearning\csharp\code\allweb\webERP\obj\Debug\webERP.Migrations._1758.resources

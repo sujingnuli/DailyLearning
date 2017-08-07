@@ -1,0 +1,9 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\obj\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\obj\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\Entities.dll.config
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\EntityFramework.xml
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\bin\Debug\zh-Hans\EntityFramework.resources.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Entities\obj\Debug\Entities.csprojResolveAssemblyReference.cache

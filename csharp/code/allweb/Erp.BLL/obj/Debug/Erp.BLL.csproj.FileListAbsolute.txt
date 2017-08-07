@@ -1,0 +1,16 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.BLL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.BLL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\obj\Debug\Erp.BLL.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\obj\Debug\Erp.BLL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\obj\Debug\Erp.BLL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.DAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.IBLL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.IDAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.DAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.IBLL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\Erp.IDAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\EntityFramework.xml
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.BLL\bin\Debug\zh-Hans\EntityFramework.resources.dll

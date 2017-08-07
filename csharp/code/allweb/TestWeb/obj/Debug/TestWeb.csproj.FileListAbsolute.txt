@@ -1,0 +1,5 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\TestWeb\bin\Debug\TestWeb.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\TestWeb\bin\Debug\TestWeb.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\TestWeb\obj\Debug\TestWeb.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\TestWeb\obj\Debug\TestWeb.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\TestWeb\obj\Debug\TestWeb.csprojResolveAssemblyReference.cache

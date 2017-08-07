@@ -1,0 +1,4 @@
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Entities\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Entities\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Entities\obj\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\ASP.NET_MVC_Web编程\code\GJBCTest\Entities\obj\Debug\Entities.pdb

@@ -1,0 +1,10 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\Erp.IDAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\Erp.IDAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\obj\Debug\Erp.IDAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\obj\Debug\Erp.IDAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\obj\Debug\Erp.IDAL.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\EntityFramework.xml
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.IDAL\bin\Debug\zh-Hans\EntityFramework.resources.dll

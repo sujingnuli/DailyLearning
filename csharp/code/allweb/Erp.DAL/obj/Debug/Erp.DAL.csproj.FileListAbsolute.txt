@@ -1,0 +1,13 @@
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Erp.DAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Erp.DAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\obj\Debug\Erp.DAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\obj\Debug\Erp.DAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\obj\Debug\Erp.DAL.csprojResolveAssemblyReference.cache
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Erp.DAL.dll.config
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Entities.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\EntityFramework.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Erp.IDAL.dll
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Entities.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\Erp.IDAL.pdb
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\EntityFramework.xml
+D:\GitHub\DailyLearning\csharp\code\allweb\Erp.DAL\bin\Debug\zh-Hans\EntityFramework.resources.dll
