@@ -15,6 +15,7 @@ namespace webERP.Controllers
     public class UserInfoController : BaseController
     {
         IUserService _userService = new UserService();
+        IRoleService _roleService = new RoleService();
         public ActionResult Index() {
             return View();
         }
@@ -87,6 +88,24 @@ namespace webERP.Controllers
             editUser.Mail = user.Mail;
             _userService.UpdateEntites(editUser);
             return Content("OK");
+        }
+        //获取Update绑定的用户信息
+        public ActionResult GetBindDetails(int Id) {
+            User user = _userService.LoadEntities(u => u.Id == Id).FirstOrDefault();
+            User user2 = new User { Id = Id, UName = user.UName, Pwd = user.Pwd, Phone = user.Phone, LastModifiedOn = user.LastModifiedOn, SubTime = user.SubTime,Mail=user.Mail };
+            return Json(user2, JsonRequestBehavior.AllowGet);
+        }
+        //设置用户角色
+        //Get请求
+        public ActionResult SetRole(int Id) {
+            var currentUser = _userService.LoadEntities(u => u.Id == Id).FirstOrDefault();
+            ViewData.Model = currentUser;
+            short deleteNormal = (short)DelFlagEnum.Normal;
+            var allRoles = _roleService.LoadEntities(u => u.DelFlag == deleteNormal).ToList();
+            ViewBag.AllRoles = allRoles;
+            ViewBag.ExtistRoleIds = (from r in currentUser.R_User_Role
+                                     select r.RoleId).ToList();
+            return View();
         }
     }
 }

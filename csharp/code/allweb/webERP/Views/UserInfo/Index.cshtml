@@ -74,8 +74,38 @@
                 handler: function () {
                     DeleteUserInfoByClick();
                 }
+            }, '-', {
+                id: 'btnSetRole',
+                text: '设置用户角色',
+                iconCls: 'icon-redo',
+                handler: function () {
+                    SetUserRole();
+                }
+            }, '-', {
+                id: 'btnSetAction',
+                text: '设置用户特殊权限',
+                iconCls: 'icon-redo',
+                handler: function () {
+                    SetUserAction();
+                }
             }]
         });
+    }
+    //设置用户角色
+    function SetUserRole() {
+        var SetUserRoleId = $("#test").datagrid('getSelections');
+        if (SetUserRoleId.length == 1) {
+            $("#UserRoleInfoDialog").dialog('open').dialog('setTitle', '设置用户角色信息');
+        } else {
+            $.messager.alert('友情提示', '每次只能设置一个用户角色信息，您已经选择了<font color="red" size="6">' + SetUserRoleId.length + '</font>行');
+        }
+        //更改frame的 src信息
+        $("#frameSetRole").attr('src', '/UserInfo/SetRole/' + SetUserRoleId[0].Id);
+    }
+
+
+    function SetUserAction() {
+
     }
     function SearchNameMailInfo() {
         $("#btnSearch").click(function () {
@@ -91,7 +121,26 @@
         ClearTextBox();
     }
     function ShowUpdateUserInfoDialog() {
-        var udpateUserInfoId = $("#test").datagrid('getSelections');
+        var updateUserInfoId = $("#test").datagrid('getSelections');
+        if (updateUserInfoId.length == 1) {
+            $("#UpdateUserInfoDialog").dialog('open').dialog('setTitle', '修改用户信息');
+            BindUpdateDetailsShowTextBox();
+        } else {
+            $.messager.alert('友情提示', "每次只能修改一行数据，您已经选择了<font color='red' size='6'>" + updateUserInfoId.length + "</font>行");
+        }
+    }
+    function BindUpdateDetailsShowTextBox() {
+        //获取选中的用户的Id
+        var checkId = $("#test").datagrid('getSelections')[0].Id;
+        //使用Json请求绑定传递过来的数据
+        $.getJSON('/UserInfo/GetBindDetails', { Id: checkId }, function (data) {
+           
+            $("#Id").val(checkId);
+            $("#UName1").val(data.UName);
+            $("#Pwd1").val(data.Pwd);
+            $("#Phone1").val(data.Phone);
+            $("#Mail1").val(data.Mail);
+        });
 
     }
     function DeleteUserInfoByClick() {
@@ -319,5 +368,11 @@
         </table>
     </form>
 </div>
-@*--------------------------------搜索----------------------------------*@
-@*--------------------------------搜索----------------------------------*@
+@*--------------------------------设置用户角色----------------------------------*@
+<div id="UserRoleInfoDialog" modal="true" closed="true" class="easyui-dialog" style="width:360px;height:300px;padding:10px 20px ;" resizable="true" buttons="#dlg-buttons" align="center">
+    <iframe id="frameSetRole" src="/Welcome.htm" scrolling="yes" frameborder="0" width="100%" height="100%"></iframe>
+</div>
+@*--------------------------------设置用户特殊权限------------------------------*@
+<div id="UserActionInfoDialog" class="easyui-dialog" style="width:500px;height:470px;padding:10px 20px;" closed="true" resizable="true" modal="true" buttons="#dlg-buttons" align="center">
+    <iframe id="frameSetAction" src="/Welcome.htm" scrolling="yes" frameborder="0" width="100%" height="100%"></iframe>
+</div>
