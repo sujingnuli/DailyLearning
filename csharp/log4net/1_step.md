@@ -4,6 +4,7 @@
 3. 工具类中增加Log4NetHelper.cs文件
  >  
    public class Log4NetHelper{
+   
      public Log4NetHelper(){
         var config=CachedConfigContext.Current.ConfigService.GetConfig("log4net");
         config.Replace("{connectionString}",CachedConfigContext.Current.DaoConfig.Log);
@@ -42,4 +43,8 @@
        }else
         return JsonConvert.SerializeObject(message,new JsonSerializerSettings(){ReferenceLoopHanding=ReferenceLoopHanding.Ignore});
      }
+    }
+    public enum LoggerType{
+     WebExceptionLog,
+     ServiceExceptionLog
     }
