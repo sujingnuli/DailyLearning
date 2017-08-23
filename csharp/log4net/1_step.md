@@ -48,3 +48,24 @@
      WebExceptionLog,
      ServiceExceptionLog
     }
+ 4. ControllerBase.cs中重写OnException方法
+ > 
+     public class ControllerBase:Controller{
+     
+        //重写Controller类中Exception方法
+        
+        protected override void OnException(ExceptionContext filterContext){
+           base.OnException(filterContext);
+           
+           var e=filterContext.Exception;
+           
+           LogException(e,this.WebExceptionContext);
+        }
+        
+        //虚方法，LogException
+        
+        protected virtual void LogException(Exception exception,WebExceptionContext exceptionContext==null){
+        
+          //todo 
+        }
+     }
