@@ -3,7 +3,7 @@
 2. config中增加log4net.xml配置文件
 3. 工具类中增加Log4NetHelper.cs文件
  >  
-   public class Log4NetHelper{
+      public class Log4NetHelper{
    
      public Log4NetHelper(){
         var config=CachedConfigContext.Current.ConfigService.GetConfig("log4net");
