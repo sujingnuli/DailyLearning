@@ -13,7 +13,22 @@
         <h3>欢迎您给用户：<font color="red" size="5">@Model.UName</font>设置角色信息：</h3>
         <hr />
         <fieldset>
-            <legend>设置角色信息</legend>
+            
+            @using (Ajax.BeginForm("SetRole", "UserInfo", new AjaxOptions() { OnSuccess = "AfterSetRole" }, new { id = "frmSetRole" })) { 
+                //存放一个隐藏域用来给前台传递ID
+                <input type="hidden" name="hidUserId" value="@Model.Id" />
+                <legend>请选择您需要设置的角色</legend>
+                //获取后台传来的role对象，并且进行交换
+                List<Entities.Role> allRoles = (List<Entities.Role>)ViewBag.AllRoles;
+                List<int> ExistIds = (List<int>)ViewBag.ExistRoleIds;
+                for (int i = 0; i < allRoles.Count; i++) {
+                    if (i % 3 == 0) { 
+                        <br/>
+                    }
+                    string str = "ckb_" + allRoles[i].Id;
+                    
+                }
+            }
         </fieldset>
     </body>
 </html>
