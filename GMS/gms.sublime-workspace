@@ -16,11 +16,13 @@
 	"buffers":
 	[
 		{
-			"file": "content/1.Login页面.cs",
+			"contents": "1.",
+			"file": "/D/GitHub/DailyLearning/note2/动态代理",
+			"file_size": 0,
+			"file_write_time": 131532207409712617,
 			"settings":
 			{
-				"buffer_size": 248,
-				"encoding": "UTF-8",
+				"buffer_size": 2,
 				"line_ending": "Windows"
 			}
 		}
@@ -32,10 +34,22 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 375.0,
-		"last_filter": "in",
+		"height": 60.0,
+		"last_filter": "Package Control: install",
 		"selected_items":
 		[
+			[
+				"Package Control: install",
+				"Package Control: Install Package→安装插件"
+			],
+			[
+				"Package Control:insta",
+				"Package Control: Install Package→安装插件"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package→安装插件"
+			],
 			[
 				"in",
 				"Package Control: Install Package→安装插件"
@@ -65,10 +79,11 @@
 	},
 	"expanded_folders":
 	[
-		"/D/GitHub/DailyLearning/GMS/content"
+		"/D/GitHub/DailyLearning/note2"
 	],
 	"file_history":
 	[
+		"/D/GitHub/DailyLearning/GMS/content/1.Login页面.cs",
 		"/D/GitHub/DailyLearning/GMS/content/1.Login页面.txt",
 		"/D/GitHub/test/bootstrap/4.html",
 		"/D/GitHub/DailyLearning/bootstrap/样式笔记",
@@ -123,7 +138,7 @@
 	"folders":
 	[
 		{
-			"path": "D:\\GitHub\\DailyLearning\\GMS\\content"
+			"path": "D:\\GitHub\\DailyLearning\\note2"
 		}
 	],
 	"groups":
@@ -134,25 +149,24 @@
 			[
 				{
 					"buffer": 0,
-					"file": "content/1.Login页面.cs",
+					"file": "/D/GitHub/DailyLearning/note2/动态代理",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 248,
+						"buffer_size": 2,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								248,
-								248
+								2,
+								2
 							]
 						],
 						"settings":
 						{
-							"origin_encoding": "UTF-8",
-							"syntax": "Packages/Java/Java.sublime-syntax"
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

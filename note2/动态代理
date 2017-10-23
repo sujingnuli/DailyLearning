@@ -1,0 +1,50 @@
+1.动态代理
+ （1）代理模式们都知道，动态代理，就是动态生成的代理。重量级的ORM和IOC产品都离不开动态代理。我们引入Castle.core.dll文件.
+ （2）常见的动态代理的场景：ORM延迟加载；AOP拦截（不全是使用动态代理，优势使用平台自带的管道过滤器，如ASP.NET MVC中的FilterAction ）;WCF客户端代理。
+ （3）代理类和委托类有共同的父类和接口，这样在任何使用委托对象的地方都可以使用代理对象替代。代理类负责请求的预处理，过滤，将请求分派给委托类处理，以及委托类执行完请求后的后续处理。
+ （4）根据代理类的生成时间不同，分为静态代理和动态代理。
+2.公共部分
+ public class TInterceptor:IInterceptor{
+  	public void Intercept(IInvocation invocation){
+  		try{
+  		    Console.WriteLine("Before Interceptor Intercep...")
+  			invocation.Proceed();
+  		}catch(Exception exception){
+  			if(exception is BusinessException){
+  				throw;
+  			}
+  			var message=new{
+  				exception=exception.Message;
+  				exceptionContext=new {
+  					method=invocation.Method.ToString(),
+  					arguments=invocation.Arguments,
+  					returnValue=invocation.ReturnValue
+  				}
+  			};
+  			Log4NetHelper.Error(LoggerType.ServiceExceptionLog,message,exception);
+  			throw;
+  		}
+  		Console.WriteLine("AfterInterceptor.Intercep...");
+  	}
+ }
+3.动态代理的5+1模式
+  (1)ClassProxy
+  	var generator=new ProxyGenerator();
+  	var dynamicPorxy=generator.CreateClassProxy<T>(new TInterceptor());
+  	return dynamicProxy;
+  (2)ClassProxyWithTarget
+  	var generator=new ProxyGenerator();
+  	var dynamicProxy=generator.CreateClassProxyWithTarget<T>(new T(),new Interceptor());
+  	return dynamicProxy;
+  (3)InterfaceProxyWithoutTarget
+  	var generator=new ProxyGenerator();
+  	var dynamicProxy=generator.CreateInterfaceProxyWithoutTarget<T>(new Interceptor());
+  	return dynamicProxy;
+  (4)InterfaceProxyWithTarget
+  	var generator=new ProxyGenerator();
+  	var dynamicProxy=generator.CreateInterfaceProxyWithTarget<T>(new T(),new Interceptor());
+  	return dynamicProxy;
+  (5)InterfaceProxyWithTargetInterface();
+  	var generator=new ProxyGenerator();
+  	var dynamicProxy=generator.CreateInterfaceProxyWithTargetInterface<T>(new T(),New Interceptor());
+  	return daynamicProxy;
