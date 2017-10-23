@@ -1,0 +1,130 @@
+
+	
+1.按钮
+	btn btn-default
+	btn btn-primary
+	btn btn-success
+	btn btn-info
+	btn btn-warning
+	btn btn-danger
+	btn btn-link
+	btn-lg
+	btn-sm
+	btn-xs
+	btn-block
+	disabled 禁用按钮，非样式，直接属性
+		可以做按钮的标签，button ,input type="button",a,submit
+2.图片
+bg-primary	bg-success	bg-info	bg-warning	bg-danger	img-circle
+	img-thumbnail
+3.辅助类
+	文本颜色
+		text-muted	text-primary text-success text-info	text-warning	text-danger
+	背景颜色
+		bg-primary	bg-success	bg-info	bg-warning	bg-danger
+	关闭
+		close
+	更多
+		caret <span class="caret"></span>
+	浮动
+		pull-right pull-left
+	清除浮动
+		clearfix <div class="clearfix"></div>
+	居中
+		center-block
+	显示和隐藏
+		hide show
+4.响应式工具
+	img-responsive
+	table-responsive
+
+组件：
+1.glyhpicons图标
+	字体图标：glyphicon glyphicon-triangle-right
+2.下拉菜单
+	dropdown
+	<div class="dropdown">
+		<button class="btn btn-primary" data-toggle="dropdown">更多课程<span class="caret"></span></button>
+		<ul class="dropdown">
+			<li>百度</li>
+			<li>谷歌</li>
+		</ul>
+	</div>
+	分隔线
+		divider
+	标题
+		dropdown-header
+3.按钮组
+	btn-group
+	<div class="btn-group">
+		<button class="btn btn-primary">百度</button>
+		<button class="btn btn-danger">谷歌</button>
+		<button class="btn btn-info">搜索</button>
+4.按钮工具箱
+	.btn-toolbar 里面放btn-group
+	按钮尺寸
+		btn-group 里加的
+		btn-group-lg btn-group-sm 	btn-group-sx
+5.嵌入式按钮组
+	<div class="btn-group">
+		<button class="btn btn-primary">百度</button>
+		<button class="btn btn-default">谷歌</button>
+		<div class="btn-group btn-toggle">
+			<button class="btn btn-primary">更多<span class="caret"></span><button>
+			<ul class="dropdown-menu">
+				<li><a href="#">百度</a></li>
+				<li><a href="#">谷歌</a></li>
+			</ul>
+		</div>
+	</div>
+	竖向排列
+	.btn-toggle
+	.btn-group-vertical
+6.表单：
+	.from-group
+	.form-control
+	.checkbox
+	.radio
+	内联表单：.form-inline
+	内部嵌套：input-group ,input-group-addon
+	水平排列：form-horizontal ,
+	静态字体：form-control-static .
+	表单元素禁用和只读 disabled readonly 
+	区域禁用：fieldset class="disabled"
+	表单验证：表单框颜色 has-success,has-warning,has-error
+	输入框内字符图标：div上加has-feedback ,后面input 内部加 span class="... form-control-feedback"
+	表单框尺寸：input-lg,input-sm
+	表单框帮助提示：<p class="help-block">
+7.输入框组
+	input-group
+	input-group-addon
+	input-group-lg,input-group-sm
+
+	输入文字，checkbox，radio
+	<div class="input-group-addon">
+		<input type="checkbox">
+		<input type="redio">
+	输入btn
+	<div class="input-group-btn">
+		<button class="btn btn-primary">
+	输入dropdownlist
+	<div class="input-group-btn">
+		<input type="text" class="form-control"/>
+		<div class="input-group-btn">
+			<button class="btn btn-default" data-toggle="dropdown">XmFx<span class="caret"><span></button>
+			<ul class="dropdown-menu">
+				<li><a>Panda</a></li>
+			</ul>
+		</div>
+	</div>
+8.导航
+	分两种，标签页式导航，胶囊式导航
+	标签页
+	<ul class="nav nav-tabs">
+		<li class="active"><a>项目管理</a></li>
+		<li><a>金融管理</a></li>
+	</ul>
+	胶囊式导航
+	<ul class="nav nav-pills nav-stacked">
+	</ul>
+
