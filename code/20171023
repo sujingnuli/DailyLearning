@@ -1,0 +1,52 @@
+public class WebDbContextBase{
+	public IAccountService AccountService{
+		get{
+			return ServiceContext.Current.AccountService;
+		}
+	}
+}
+public class ServiceContext{
+	public static ServiceContext Current{
+		get{
+			return CacheHelper.GetItem<ServiceContext>("ServiceContext",()=>new ServiceContext());
+		}
+	}
+	public IAccountService AccountService{
+		get{
+			return ServiceHelper.CreateService<T>();
+		}
+	}
+}
+//GMS.Core.Service
+	--ServiceHelper.cs
+	--ServiceFactory.cs
+public class ServiceHelper{
+	public static ServiceFactory serviceFactory=new RefServiceFactory();
+	public static void CreateService<T>() where T:class{
+		var service=serviceFactory.CreateService<T>();
+		var generator=new ProxyGenerator();
+		var dynamicProxy=generator.CreateInterfaceProxyWithTargetInterface<T>(service,new InvokeInterceptor());
+		return dynamicProxy;
+	}
+}
+public class InvokeInterceptor:IInterceptor{
+	public void InvokeInterceptor(IInvocation invocation){
+		try{
+			invocation.Proceed();
+		}catch(Exception exception){
+			if(exception is BusinessException){
+				throw;
+			}
+			var message=new{
+				exception=exception.Message,
+				exceptionContext=new{
+					method=invocation.Method.ToString(),
+					arguments=invocation.Arguments,
+					returnValue=invocation.ReturnValue
+				}
+			};
+			Log4NetHelper.Error(LoggerType.ServiceExceptionLog,message,exception);
+			throw;
+		}
+	}
+}

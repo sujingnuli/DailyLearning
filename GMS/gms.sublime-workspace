@@ -16,13 +16,11 @@
 	"buffers":
 	[
 		{
-			"contents": "1.",
 			"file": "/D/GitHub/DailyLearning/note2/动态代理",
-			"file_size": 0,
-			"file_write_time": 131532207409712617,
 			"settings":
 			{
-				"buffer_size": 2,
+				"buffer_size": 1881,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		}
@@ -79,7 +77,6 @@
 	},
 	"expanded_folders":
 	[
-		"/D/GitHub/DailyLearning/note2"
 	],
 	"file_history":
 	[
@@ -153,15 +150,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2,
+						"buffer_size": 1881,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2,
-								2
+								1194,
+								1194
 							]
 						],
 						"settings":
@@ -169,7 +166,7 @@
 							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 551.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

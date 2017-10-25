@@ -1,0 +1,150 @@
+//少说话，不要显摆，显得自己很无知。
+//怎么才能表现的不无知，少说话，努力做事情。
+//GMS.Framework.DAL
+	//IDataRepository.cs
+	//DbContextBase.cs
+public interface IDataRepository{
+	T Update<T>(T entity) where T:ModelBase;
+	T Insert<T>(T entity) where T:ModelBase;
+	void Delete<T>(T entity) where T:ModelBase;
+	T Find<T>(params object[] keyValues) where T:ModelBase;
+	List<T> FindAll<T>(Expression<Func<T,bool>> conditions=null)where T:ModelBase; 
+}
+
+public class DbContextBase:DbContext,IDataRepository,IDisposable{
+
+	public IAuditable AuditLogger{get;set;}
+
+	public DbContextBase(string link){
+		this.Database.Connection.ConnectionString=link;
+		this.Configuration.LazyLoadingEnabled=false;
+		this.Configuration.ProxyCreationEnabled=fasle;
+	}
+	public DbContextBase(string link,IAuditable auditLogger):this(link){
+		this.AuditLogger=auditLogger;
+	}
+
+	public T Update<T>(T entity) where T:ModelBase{
+		var set=this.Set<T>();
+		set.Attach(entity);
+		this.Entry<T>(entity).State=EntityState.Modified;
+		this.SaveChanges();
+		return entity;
+	}
+	public T Insert<T>(T entity) where T:ModelBase{
+		this.Set<T>().Add(entity);
+		this.SaveChanges();
+		return entity;
+	}
+	public void Delete<T>(T entity) where T:ModelBase{
+		this.Entry<T>(entity).State=EntityState.Deleted;
+		this.SaveChanges();
+	}
+	public T Find<T>(params object[] keyValues) where T:ModelBase{
+		return this.Set<T>().Find(keyValues);
+	}
+	public List<T> FindAll<T>(Expression<Func<T,bool>> conditions) where T:ModelBase{
+		if(conditions==null)
+			return this.Set<T>().ToList();
+		else
+			return this.Set<T>().Where(conditions).ToList();
+	}
+	public override int SaveChanges(){
+		this.WriteAuditLog();
+		var result=base.SaveChanges();
+		return result;
+	}
+	public void WriteAuditLog(){
+		if(this.auditLogger==null){
+			return;
+		}
+
+	}
+}
+//在 DbDatabase中，在SaveChange(){this.WriteLog();}
+public void WriteLog(){
+	if(this.auditLog==null){
+		return;
+	}
+	//接下来处理
+}
+//什么时候用的到LOG4NET .
+就是有Exception ,AOP的时候，
+工厂类。
+public class ServiceContext{
+	public staticServiceContext Current{
+		get{
+			return CacheHelper.GetItem<ServiceContext>("ServiceContext",()=>new ServiceContext());
+		}
+	}
+	public IAccountService AccountService{
+		get{
+			return ServiceHelper.CreateService<IAccountService>();
+		}
+	}
+}
+public class ServiceHelper{
+	public static ServiceFactory serviceFactory=new RefServiceFactory();
+	public static T CreateService<T>() where T:class{
+		var service=serviceFactory.CreateService<T>();
+		vare generator=new ProxyGenerator();
+		var dynamicProxy=generator.CreateInterfaceProxyWithInterfaceTarget<T>(service,new InvokeInterceptor());
+		return dynamicProxy;
+	}
+}
+public class InvokeInterceptor:IInterceptor{
+	public void Intercept(IInvocation invocation){
+		try{
+			invocation.Proceed();
+		}catch(Exception exception){
+			if(exception is BusinessException){
+				throw;
+			}
+			var message=new{
+				exception=exception.Message,
+				exceptionContext=new{
+					method=invocation.Method.ToString(),
+					arguments=invocation.Arguments,
+					returnValue=invocation.ReturnValue
+				}
+			};
+			Log4NetHelper.Error(LoggerType.ServiceExceptionLog,message,exception);
+			throw;
+		}
+	}
+}
+
+public class BusinessException{
+	public string Name{get;set;}
+	public string ErrorCode{get;set;}
+	public BusinessException():this(string.Empty){
+
+	}
+	public BusinessException(string message):this("error",message){
+
+	}
+	public BusinessException(string name,string message){
+		this.Name=name;
+	}
+	public BusinessException(string message,Enum errorCode):this("error",message,errorCode){
+
+	}
+	public BusinessException(string name,string message,Enum errorCode){
+		this.Name=name;
+		this.ErrorCode=errorCode;
+	}
+}
+//GMS.Framework.Contract
+	IAuditable.cs
+public interface IAuditable{
+	void WriteLog(string methodId,string userName,string moduleId,string TableName,string evetnType,ModelBase newValues);
+}
+//GMS.Core.Log
+	//LogContext.cs
+	//Log4NetHelper.cs
+public class LogDbContext:DbContextBase,IAuditable{
+	public LogDbContext():base(link){
+		this.Database.SetIntializer<LogDbContext>(null);
+	}
+	public void WriteLog(string modelId,string userName,string moduleName,str)
+}
