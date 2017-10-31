@@ -1,0 +1,2 @@
+1.Assembly.GetEntryAssembly();获取当前应用程序第一个启动的程序。一般是.exe文件
+2.Assembly.GetExecutingAssembly();获取当前执行方法所在的程序文件，可能是exe，也可能是当前方法所在的.dll文件。

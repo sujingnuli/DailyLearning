@@ -1,7 +1,0 @@
-//1.每三天一个功能，每周一个项目。
-public class ICacheProvider{
-	object Get(string key);
-	void Set(string name,object value,int minutes,bool isAbsoluteExpiration,Action<string,object,string> onRemove);
-	void Remove(string key);
-	void Clear();
-}

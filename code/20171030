@@ -1,0 +1,121 @@
+//GMS.Core.Cache
+	//CacheHelper.cs
+	//CacheConfigContext.cs
+	//ICacheProvider
+	//LocalCacheProvider
+//Config
+	CacheConfig.xml
+
+CacheConfig.xml
+<CacheConfig>
+	<CacheProviderItems>
+		<CacheProvderItem name="LocalCacheProvider" type="GMS.Core.Cache.LocalCacheProvider,GMS.Core.Cache" desc="本地缓存"/>
+	</CacheProviderItems>
+	<CacheConfigItems>
+		<CacheConfigItem desc="本地缓存" providerName="LocalCacheProvider" priority="0" keyRegex=".*" moduleName=".*" minutes="20" isAbsoluteExpiration="true"/>
+		<CacheConfigItem desc="LoginInfo缓存" providerName="LocalCacheProvider" 
+		keyRegex="LoginInfo.*" moduleRegex=".*" minutes="20" isAbsoluteExpiration="true" priority="1"/>
+	</CacheConfigItems>
+</CacheConfig>
+
+//GMS.Core.Config
+	//Modles
+		//CacheConfig.cs
+[Serailizable]
+public class CacheConfig:ConfigFileBase{
+	public CacheConfig(){
+
+	}
+	public CacheConfigItem[] CacheConfigItems{get;set;}
+	public CacheProviderItem[] CacheProviderItems{get;set;}
+}
+public class  CacheConfigItem:ModelBase{
+	[XmlAttribute(AttributeName="providerRegex")]
+	public string ProviderName{get;set;}
+	[XmlAttribute(AttributeName="keyRegex")]
+	public string KeyRegex{get;set;}
+	[XmlAttribute(AttributeName="moduleRegex")]
+	public string ModuleRegex{get;set;}
+	[XmlAttribute(AttributeName="minutes")]
+	public int Minutes{get;set;}
+	[XmlAttribute(AttributeName="priority")]
+	public int Priority{get;set;}
+	[XmlAttribute(AttributeName="isAbsoluteExpiration")]
+	public bool IsAbsoluteExpiration{get;set;}
+	[XmlAttribute(AttributeName="desc")]
+	public string Desc{get;set;}
+}
+public class CacheProviderItem:ModelBase{
+	[XmlAttribute(AttributeName="name")]
+	public string Name{get;set;}
+	[XmlAttribute(AttributeName="type")]
+	public string Type{get;set;}
+	[XmlAttribute(AttributeName="desc")]
+	public string Desc{get;set;}
+}
+
+public class CacheConfigContext{
+	private static readonly object olock=new object();
+
+	public static CacheConfig CacheConfig{
+		get{
+			return CachedConfigContext.Current.CacheConfig;
+		}
+	}
+	//程序入口的名字
+	private static string moduleName{get;set;}
+	public static string ModuleName{
+		get{
+			if(moduleName==null){
+				olock(lock){
+					if(moduleName=null){
+						var entryAssembly=Assembly.GetEntryAssembly();
+						if(entryAssembly!=null){
+							moduleName=entryAssembly.FullName;
+						}else{
+							moduleName=new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory).Name;
+						}
+					}
+				}
+			}
+			return moduleName;
+		}
+	}
+
+	private static List<WrapCacheConfigItem> wrapCacheConfigItems;
+	public static List<WrapCacheConfigItem> WrapCacheConfigItems{
+		get{
+			if(wrapCacheConfigItems==null){
+				lock(olock){
+					if(wrapCacheConfigItems==null){
+						wrapCacheConfigItems=new List<WrapCacheConfigItem>();
+						foreach(var i in CacheConfig.CacheConfigItems){
+							var wrap=new WrapCacheConfigItem();
+							wrap.CacheConfigItem=i;
+							wrap.CahceProviderItem=i.CacheProviderItems.Where(c=>c.Name=i.ProviderName);
+							wrap.CacheProvider=CacheProviders[i.ProviderName];
+							wrapCacheConfigItems.Add(wrap);
+						}
+					}
+				}
+			}
+			return wrapCacheConfigItems;
+		}
+	}
+
+	private static Dictionary<string,ICacheProvider> cacheProviders;
+	public static Dictionary<string,ICacheProvider> CacheProviders{
+		get{
+			if(cacheProviders==null){
+				olock(lock){
+					if(cacheProviders==null){
+						cacheProvder=new Dictionary<string,ICacheProvider>();
+						foreach(var i in CacheConfig.CacheProviderItems){
+							
+						}
+					}
+				}
+			}
+		}
+	}
+}

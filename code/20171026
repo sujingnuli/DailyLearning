@@ -1,0 +1,198 @@
+public interface ICacheProvider{
+	object Get(string key);
+	void Set(string key,object value,int minutes);
+	void Remove(string key);
+	void Clear();
+}
+//GMS.Framework.Utility
+public class Caching{
+	public static object Get(string key){
+		return HttpRuntime.Cache.Get(key);
+	}
+	public static void Remove(string key){
+		if(HttpRuntime.Cache[key]!=null){
+			HttpRuntime.Cache.Remove(key);
+		}
+	}
+	public static void Set(string key,object value){
+		Set(key,value,null);
+	}
+	public static void Set(string key,object value,CacheDependency cacheDependency){
+		HttpRuntime.Cache.Insert(key,value,cacheDependency,Cache.NoAbsoluteExpiration,TimeSpan.FormMinutes(20));
+	}
+	public static void Set(string key,object value,int minutes){
+		HttpRuntime.Cache.Insert(key,value,null,Cache.NoAbsoluteExpiration,Timespan.FormMinutes(minutes));
+	}
+	public static void Set(string key,object value,int minutes,bool isAbsoluteExpiration,CacheItemRemovedCallBack onRomoveCallback){
+		if(isAbsoluteExpiration){
+			HttpRuntime.Cache.Insert(key,value,DateTime.Now.AddMinutes(minutes),Cache.NoSlidingExpiration,CacheItemPriority.Normal,onRemoveCallback);
+		}else{
+			HttpRuntime.Cache.Insert(key,value,null,Cache.NoAbsoluteExpiration,Timespan.FromMinutes(minutes),CacheItemPriority.Normal,onRemoveCallback);
+		}
+	}
+}
+
+//GMS.Core.Cache
+public class LocalCacheProvider:ICacheProvider{
+	pubic object Get(string key){
+		return Caching.Get(key);
+	}
+	public void Remove(string key){
+		Caching.Remove(key);
+	}
+	public void Set(string key,object value,int minutes,bool isAbsoluteExpiration,Action<string,object ,string> onRemove){
+		Caching.Set(key,value,minutes,isAbsoluteExpiration,(k,v,reason)=>{
+			if(onRemove!=null){
+				onRemove(k,v,reason.ToString());
+			}
+		});
+	}
+	public void Clear(){
+		List<string> keys=new List<string>();
+		IDictionaryEnumerator enumerator=HttpRuntime.Cache.GetEnumerator();
+		while(enumerator.MoveNext()){
+			var key=enumerator.Key.ToString();
+			if(Regex.IsMatch(key,keyRegex,RegexOptions.IgnoreCase)){
+				keys.Add(key);
+			}
+		}
+		for(int i=0;i<keys.Count;i++){
+			HttpRuntime.Cache.Remove(keys[i]);
+		}
+	}
+}
+
+	public void Clear(){
+		List<string> keys=new List<string>();
+		IDictionaryEnumerator enumerator=HttpRuntime.Cache.GetEnumerator();
+		while(enumerator.MoveNext()){
+			var key=enumerator.Key.ToString();
+			if(Regex.IsMatch(key,KeyRgex,RegexOptions.IgnoreCase)){
+				keys.Add(key);
+			}
+		}
+		for(int i=0;i<keys.Count;i++){
+			HttpRuntime.Cache.Remove(keys[i]);
+		}
+	}
+
+	//Config
+		CacheConfig.xml
+
+	<CacheConfig>
+		<CacheProviderItems>
+			<CacheProviderItem name="LocalCacheProvider" type="GMS.Core.Cache.LocalCacheProvider,GMS.Core.Cache" desc="本地缓存"/>
+		</CacheProviderItems>
+		<CacheConfigItems>
+			<CacheConfigItem desc="本地缓存" keyRegex=".*" moduleRegex=".*" priority="0" isAbsoluteExpirations="true" minutes="30"/>
+			<CacheConfigItem desc="LoginInfo缓存" keyRegex="LoginInfo.*" moduleRegex=".*" priority="1" providerName="LocalCacheProvider" minutes="30" isAbsoluteExpiration="true"/>
+		</CacheConfigItems>
+	</CacheConfig>
+
+	public class CacheConfig:ConfigFileBase{
+		public CacheConfig(){
+
+		}
+		public CacheProviderItem[] CacheProviderItems{get;set;}
+		public CacheConfigItem[] CacheConfigItems{get;set;}
+	}
+	public class CacheConfigItem:ConfigNodeBase{
+		[XmlAttribute(AttributeName="keyRegex")]
+		public string KeyRegex{get;set;}
+		[XmlAttribute(AttributeName="moduleRegex")]
+		public string ModuleRegex{get;set;}
+		[XmlAttribute(AttributeName="providerName")]
+		public string ProviderName{get;set;}
+		[XmlAttribute(AttributeName="minutes")]
+		public int Minutes{get;set;}
+		[XmlAttribute(AttributeName="priority")]
+		public int Priority{get;set;}
+		[XmlAttribute(AttributeName="isAbsoluteExpiration")]
+		public bool IsAbsoluteExpiration{get;set;}
+		[XmlAttribute(AttributeName="desc")]
+		public string Desc{get;set;}
+	}
+	public class CacheProviderItem:ConfigNodeBase{
+		[XmlAttribute(AttributeName="name")]
+		public string Name{get;set;}
+		[XmlAttribute(AttributeName="type")]
+		public string Type{get;set;}
+		[XmlAttribute(AttribtueName="desc")]
+		public string Desc{get;set;}
+	}
+
+	public class LocalCacheProvider{
+		public object Get(string key){
+			return Caching.Get(key);
+		}
+		public void Set(string key,object value){
+			Set(key,value,null);
+		}
+		public void Set(string key,object value,CacheDependency,int minutes,bool isAbsoluteExpiration,Action<string,object,string> onRemvoe){
+			Caching.Set(key,value,null,minutes,isAbsoluteExpiration,(k,v,reason)=>{
+				if(onRemove!=null){
+					onRemove(k,v,reason.ToString());
+				}
+			})
+		}
+		public void Clear(){
+			List<string> keys=new List<string>();
+			IDictionaryEnumerator enumerator=HttpRuntime.Cache.GetEnumerator();
+			while(enumerator.MoveNext()){
+				var key=enuermator.Key.ToString();
+				if(Regex.IsMatch(key,KeyRegex,RegexOptions.IgnoreCase){
+					keys.Add(key);
+				}
+			}
+			for(int i=0;i<keys.Count;i++){
+				HttpRuntime.Cache.Remove(keys[i]);
+			}
+		}
+
+	}
+
+public class CacheConfigContext{
+	private static readonly object olock=new object();
+	internal static CacheConfig CacheConfig{
+		get{
+			return CachedConfigContext.Current.CacheConfig;
+		}
+	}
+
+}
+//GMS.Core.Cache
+public class CacheConfigContext{
+	private static readonly object olock=new object();
+	internal static CacheConfig CacheConfig{
+		get{
+			return CachedConfigContext.Current.CacheConfig;
+		}
+	}
+	private static List<WrapCacheConfigItem> wrapCacheConfigItems;
+	public static List<WrapCacheConfigItem> WrapCacheConfigItems{
+		get{
+			if(wrapCacheConfigItems==null){
+				lock(olock){
+					if(wrapCacheConfigItems==null){
+						wrapCacheConfigItems=new List<WrapCacheConfigItem>();
+						foreach(var i in CacheConfig.CacheConfigItems){
+							var wrapCacheConfigItem=new WrapCacheConfigItem();
+							wrapCacheConfigItem.CacheConfigItem=i;
+							wrapCacheConfigItem.CacheProviderItem=CacheConfig.CacheProviderItems.SinelOrDefault(c=>c.Name=i.ProviderName);
+							wrapCacheConfigItem.CacheProvider=CacheProviders[i.ProviderName];
+							wrapCacheConfigItems.Add(wrapCacheConfigItem);
+						}
+					}
+				}
+			}
+			return wrapCacheConfigItems;
+		}
+	}
+
+	public static Dictionary<
+}
+public class WrapCacheConfigItem{
+	public CacheConfigItem CacheConfigItem{get;set;}
+	public CacheProviderItem CacheProviderItem{get;set;}
+	public ICacheProvider CacheProvider{get;set;}
+}

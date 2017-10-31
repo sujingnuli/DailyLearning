@@ -1,0 +1,36 @@
+参考：http://www.4fang.net/content.jsp?id=29491
+1.缓存
+	dll:log4net.dll
+	文件:GMS.Core.Cache;
+		 GMS.Framework.Utility--Caching.cs
+	配置：Config/log4net.xml
+
+2.基本知识
+	我们在.net中经常会用到Cache
+	常用到的缓存：System.Web.Cache
+				  HttpContext.Current.Cache
+				  HttpRuntime.Cache
+	HttpRuntime.Cache 是应用程序级别。
+	HttpContext.Current.Cache 是针对当前Web上下文定义的。
+	应用程序将（1）频繁访问（2）需要大量处理时间来创建的数据 存储在内存中，提高性能。
+
+	案例：大量数据-》复杂逻辑-》用户（频繁访问，不需经常更新page）
+	解决方案：
+		ASP.NET 提供了两种基本的缓存机制来提供缓存功能。
+			第一：应用程序缓存。允许缓存生成的数据，如DataSet和自定义报表。
+			第二：页输出缓存。保存页处理输出，再次访问重用保存的输出。
+	使用应用程序缓存，数据容易丢失。使用模式：判断是否存在，如果不存在，则重新创建。
+	页缓存，分为（1）整页缓存（2）部分页缓存。
+
+	（1）清除缓存数据：
+		1.服务器内存不足，ASP.NET 从缓存中移除数据
+		2.缓存项过期
+		3.项的依赖发生了更改
+		4.为了帮助管理缓存项，将项从缓存中移除时，ASP.NET 会通知程序。
+	ASP.NET 根据CacheItemPriority来判断首先清理的项。
+
+	（2）依赖项
+		键依赖项
+		SQL依赖项
+		聚合依赖项
+		自定义依赖项
