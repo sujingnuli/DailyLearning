@@ -1,0 +1,21 @@
+Task
+1.说明
+	（1）Task 是 一个管理 并行 工作单元的轻量级对象。通过CLR的线程池来避免启动专用线程，可以有效的利用线程池。System.Threading.Task.
+	（2）任务用来并行的执行工作，充分利用多核。事实上Parallel 和 PLINQ就是建立在 任务并行的基础上。
+	（3）任务提供了一些列强大的特性来管理工作单元，包括：
+			协调任务调度
+			建立一个任务从另一个任务中启动的父子关系
+			实现合作取消 cooperative cancellation模式
+			无信号的任务等待
+	（4）创建与启动任务
+		 有两种方法创建任务
+		 		创建并启动
+		 	1.Task.Factory.StartNew(()=>{Console.WriteLine("Hello World!")});
+		 		创建/手动启动
+		 	2.var task=new Task<string>(()=>"Task Created!");
+		 	  task.Start();//异步执行
+		 	  Console.WriteLine(task.Result);
+
+		 	  var task=new Task<string>(()=>"Hello world!");
+		 	  task.RunSynchronously();//同步执行
+		 	  Console.WriteLine(task.Result);

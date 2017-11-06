@@ -1,0 +1,20 @@
+HttpCookie
+1.说明
+	HttpCookie是专门由C#读取和写入Cookie的类。
+	cookie是存储在用户主机浏览器的一小段文本文件。是纯文本形式，不包含任何可执行代码。
+
+	（1）构造函数：
+		HttpCookie(string) .//创建并命名Cookie
+		HttpCookie(string,string) .//创建命名Cookie并为其赋值。
+	（2）属性
+		Domain .//设置获取Cookie的作用域
+		Path .//设置获取Cookie的作用路径
+		Expires //设置获取Cookie的有效时间
+		HasKey .//获取值，判断该Cookie是否含有子键。
+		HttpOnly .//设置或获取值，指定Cookie是否可以通过客户端脚本访问
+		Name .//Cookie名称
+		Value .//获取设置Cookie的单个值。
+		Values .//获取设置Cookie所包含的键值对的集合。
+
+		HttpOnly=true;不能通过客户端脚本访问。js无法再读取cookie .
+

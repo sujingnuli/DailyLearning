@@ -1,0 +1,177 @@
+public ActionResult Index(){
+	
+	HttpCookie hc=new HttpCookie("userName","admin");
+	hc.Path="/";
+	hc.Expires=DateTime.Now.AddDays(7);
+	Response.SetCookie(hc);
+	return View();
+}
+
+public ActionResult TestCookie(){
+	return View();
+}
+
+Home/TestCookie.cshtml
+
+<script src="/jscookie.js" type="text/javascript">
+	
+</script>
+<script>
+	$(function(){
+		if($.cookie("userName")){
+			alert($.cookie("userName"));
+		}
+		else{
+			alert("cookie没有写入");
+		}
+	});
+</script>
+
+public ActionResult Index(){
+	HttpCookie hc=new HttpCookie("userName","张三");
+	hc.Expires=DateTime.Now.AddDays(7);
+	hc.Path="/";
+	hc.HttpOnly=true;
+	Reponse.Cookies.Add(hc);
+	HttpCookie hc1=new HttpCookie("userName1","李四")；
+	hc1.Expires=DateTime.Now.AddDays(7);
+	hc1.Path="/";
+	hc1.HttpOnly=false;
+	Reponse.Cookies.Add(hc1);
+	return View();
+}
+public ActionResult TextCookie(){
+		return View();
+}
+
+
+//对Cookie的操作，增加Cookie ,删除Cookie ,
+public class Cookie{
+	public static HttpCookie Get(string name){
+		return HttpContext.Current.Request.Cookies[name];
+	}
+	public static string GetValue(string name){
+		var httpCookie=Get(name);
+		if(httpCookie!=null)
+			return httpCookie.Value;
+		else
+			return string.Empty;
+	}
+
+	//移除Cookie设置他的过期时间，就好了
+	public static void Remove(string name){
+		Remove(Cookie.Get(name));
+	}
+	public static void Remove(HttpCookie cookie){
+		if(httpCookie!=null){
+			httpCookie.Expires=DateTime.Now;
+			Cookie.Save(httpCookie);
+		}
+	}
+
+	public static void Save(string name,string value,int expiresHours=0){
+		var httpCookie=Cookie.Get(name);
+		if(httpCookie==null){
+			httpCookie=Set(name);
+		}
+		httpCookie.Value=value;
+		Save(httpCookie,expiresHours);
+	}
+	public static void Save(HttpCookie cookie,int expiresHours=0){
+		//设置Cookie的作用域，如果请求的域名和我们主机的作用于不同，按照主机的作用域。
+		string domain=Fetch.ServerDomain;
+		string urlHost=HttpContext.Current.Request.Url.Host.ToLower();
+		if(domain!=urlHost){
+			cookie.domain=domain;
+		}
+		if(expiresHours>0){
+			cookie.Expires=expiresHours;
+		}
+		HttpContext.Current.Response.Cookies.Add(cookie);
+	}
+	public static void Set(string name){
+		return new HttpCookie(name);
+	}
+}
+
+public interface IAuthCookie{
+	int ExpiresHours{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	Guid UserToken{get;set;}
+	string VerifyCode{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+	int LoginErrorTimes{get;set;}
+}
+public class CookieContext:IAuthCookie{
+		public virtual string KeyPrefix{
+			get{
+				return "Context_"
+			}
+		}
+}
+
+//Cookie中存放的
+	"Context_UserName"
+	"Context_UserId"
+	"Context_IP"
+	"Context_UserToken"
+	"Context_Expires"
+	"Context_VerifyCode"
+	"Context_IsNeedVerifyCode"
+
+public class CookieContext:IAuthCookie{
+	
+	public CookieContext(){
+
+	}
+	public virtual string KeyPrefix{
+		get{
+			return "Context_";
+		}
+	}
+}
+
+Encrypt
+Encrypt:加密
+
+public class Encrypt{
+	
+	private static byte[] keys={0x12,0x34,0x56,0x78,0x90,0xAB,0xCD,0xEF};
+
+
+	public static string Encode(string encryptString,string encryptKey="www.GMS.com"){
+		encryptKey=encryptKey.Substring(0,8);
+		encryptKey=encryptKey.PadRight(8,' ');
+		byte[] rgbKey=Encoding.UTF8.GetBytes(encryptKey.Substring(0,8));
+		byte[] rgbIV=keys;
+		byte[] inputByteArray=Encoding.UTF8.GetBytes(encryptString);
+		DESCryptoServiceProvider DESP=new DESCryptoServiceProvider();
+
+	}
+
+	public static string Decode(){
+
+	}
+}
+
+本演练 演示 如何借助 3DES 算法的加密服务 提供程序版本
+
+DESCryptoServiceProvider 类，加密和解密字符串。
+1.创建3DES算法的简单包装器类，并将加密数据存储为Base64编码字符串。
+2.使用该包装其可公开访问文本文件中安全地存储私有用户数据。
+3.与DES相比，Rijindael（称为[高级加密标准[AES]]）和"三种数据加密标准[3DES]"算法提供的安全性更高，原因是破解需要的计算量更大。
+
+
+私钥的寸的胡，微软的建议是使用windows自带的密钥容器。
+1.本文将其存储到xml文件中，实际情况要复杂的多，牵涉到数字签名，数字证书等。
+2.相关公钥，私钥，数字签名，数字证书等的概念，可参考博客。
+
+public interface IAuthCookie{
+	Guid UserToken{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	string VerifyCode{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+	int LoginErrorTimes{get;set;} 
+}

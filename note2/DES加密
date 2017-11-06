@@ -1,0 +1,93 @@
+DESCryptoServiceProvider 
+1.使用DESCryptoServiceProvider来加密和解密字符串。
+	步骤：
+		（1）创建封装3DES算法的简单包装类，并将加密数据存储为Base64编码字符串。
+		（2）使用该包装其 在可公开访问的文本文件中 安全的存储私有用户数据。
+		（3）与DES相比，Rijindael(现在称谓"高级机密标准[AES]")和 "三重个数据加密标准[3DES]" 算法提供的安全性更高，原因是破解它们所需要的计算量更大。
+	说明：
+		（1）关于私钥的存储，微软建议使用windows自带的密钥容器。为了直观，存储到xml文件中。
+		（2）关于公钥，私钥，数字签名，数字证书的概念，参考博客。http://www.ruanyifeng.com/blog/2011/08/what_is_a_digital_signature.html
+		（3）由于RSA 不适合加密大量数据，可以采用RSA 和DES 混合加密的方法。先试用DES加密数据，再用RSA加密DES的密钥。参考：http://www.cnblogs.com/tang-tang/p/6370557.html
+2.代码
+	DES Helper类
+	public class DESHelper{
+
+		//DES加密/解密
+		//data  加密/解密数据
+		//key   密钥
+		//keyIV 向量
+		public static byte[] EncryptOrDesrypt(byte[] data,byte[] key,byte[] keyIV,bool IsEncrypt){
+			DESCryptoServiceProvider desP=new DESCryptoServiceProvicer();
+			if(IsEncrypt){
+				desP.Key=key;
+				desP.IV=keyIV;
+				ICryptoTransform desencrypt=desP.CreateEncryptor(key,keyIV);
+				byte[] result=desencrypt.TransformFinalBlock(data,0,data.Length);
+				return result;
+			}else{
+				desP.Key=key;
+				desP.IV=keyIV;
+				ICryptoTranform desencrypt=desP.CraeteDecryptor(key,keyIV);
+				byte[] result=desencrypt.TransformFinalBlock(data,0,data.Length);
+				return result;
+			}
+		}
+
+		//创建随机密钥
+		public static byte[] CreateKey(){
+			DESCryptServiceProvider desP=new DESCryptoServiceProvider();
+			desP.GenerateKey();
+			return desP.Key;
+		}
+		//创建随机向量
+		public static byte[] CreateIV(){
+			DESCryptoServiceProvider desP=new DESCryptoServiceProvider();
+			desP.GenrateIV();
+			return desP.IV;
+		}
+	}
+	RSA Helper辅助类
+
+	public class RSAHelper{
+		//写入二进制文件
+		public static void WriteByte(byte[] content,string path){
+			FileInfo ff=new FileInfo(path);
+			using(FileStream fs=ff.Open(FileMode.OpenOrCreate,FileAccess.ReadWrite)){
+				BinaryWriter br=new BinaryWriter(fs);
+				br.Write(content);
+				br.Flush();
+				br.Close();
+			}
+		}
+		//写入文本文件
+		public static void WriteText(string content,string path){
+			FileInfo ff=new FileInfo(path);
+			using(FileStream fs=ff.Open(FileMode.OpenOrCreate,FileAccess.ReadWrite)){
+				StreamWriter sw=new StreamWriter(fs);
+				sw.Write(content);
+				sw.Flush();
+				sw.Close();
+			}
+		}
+	}
+
+	主程序代码：
+	static void Main(string[] args){
+
+		string RSAPath=Path.Combine(rootPath,"RSA");
+		string encryptFilePath=Path.Combine(RSAPath,"加密文件.dll")；
+		string decryptFilePath=Path.Combine(RSAPath,"解密文件.txt");
+		string publicKeyPath=Path.Combine(RSAPath,"RSA公钥.xml")；
+		string privateKeyPath=Path.Combine(RSAPath,"RSA私钥.xml");
+
+		
+
+		RSACryptoServiceProvider rsa=new RSACryptoServiceProvider();
+		byte[] DESKey=DESHelper.CreateKey();//DES密钥
+		byte[] DESIV=DESHelper.CreateIV();//DES向量
+
+		//加密后的字符串
+		byte[] enData=DESHelper.EncryptOrDecrypt(Encoding.UTF8.GetBytes(data),DESKey,DESIV,true);
+		RSAHelper.WriteByte(enData,encryptFilePath);
+
+	}

@@ -1,0 +1,6 @@
+1.HttpContext
+	封装有关个别 HTTP 请求的所有HTTP特定的信息。HttpContext.Current为当前的HTTP请求获取HttpContext对象。
+2.HttpRuntime.Cache
+	HttpRuntime：为当前应用程序提供一组ASP.NET运行时服务。
+
+	

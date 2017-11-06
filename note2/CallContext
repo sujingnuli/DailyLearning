@@ -1,0 +1,80 @@
+CallContext
+
+1.说明
+	CallContext  是类似于方法调用的线程本地存储区的专用集合对象，并提供每个逻辑执行线程都唯一的数据。数据槽不在其他逻辑线程的调用上下文之间共享。当CallContext 沿代码执行路径往返传播并且由该路径中的各个对象检查时，可将对象添加到其中。
+
+	也就是说，当前线程 把对象存储到 线程本地区域，对象随着线程的销毁而销毁。
+
+	当对象 需要线程内全局使用，而其他线程包括子线程 都不能访问的时候使用。比如EF的上下文，每次请求，都会生成一个线程处理请求。
+
+
+	public class WCFContext{
+		private const string CallContextKey="__CallContext";
+
+		public static WCFContext Current{
+			get{
+				if(CallContext.GetData(CallContextKey)==null){
+					CallContext.SetData(CallContextKey,new WCFContext());
+				}
+				return CallContext.GetData(CallContextKey) as WCFContext;
+			}
+			set{
+				CallContext.SetData(CallContextKey,value);
+			}
+		}
+	}
+2.信息传递
+	//ambient 环境，周围的，
+	在一个多层次结构中，我们需要一些上下文的信息在各层之间传递。比如，为了进行Audit ，需要传递当前user profile的一些信息。在一些分布式的环境中，也可以遇到context信息，从client到service的传递。如何实现这种context的传递？
+	两种方案：
+		（1）将context作为参数传递，将context作为参数的一部分。但不是好的解决方案，API应该之和逻辑业务有关，context一般是非业务逻辑服务的。比如Audit，logging等。而且，将context作为API一部分，降低API稳定性。比如，今天需要获取user的组织信息，明天要IP地址，API经常变动是不允许的。
+		（2）创建Ambient Context来保存context信息。Ambient可以在不同层次，甚至是分布式环境的每个节点之间 共享或传递。比如，用SessionState 来存储Session信息。通过HttpContext来存储HttpRequest信息。在非Web应用中，通过CallContext将Context信息存储在TLS中，当前线程下执行的所有代码，都可以访问并设置这些context参数。
+		（3）此Context会置于SOAP Header中从 client向Serrvice传递，我们需要为此message header指定一个local name 和namespace .才能通过local name 和namespace 获取此message header .同时在local domain ,client或service ，context是通过CallContext存取的
+		public class WCFContext:Dictionary<string,object>{
+			private const string CallContextKey="__CallContext";
+
+			internal const string ContextHeaderLocalName="__CallContext";
+			internal const string ContextHeaderNamespace="urn:gms.com";
+
+			private void EnsureSeriazable(object value){
+				if(value==null){
+					throw new ArgumentNullException("value");
+				}
+				if(!value.GetType().IsSerializable){
+					throw new ArgumentException(string.Format("The argument of type \"{0}\" is not serializable!",value.GetType().ToString()));
+				}
+
+			}
+
+			public new object this[string key]{
+				get{
+					return base[key];
+				}
+				set{
+					this.EnsureSerializable(value);
+					base[key]=value;
+				}
+			}
+
+			public Operater Operater{
+				get{
+					return JsonConvert.DeserializeObject(this["__Operater"].ToString());
+				}
+				set{
+					this["_Opserater"]=JsonConvert.SerializeObject(value);
+				}
+			}
+
+			public static WCFContext Current{
+				get{
+					if(CallContext.GetData(CallContextKey)==null){
+						CallContext.SetData(CallContextKey,new WCFContext());
+					}
+					return CallContext.GetData(CallContextKey) as WCFContext;
+				}
+				set{
+					CallContext.SetData(CallContextkey,value);
+				}
+			}
+
+		}

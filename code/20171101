@@ -1,0 +1,276 @@
+//1.客户端的信息
+public class Operater{
+	public Operater(){
+		Name="Anonymous";
+	}
+	public string IP{get;set;}
+	public string Name{get;set;}
+	public int UserId{get;set;}
+	public DateTime Time{get;set;}
+	public Guid Token{get;set;}
+	public string Method{get;set;}
+}
+//
+public class Operater{
+	public Operater(){
+
+	}
+	public string IP{get;set;}
+	public string Name{get;set;}
+	public string UserId{get;set;}
+	public DateTime Time{get;set;}
+	public Guid Token{get;set;}
+	public string Method{get;set;}
+}
+
+public class WCFContext:Dictionary<string,object>{
+	privates const string CallContextKey="__CallContext";
+
+	public Operater Operater{
+		get{
+			return JsonConvert.DeserializeObject<Operater>(this["__Operater"].ToString());
+		}
+		set{
+			return["__Operarter"]=JsonConvert.SerializeObject(value);
+		}
+	}
+
+	public static WCFContext Current{
+		get{
+			if(CallContext.GetData(CallContextKey)==null){
+				CallContext.SetData(CallContextKey,new WCFContext());
+			}
+			return CallContext.GetData(CallContextKey) as WCFContext;
+		}
+		set{
+			CallContext.SetData(CallContextKey,value);
+		}
+	}
+}
+
+public class WCFContext:Dictionary<string,object>{
+	private const string CallContextKey="__CallContext";
+
+	public Operater Operater{
+		get{
+			return JsonConvert.DeserializeObject<Operater>(this["__Operater"].ToString());
+		}
+		set{
+			this["__Operater"]=JsonConvert.SerializeObject(value);
+		}
+	}
+
+	public static WCFContext Current{
+		get{
+			if(CallContext.GetData(CallContextKey)==null){
+				CallContext.SetData(CallContextKey,new WCFContext());
+			}
+			return CallContext.GetData(CallContextKey) as WCFContext;
+		}
+		set{
+			CallContext.SetData(CallContextKey,value);
+		}
+	}
+}
+
+public  class WCFContext:Dictionary<string,object>{
+	private const string CallContextKey="__CallContext";
+	internal const string ContextHeaderLocalName="_CallContext";
+	internal const string ContextHeaderNamespace="urn:gms.com";
+
+	public void EnsureSerializable(object value){
+		if(value==null){
+			throw new ArgumentNullException("value");
+		}
+		if(!value.GetType().IsSerializable){
+			throw new ArgumentException(string.Format("the argument of type \"{0}\" is not serializable!",value.GetType().FullName));
+		}
+	}
+
+	public new object this[string key]{
+		get{
+			return base[key];
+		}
+		set{
+			this.EnsureSerializable(value);
+			base[key]=value;
+		}
+	}
+	public Operater Operater{
+		get{
+			return JsonConvert.DeserializeObject<Operater>(this["__Operater"].ToString());
+		}
+		set{
+			this["_Opserater"]=JsonConvert.SerializeObject(value);
+		}
+	}
+	public static WCFContext Current{
+		get{
+			if(CallContext.GetData(CallContextKey)==null){
+				CallContext.SetData(CallContextKey,new WCFContext());
+			}
+			return CallContext.GetData(CallContextKey);
+		}
+		set{
+			CallContext.SetData(CallContextKey,value);
+		}
+	}
+}
+
+public class Operater{
+	public Operater(){
+		this.Name="Anonymous";
+	}
+	public string IP{get;set;}
+	public Guid Token{get;set;}
+	public string Name{get;set;}
+	public int UserId{get;set;}
+	public DateTime Time{get;set;}
+	public string Method{get;set;}
+}
+
+public class DbContextBase:DbContext,IDataRepository,IDisposable{
+	public DbContextBase(string connectionString){
+		Database.Connection.ConnnectionString=connectionString;
+		Database.Configuration.LazyLoadingEnabled=false;
+		Database.Configuration.ProxyCreationEnabled=false;
+	}
+	public DbContextBase(string connectionString,IAuditable auditLogger):this(connectionString){
+		this.AuditLogger=auditLogger;
+	}
+	private IAuditable AuditLogger{get;set;}
+
+	public T Update<T>(T entity) where T:class{
+		var set=this.Set<T>();
+		set.Attach(entity);
+		this.Entry<T>(entity).State=EntityState.Modified;
+		this.SaveChanges();
+		return entity;
+	}
+	public T Insert<T>(T entity) where T:class{
+		this.Set<T>().Add(entity);
+		this.SaveChanges();
+		return entity;
+	}
+	public void Delete<T>(T entity) where T:class{
+		this.Entry<T>(entity).State=EntityState.Deleted;
+		this.SaveChanges();
+	}
+	public T Find<T>(params object[] keyValues)where T:class{
+		return this.Set<T>().Find(keyValues);
+	}
+	public List<T> FindAll<T>(Expression<Func<T,bool>> conditions) where T:class{
+		if(conditions==null){
+			return this.Set<T>().ToList();
+		}
+		else
+			return this.Set<T>().Where(conditions).ToList();
+	}
+	public override int SaveChanges(){
+		this.WriteLog();
+		var result=base.SaveChanges();
+		return result;
+	}
+	public void WriteLog(){
+		if(this.AuditLogger==null)
+			return;
+		foreach(var dbEntry in this.ChangeTracker.Entries<ModelBase>().Where(p=>p.State=EntityState.Modified||p.State==EntityState.Added||p.State==EntityState.Deleted)){
+			var auditableAttr=dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute),false).SingleOrDefalt() as AuditableAttribute;
+			if(auditableAttr==null)
+				continute;
+			var operaterName=WCFContext.Current.Operater.Name;
+			Task.Factory.StartNew(()=>{
+				var tableAttr=dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute),false).SingleOrDefault() as TableAttribute;
+				string tableName=tableAttr!=null?tableAttr.Name:dbEntry.Entity.GetType().Name;
+				var moduleName=dbEntry.Entity.GetType().FullName.Split('.').Skip(1).FirstOrDefault();
+				AuditLogger.WriteLog(dbEntry.Entity.Id,operaterName,moduleName,tableName,dbEntry.State.ToString(),dbEntry.Entity);
+			});
+
+
+		}
+	}
+}
+
+public void WriteLog(){
+		if(AuditLogger==null)
+			return;
+		foreach(var dbEntry in this.ChangeTracker.Entries<ModelBase>().Where(p=>p.State==EntityState.Modified||p.State==EntityState.Added||p.State==EntityState.Deleted)){
+			var auditableAttr=dbEntry.Entity.GetType().GetCustomAttributes(typeof(AuditableAttribute),false).SingleOrDefault as AuditTableAttribute;
+			if(auditableAttr==null)
+				continute;
+		}
+}
+
+//重写EntityFramework 6.0 的 SaveChanges() 方法
+public void WriteLog(){
+	if(AuditLogger==null){
+		return;
+	}
+	foreach(var dbEntry in this.ChangeTracker.Entries<ModelBase>().Where(p=>p.State==EntityState.Modified||p.State==EntityState.Added||p.State==EntityState.Deleted)){
+		var auditableAttribute=dbEntry.Entity.GetType().GetCustomAttributes(typeof(AuditableAttribute),false).SingleOrDefault() as AuditTableAttribute;
+
+		if(auditableAttr==null)
+			continute;
+		var operaterName=WCFContext.Current.Operater.Name;
+		Task.Factory.StartNew(()=>{
+			var tableAttr=dbEntry.Entity.GetType().GetCustomAttributes(typeof(TableAttribute,false)).SingleOrDefault() as TableAttribute;
+			var tableName=tableAttr!=null?tableAttr.Name:dbEntry.Entity.GetType().Name;
+			var moduleName=dbEntry.Entity.GetType().FullName.Split(',').Skip(1).FirstOrDefault();
+			AuditLogger.WriteLog(dbEntry.Entity.Id,operaterName,moduleName,tableName,dbEntry.State.ToString(),dbEntry.Entity);
+
+		});
+	}
+}
+
+public interface IAuthCookie{
+	int UserExpiresHours{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	Guid UserToken{get;set;}
+	string VerifyCode{get;set;}
+	int LoginErrorTimes{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+}
+Cookie ,
+过期时间
+用户名 
+用户Id
+Token
+VerifyCode
+是否需要验证码
+登录错误次数
+
+public interface IAuthCookie{
+	int UserExpiresHours{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	Guid UserToken{get;set;}
+	string VerifyCode{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+	int LoginErrorTimes{get;set;}
+}
+
+public interface IAuthCookie{
+	int UserExpiresHours{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	Guid UserToken{get;set;}
+	string VerifyCode{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+	int LoginErrorTimes{get;set;}
+}
+
+public class Cookie{
+	public static HttpCookie Get(string name){
+		return HttpCookie.Current.Request.Cookies[name];
+	}
+
+	public static string GetValue(string name){
+		var httpCookie=Get(name);
+		if(httpCookie!=null){
+			return httpCookie.Value;
+		}else{
+			return string.Empty;
+		}
+	}
+}

@@ -111,7 +111,7 @@ public class CacheConfigContext{
 					if(cacheProviders==null){
 						cacheProvder=new Dictionary<string,ICacheProvider>();
 						foreach(var i in CacheConfig.CacheProviderItems){
-							
+							cacheP
 						}
 					}
 				}

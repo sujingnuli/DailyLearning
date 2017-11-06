@@ -1,0 +1,11 @@
+public interface IAuthCookie{
+	int ExpiresHours{get;set;}
+	string UserName{get;set;}
+	int UserId{get;set;}
+	Guid UserGuid {get;set;}
+	string 	VerifyCode{get;set;}
+	bool IsNeedVerifyCode{get;set;}
+	
+}
+
+public class C

@@ -1,0 +1,252 @@
+1.流程管理的数据，哪里来的，怎么那么多
+2.索引查询的数据，哪里来的，那么多。
+3.待办事宜，怎么有这么多，哪里来的。
+
+
+1.流程数据库不对。要新建一个流程数据库。
+2.个人信息照片上传，
+
+public class CacheConfigContext{
+	private static readonly object olock=new object();
+
+	public static CacheConfig CacheConfig{
+		get{
+			return CachedConfigContext.Current.CacheConfig;
+		}
+	}
+
+	private static List<WrapCacheConfigItem> wrapCacheConfigItems;
+	public static List<WrapCacheConfigItem> WrapCacheConfigItems{
+		get{
+			if(wrapCacheConfigItems==null){
+				lock(olock){
+					if(wrapCacheConfigItems==null){
+						wrapCacheConfigItems=new List<WrapCacheConfigItem>();
+						foreach(var i in CacheConfig.CacheConfigItems){
+							var wrap=new WrapCacheConfigItem();
+							wrap.CacheConfigItem=i;
+							wrap.CacheProviderItem=CacheConfig.CacheProviderItems.Where(c=>c.Name=i.ProviderName);
+							wrap.CacheProvider=cacheProviders[i.ProviderName];
+							wrapCacheConfigItems.Add(wrap);
+						}
+					}
+				}
+			}
+			return wrapCacheConfigItems;
+		}
+	}
+
+	private static IDictionary<string,ICacheProvider> cacheProviders;
+	public static IDictionary<string,ICacheProvider> CacheProviders{
+		get{
+			if(cacheProviders==null){
+				lock(olock){
+					if(cacheProviders==null){
+						cacheProviders=new Dictionary<string,ICacheProvider>();
+						foreach(var i in CacheConfig.CacheProviderItems){
+							cacheProviders.Add(i.Name,(ICacheProvider)Activator.CreateInstance(Type.GetType(i.Type));
+						}
+					}
+				}
+			}
+			return cacheProviders;
+		}
+	}
+	privates static Dictionary<string,WrapCacheConfigItem> wrapCacheConfigDic;
+	public static WrapCacheConfigItem GetCurrentWrapCacheConfigItem(string key){
+		if(wrapCacheConfigDic==null){
+			wrapCacheConfigDic=new Dictionary<string,WrapCacheConfigItem>();
+		}
+		if(wrapCacheConfigDic.Contains(key)){
+			return wrapCacheConfigDic[key];
+		}
+		var currentWrapCacheConfigItem=WrapCacheConfigItems.Where(i=>Regex.IsMatch(ModuleName,i.ModuleRegex,RegexOPtions.IgnoreCase)&&Regex.IsMatch(key,i.KeyRegex,RegexOptions.IgnoreCase)).OrderBy(i=>i.CacheConfigItem.Priority).FirstOrDefault();
+		if(currentWrapCacheConfigItem==null){
+			throw new Exception(string.Format("Get Cache '{0}' Config Exception",key));
+		}
+		lock(olock){
+			if(!wrapCacheConfigItemDic.Contains(key)){
+				wrapCacheConfigItemDic.Add(key,wrapCacheConfigItem);
+			}
+		}
+		return currentWrapCacheConfigItem;
+	}
+}
+
+//1.写一个方法，通过反射，通过目录，获取实现Interface接口的类型
+
+public static class AssemblyHelper {
+		public static T GetTypeByInterface<T>(string searchPattern=".*")where T:class{
+			var itype=typeof(T);
+			var domain=GetBaseDirectory();
+			var dllFiles=Directory.LoadFiles(domain,searchPattern,SearchOptions.TopDirectoryOnly);
+			foreach(var dllFile in dllFiles){
+				foreach(Type type in Assembly.LoadFrom(dllFile).GetLoadableTypes()){
+					if(type!=itype&&itype.IsAssignableFrom(type)){
+						var result=Activator.CreateInstance(type) as T;
+						return result;
+					}
+				}
+			}
+		}
+		public static IEnumerable<Type> GetLoadableTypes(this Assembly assembly){
+			if(assembly==null) throw new NullArgumentException("assembly");
+			try{
+				return assembly.GetTypes();
+			}catch(ReflectionTypeLoadException e){
+				return assembly.GetTypes().Where(c=>c!=null);
+			}
+		}
+		public static string GetBaseDirectory(){
+			baseDirectory=AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+			if(AppDomain.CurrentDomain.SetupInformation.PrivateBinPath==null){
+				baseDirectory=AppDomain.CurrentDomain.BaseDriectory;
+			}
+			return baseDirectory;
+		}
+
+}
+//2.写一个基本的DbContext类库，用来与数据库交互
+public interface IDataRepository{
+	T Update<T>(T entity) where T:class;
+	T Insert<T>(T entity) where T:class;
+	void Delete<T>(T entity) where T:class;
+	T Find<T>(params object[] keyValues) where T:class;
+	List<T> FindAll<T>(Expression<Func<T,bool>> conditions);
+}
+
+public class DbContextBase:IDataRepository,IDisposable,DbContext{
+	public DbContextBase(string connection){
+		DataBase.Connection.ConnectionString=connection;
+		Database.Configuration.LazyLoadingEnabled=false;
+		Database.Configuration.ProxyCreationEnabled=false;
+	}
+
+	public DbContextBase(string connectionString,IAuditable auditLogger):base(connectionString){
+		this.AuditLogger=auditLogger;
+	}
+
+	public IAuditLogger auditLogger{get;set;}
+
+	public T Update<T>(T entity)where T:class{
+		var set=this.Set<T>();
+		set.Attach(entity);
+		set.Entry<T>(entity).State=EntityState.Modified;
+		this.SaveChanges();
+	}
+	public T Insert<T>(T entity) where T:class{
+		this.Set<T>().Add(entity);
+		this.SaveChanges();
+	}
+	public T Find<T>(params object[] keyValues)where T:class{
+		return this.Set<T>().Find(keyValues);
+	}
+	public T List<T>(Expression<Func<T,bool>> conditions)where T:class{
+		if(conditions==null){
+			return this.Set<T>().ToList();
+		}else{
+			return this.Set<T>.Where(conditions).ToList();
+		}
+	}
+
+	public override int SaveChanges(){
+		this.WriteLog();
+		var result=base.SaveChanges();
+		return result;
+	}
+
+	public void WriteLog(){
+		if(this.AuditLogger==null){
+			return;
+		}
+
+	}
+
+}
+//GMS.Framework.DAL 
+//GMS.Account.BLL,GMS.ACCOUNT.DAL AccountDbContext:DbContextBase
+//GMS.Account.Contract
+	IAccountService.cs
+//GMS.Account.BLL
+	AccountService.cs
+public interface IAccountService{
+	bool verifyCode(string verifyCodeText,Guid guid);
+}
+public class AccountService:IAccountService{
+	public bool VerifyCode(string verifyCodeText,Guid guid){
+
+	}
+}
+
+
+public void WriteLog(){
+	if(AuditLogger==null){
+		return null;
+	}
+	foreach(var dbEntry in this.ChangeTracker.Entries<ModelBase>().Where(p=>p.State=EntityState.Modified||p.State==EntityState.Deleted||p.State==EntityState.Added)){
+
+	}
+}
+//在SaveChanges期间设置接口写日志
+public DbContextBase(string connectionString){
+	Database.Connection.ConnectionString=connectionString;
+	Database.Configuration.LazyLoadingEnable=false;
+	Database.Configuration.ProxyCreationEnabled=false;
+}
+public DbContextBase(string connectionString,IAuditable auditLogger):this(connectionString){
+		this.AuditLogger=auditLogger;
+}
+public IAuditable AuditLogger{get;set;}
+public override int SaveChange(){
+	this.WriteLog();
+	var result=base.SaveChange();
+	return result;
+}
+public void WriteLog(){
+	if(AuditLogger==null){
+		return ;
+	}
+	foreach(var dbEntry in this.ChangeTracker.Entries<ModleBase>().Where(p=>p.State==EntityState.Modified||p.State=Enti)){
+
+	}
+}
+
+
+public interface IAuditable{
+	void WriteLog(int modelId,string userName,string moduleName,string tableName,string eventType,ModelBase newValues);
+}
+foreach(var dbEntry in this.ChangeTracker.Entries<ModelBase>().Where(p=>p.State=EntityState.Modified||p.State==EntityState.Added||p.State=EntityState.Deleted)){
+	var auditableAttr=dbEntry.Entity.GetType().GetCustomAttribute(typeof(AuditableAttribute),false).SingleOrDefault() as AuditableAttribute;
+
+}
+//EF 5 对 TPT 层次结构 生成的查询，确实有改进，但
+POCO ,从数据库获取原始对象
+
+public class WCFContext{
+	private const string CallContextKey="__CallContext";
+
+	public WCFContext Current{
+		get{
+			if(CallContext.GetData(CallContextKey)==null){
+				CallContext.SetData(CallContextKey,new WCFContext());
+			}
+			return CallContext.GetData(CallContextKey);
+		}
+		set{
+			CallContext.SetData(CallCotnextKey,value) as WCFContext;
+		}
+	}
+}
+
+static string key="DbContext_Single";
+public static DbContext Current{
+	get{
+		DbContext temp=CallContext.GetData(key) as DbContext;
+		if(temp==null){
+			temp=new HelperModelContainer();
+			CallContext.SetData(key,temp);
+		}
+		return temp;
+	}
+	private set{}
+}
